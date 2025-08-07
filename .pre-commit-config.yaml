@@ -1,0 +1,36 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-json
+        exclude: ^(tsconfig\.json|.*\.jsonc)$
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: mixed-line-ending
+
+  # Biome for TypeScript/JavaScript/JSON/CSS formatting and linting
+  - repo: local
+    hooks:
+      - id: biome-check
+        name: Biome check
+        entry: pnpm biome check --write
+        language: system
+        files: \.(js|ts|jsx|tsx|json|jsonc)$
+        pass_filenames: false
+
+  # TypeScript type checking
+  - repo: local
+    hooks:
+      - id: type-check
+        name: TypeScript type check
+        entry: pnpm run type-check
+        language: system
+        files: \.(ts|tsx)$
+        pass_filenames: false

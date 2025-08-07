@@ -7,10 +7,10 @@ import { ThemeToggle } from './layout/theme-toggle';
 import UserBadge from './layout/user-badge';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar';
 
-export function Layout() {
+export function Layout({ sidebar = false }: { sidebar?: boolean }) {
   return (
     <>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={sidebar}>
         <AppSidebar />
         <SidebarInset>
           <header className="flex items-center gap-2 p-4 h-16 shrink-0">

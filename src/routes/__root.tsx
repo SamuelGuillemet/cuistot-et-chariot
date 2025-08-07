@@ -17,6 +17,7 @@ import { Layout } from '@/components/layout';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { authClient } from '@/lib/auth-client';
 import { setupSSR } from '@/server/auth';
+import { getSideBarStateServerFn } from '@/server/sidebar';
 import { getThemeServerFn } from '@/server/theme';
 import mainCss from '@/styles/main.css?url';
 
@@ -44,6 +45,7 @@ export const Route = createRootRouteWithContext<{
   notFoundComponent: Page404,
   beforeLoad: async (ctx) => setupSSR(ctx.context),
   loader: async () => ({
+    sidebar: await getSideBarStateServerFn(),
     theme: await getThemeServerFn(),
     breadcrumbs: 'Home',
   }),
@@ -75,7 +77,7 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body className="font-regular antialiased tracking-wide">
-        <Layout />
+        <Layout sidebar={data.sidebar} />
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />

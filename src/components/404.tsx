@@ -15,7 +15,7 @@ export function Page404() {
           4
         </div>
       </div>
-      <h2 className="opacity-0 my-4 text-4xl md:text-7xl uppercase animate-slide-in">
+      <h2 className="opacity-0 my-4 text-4xl md:text-4xl uppercase animate-slide-in">
         La page est introuvable
       </h2>
       <p className="text-xl">

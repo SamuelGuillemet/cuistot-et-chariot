@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import Breadcrumbs from './layout/breadcrumbs';
 import { AppSidebar } from './layout/sidebar';
 import { ThemeToggle } from './layout/theme-toggle';
+import UserBadge from './layout/user-badge';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar';
 
 export function Layout() {
@@ -22,7 +23,10 @@ export function Layout() {
               <Breadcrumbs />
             </div>
             <div className="ml-auto">
-              <ThemeToggle />
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <UserBadge />
+              </div>
             </div>
           </header>
           <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 sm:py-0 grow">

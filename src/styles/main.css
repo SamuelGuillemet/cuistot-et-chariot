@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Architects+Daughter&family=JetBrains+Mono&family=Source+Serif+4&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -184,8 +185,22 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-
     letter-spacing: var(--tracking-normal);
+    @apply bg-background text-foreground;
+  }
+}
+
+@theme {
+  --animate-slide-in: slide-in 0.9s forwards 0.8s;
+
+  @keyframes slide-in {
+    0% {
+      transform: translateY(-10%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
 }

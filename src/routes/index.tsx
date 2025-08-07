@@ -4,9 +4,6 @@ import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
-  loader: async () => {
-    return { breadcrumbs: 'Home' };
-  },
 });
 
 function RouteComponent() {

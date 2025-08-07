@@ -9,9 +9,8 @@
     "**/routeTree.gen.ts": true
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
-    // "source.organizeImports": "always",
-    "source.organizeImports.biome": "always"
+    "source.organizeImports.biome": "always",
+    "source.fixAll.biome": "always"
   },
   "files.associations": {
     "**/styles/*.css": "tailwindcss"
@@ -40,5 +39,6 @@
   },
   "[tailwindcss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

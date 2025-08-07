@@ -1,20 +1,32 @@
 /// <reference types="vite/client" />
+
+import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
+import type { ConvexQueryClient } from '@convex-dev/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createRootRouteWithContext,
   HeadContent,
   Scripts,
+  useRouteContext,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import type { ConvexReactClient } from 'convex/react';
 import { Page404 } from '@/components/404';
 import { Layout } from '@/components/layout';
 import { ThemeProvider } from '@/components/layout/theme-provider';
-import { getThemeServerFn } from '@/components/server/theme';
+import { authClient } from '@/lib/auth-client';
+import { setupSSR } from '@/server/auth';
+import { getThemeServerFn } from '@/server/theme';
 import mainCss from '@/styles/main.css?url';
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
+  convexClient: ConvexReactClient;
+  convexQueryClient: ConvexQueryClient;
   breadcrumbs?: string;
+  userId?: string;
+  token?: string;
 }>()({
   head: () => ({
     meta: [
@@ -30,17 +42,26 @@ export const Route = createRootRouteWithContext<{
   }),
   component: RootComponent,
   notFoundComponent: Page404,
+  beforeLoad: async (ctx) => setupSSR(ctx.context),
   loader: async () => ({
     theme: await getThemeServerFn(),
     breadcrumbs: 'Home',
   }),
+  staleTime: Infinity,
 });
 
 function RootComponent() {
   const data = Route.useLoaderData();
+  const context = useRouteContext({ from: Route.id });
+
   return (
     <ThemeProvider theme={data.theme}>
-      <RootDocument />
+      <ConvexBetterAuthProvider
+        client={context.convexClient}
+        authClient={authClient}
+      >
+        <RootDocument />
+      </ConvexBetterAuthProvider>
     </ThemeProvider>
   );
 }

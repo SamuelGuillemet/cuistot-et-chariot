@@ -14,7 +14,8 @@ export const Route = createFileRoute('/login')({
     const searchParams: LoginSearch = {};
     for (const key in search) {
       if (allowedSearchKeys.includes(key)) {
-        searchParams[key as keyof LoginSearch] = search[key] as string;
+        searchParams[key as keyof LoginSearch] =
+          typeof search[key] === 'string' ? search[key] : undefined;
       }
     }
     return searchParams;

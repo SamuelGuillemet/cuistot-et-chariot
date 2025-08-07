@@ -21,7 +21,8 @@ export const betterAuthComponent = new BetterAuth(
 export const { createUser, updateUser, deleteUser, createSession, isAuthenticated } =
   betterAuthComponent.createAuthFunctions<DataModel>({
     onCreateUser: async (ctx, user) => {
-      const authorized_emails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+      const authorized_emails =
+        process.env.AUTHORIZED_EMAILS?.split(",").map(email => email.trim()).filter(Boolean) || [];
       if (!user.email || !authorized_emails.includes(user.email)) {
         // Reject the user if their email is not in the authorized list
         throw new ConvexError("Unauthorized email address");

@@ -23,7 +23,7 @@ export default function UserBadge() {
   const nameInitials = useMemo(() => {
     if (data) {
       const [firstName, lastName] = data.name?.split(' ') ?? [];
-      return (firstName[0] + lastName[0]).toUpperCase();
+      return ((firstName?.[0] || '') + (lastName?.[0] || '')).toUpperCase();
     }
     return '';
   }, [data]);

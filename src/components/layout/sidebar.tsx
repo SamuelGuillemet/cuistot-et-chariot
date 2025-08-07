@@ -1,9 +1,5 @@
-import {
-  Link,
-  type RegisteredRouter,
-  type RouteIds,
-} from '@tanstack/react-router';
-import { ChevronRight, Home, Settings } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { ChevronRight, Home } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -22,17 +18,18 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
+import type { FileRoutesByTo } from '@/routeTree.gen';
 
-type AllRoutes = Exclude<RouteIds<RegisteredRouter['routeTree']>, '__root__'>;
+type AllRoutes = keyof FileRoutesByTo;
 
 type MenuItem = {
   title: string;
-  url: AllRoutes;
+  url?: AllRoutes;
   icon?: React.ReactNode;
   isActive?: boolean;
   items?: {
     title: string;
-    url: string;
+    url: AllRoutes;
   }[];
 };
 
@@ -41,11 +38,6 @@ const menuItems: MenuItem[] = [
     title: 'Home',
     url: '/',
     icon: <Home className="w-5 h-5" />,
-  },
-  {
-    title: 'Tests',
-    url: '/test',
-    icon: <Settings className="w-5 h-5" />,
   },
 ];
 
@@ -68,13 +60,22 @@ export function NavMain({ items }: { items: MenuItem[] }) {
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <Link
-                  to={item.url}
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  {item.icon}
-                  <span>{item.title}</span>
-                </Link>
+                {item.url ? (
+                  // If the item has a URL, use Link
+                  <Link
+                    to={item.url}
+                    className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </Link>
+                ) : (
+                  // Otherwise, just render the title with icon
+                  <span className="flex items-center gap-4 px-2.5">
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </span>
+                )}
               </SidebarMenuButton>
               {item.items?.length ? (
                 <>

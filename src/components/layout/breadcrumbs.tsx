@@ -1,6 +1,4 @@
 import { Link, useRouterState } from '@tanstack/react-router';
-import { useTitle } from '@/hooks/use-title';
-import { uniqueObject } from '@/utils/utils';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../ui/breadcrumb';
+} from '@/components/ui/breadcrumb';
+import { useTitle } from '@/hooks/use-title';
+import { uniqueObject } from '@/utils/utils';
 
 export default function BreadcrumbComponent() {
   const breadcrumbs = useRouterState({
@@ -18,7 +18,9 @@ export default function BreadcrumbComponent() {
         path: match.pathname,
       }));
     },
-  }).filter(uniqueObject('path'));
+  })
+    .filter((breadcrumb) => breadcrumb.title)
+    .filter(uniqueObject('path'));
 
   useTitle(
     breadcrumbs[breadcrumbs.length - 1].title ?? 'Shopping List Recipe Builder',

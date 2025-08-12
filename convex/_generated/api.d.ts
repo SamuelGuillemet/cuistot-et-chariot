@@ -9,7 +9,11 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as helpers from "../helpers.js";
+import type * as households from "../households.js";
 import type * as http from "../http.js";
+import type * as rls from "../rls.js";
+import type * as types from "../types.js";
 import type * as users from "../users.js";
 
 import type {
@@ -28,7 +32,11 @@ import type {
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  helpers: typeof helpers;
+  households: typeof households;
   http: typeof http;
+  rls: typeof rls;
+  types: typeof types;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

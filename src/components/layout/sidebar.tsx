@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, Home } from 'lucide-react';
+import { ChevronRightIcon, HomeIcon } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -10,6 +10,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -19,6 +20,7 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import type { FileRoutesByTo } from '@/routeTree.gen';
+import { Households } from '../households/household-switcher';
 
 type AllRoutes = keyof FileRoutesByTo;
 
@@ -37,13 +39,16 @@ const menuItems: MenuItem[] = [
   {
     title: 'Home',
     url: '/',
-    icon: <Home className="w-5 h-5" />,
+    icon: <HomeIcon className="w-5 h-5" />,
   },
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <Households />
+      </SidebarHeader>
       <SidebarContent>
         <NavMain items={menuItems} />
       </SidebarContent>
@@ -81,7 +86,7 @@ export function NavMain({ items }: { items: MenuItem[] }) {
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
+                      <ChevronRightIcon />
                       <span className="sr-only">Toggle</span>
                     </SidebarMenuAction>
                   </CollapsibleTrigger>

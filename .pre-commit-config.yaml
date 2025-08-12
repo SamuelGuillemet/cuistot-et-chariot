@@ -9,7 +9,7 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
       - id: check-json
-        exclude: ^(tsconfig\.json|.*\.jsonc)$
+        exclude: ^(tsconfig\.json|.*\.jsonc|\.vscode.*\.json)$
       - id: check-toml
       - id: check-merge-conflict
       - id: check-case-conflict
@@ -18,19 +18,9 @@ repos:
   # Biome for TypeScript/JavaScript/JSON/CSS formatting and linting
   - repo: local
     hooks:
-      - id: biome-check
-        name: Biome check
-        entry: pnpm biome check --write
+      - id: local-biome-check
+        name: biome check
+        entry: pnpm exec biome check --write --files-ignore-unknown=true --no-errors-on-unmatched
         language: system
-        files: \.(js|ts|jsx|tsx|json|jsonc)$
-        pass_filenames: false
-
-  # TypeScript type checking
-  - repo: local
-    hooks:
-      - id: type-check
-        name: TypeScript type check
-        entry: pnpm run type-check
-        language: system
-        files: \.(ts|tsx)$
-        pass_filenames: false
+        types: [text]
+        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"

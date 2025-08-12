@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/tooltip';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { ssrSafeCookieStore } from '@/utils/cookie';
 
 export const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7 * 1000; // 7 days in milliseconds
@@ -80,7 +81,7 @@ function SidebarProvider({
       }
 
       // This sets the cookie to keep the sidebar state.
-      cookieStore.set({
+      ssrSafeCookieStore.setWithOptions({
         name: SIDEBAR_COOKIE_NAME,
         value: String(openState),
         expires: Date.now() + SIDEBAR_COOKIE_MAX_AGE,

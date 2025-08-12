@@ -1,4 +1,6 @@
 import { useSearch } from '@tanstack/react-router';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,7 +16,7 @@ const TraductionMap: Record<string, string> = {
   unable_to_create_user: "Impossible de créer l'utilisateur",
 };
 
-export function Login() {
+export function LoginForm() {
   const { error, redirect } = useSearch({
     from: '/login',
   });
@@ -27,8 +29,14 @@ export function Login() {
     });
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(TraductionMap[error] || error);
+    }
+  }, [error]);
+
   return (
-    <Card className="flex flex-col place-self-center space-y-3 mt-20 w-full min-[450px]:w-[400px]">
+    <Card>
       <CardHeader className="pb-0">
         <CardTitle className="font-bold text-xl md:text-2xl">
           Connectez-vous

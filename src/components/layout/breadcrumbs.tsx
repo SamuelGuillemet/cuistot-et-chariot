@@ -7,24 +7,29 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { useTitle } from '@/hooks/use-title';
 import { uniqueObject } from '@/utils/utils';
 
 export default function BreadcrumbComponent() {
   const breadcrumbs = useRouterState({
     select: (state) => {
-      return state.matches.map((match) => ({
-        title: match.loaderData?.breadcrumbs,
-        path: match.pathname,
-      }));
+      return state.matches.map((match) => {
+        let path = match.pathname;
+        if (
+          match.loaderData &&
+          'pathname' in match.loaderData &&
+          match.loaderData.pathname
+        ) {
+          path = match.loaderData.pathname;
+        }
+        return {
+          title: match.loaderData?.breadcrumbs,
+          path,
+        };
+      });
     },
   })
     .filter((breadcrumb) => breadcrumb.title)
     .filter(uniqueObject('path'));
-
-  useTitle(
-    breadcrumbs[breadcrumbs.length - 1].title ?? 'Shopping List Recipe Builder',
-  );
 
   return (
     <Breadcrumb className="hidden md:flex">

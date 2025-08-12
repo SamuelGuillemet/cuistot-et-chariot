@@ -1,14 +1,13 @@
-import { Id } from "./_generated/dataModel";
-import { query } from "./_generated/server";
+import { query } from './_generated/server';
+import { getAuthUserId } from './helpers';
 
 export const viewer = query({
   args: {},
   handler: async (ctx) => {
-    const auth = await ctx.auth.getUserIdentity();
-    if (!auth) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return null;
     }
-    const userId = auth.subject as Id<"users">;
     return ctx.db.get(userId);
   },
 });

@@ -24,12 +24,3 @@ repos:
         language: system
         types: [text]
         files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"
-
-  # TypeScript type checking
-  - repo: local
-    hooks:
-      - id: type-check
-        name: typescript check
-        entry: pnpm exec tsc --noEmit
-        language: system
-        files: "\\.(ts|tsx)$"

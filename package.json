@@ -1,6 +1,6 @@
 {
-  "name": "shopping-list-recipe-builder",
-  "version": "1.0.0",
+  "name": "cuistot-et-chariot",
+  "version": "0.1.0",
   "private": true,
   "sideEffects": false,
   "type": "module",

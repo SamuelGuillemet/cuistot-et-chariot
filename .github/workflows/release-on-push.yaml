@@ -1,0 +1,44 @@
+name: Release on push to main branch
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release-on-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Release a new version
+        id: release
+        uses: rymndhng/release-on-push-action@v0.28.0
+        with:
+          bump_version_scheme: norelease
+          tag_prefix: v
+          release_name: <RELEASE_TAG>
+          max_commits: 25
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check output parameters
+        run: |
+          echo "Tag name: ${{ steps.release.outputs.tag_name }}"
+          echo "Release version: ${{ steps.release.outputs.version }}"
+    outputs:
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+
+  store-version:
+    needs: release-on-push
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Save version
+        run: |
+          mkdir -p ./version
+          echo "${{ needs.release-on-push.outputs.version }}" > ./version/version_number
+      - uses: actions/upload-artifact@v4
+        with:
+          name: version_number
+          path: ./version/version_number

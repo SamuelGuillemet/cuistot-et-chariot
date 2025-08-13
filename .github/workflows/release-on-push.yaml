@@ -1,5 +1,3 @@
-# This workflow aims to release a new version of the project when a commit is pushed to the main branch.
-
 name: Release on push to main branch
 
 on:
@@ -9,20 +7,24 @@ on:
 jobs:
   release-on-push:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
     steps:
       - name: Release a new version
         id: release
-        uses: rymndhng/release-on-push-action@master
+        uses: rymndhng/release-on-push-action@v0.28.0
         with:
           bump_version_scheme: norelease
           tag_prefix: v
           release_name: <RELEASE_TAG>
           max_commits: 25
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check output parameters
-        run: echo -e "Tag name ${{ steps.release.outputs.tag_name }}\nRelease version ${{ steps.release.outputs.version }}"
+        run: |
+          echo "Tag name: ${{ steps.release.outputs.tag_name }}"
+          echo "Release version: ${{ steps.release.outputs.version }}"
     outputs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
@@ -30,12 +32,13 @@ jobs:
   store-version:
     needs: release-on-push
     runs-on: ubuntu-latest
+    permissions: {}
     steps:
       - name: Save version
         run: |
           mkdir -p ./version
           echo "${{ needs.release-on-push.outputs.version }}" > ./version/version_number
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: version_number
-          path: ./version
+          path: ./version/version_number

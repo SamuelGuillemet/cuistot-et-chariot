@@ -90,7 +90,7 @@ function RouteComponent() {
           </h1>
           <HouseholdDeleteButton
             householdId={id}
-            hidden={!currentMember?.canEditHousehold}
+            hidden={!currentMember.canEditHousehold}
           />
         </div>
         <div className="flex flex-col gap-6">
@@ -98,7 +98,7 @@ function RouteComponent() {
             onSubmit={onSubmit}
             isPending={isPending}
             values={data}
-            readOnly={!currentMember?.canEditHousehold}
+            readOnly={!currentMember.canEditHousehold}
           />
           <HouseholdMembersCard householdPublicId={id} />
         </div>

@@ -23,13 +23,37 @@ jobs:
         id: get_current_version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
 
-      - name: Get the label to add
+      - name: Get the label to add and remove old labels
         id: get_label
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const labels = ["release:patch", "release:minor", "release:major", "norelease"];
+
+            // Get current PR labels
+            const { data: currentLabels } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            // Find existing bot-managed labels to remove
+            const existingBotLabels = currentLabels
+              .map(label => label.name)
+              .filter(name => labels.includes(name));
+
+            // Remove existing bot-managed labels
+            for (const labelToRemove of existingBotLabels) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: labelToRemove,
+              });
+              console.log(`Removed label: ${labelToRemove}`);
+            }
+
             let last_release = {
               data: {
                 tag_name: "v0.0.0",
@@ -61,7 +85,7 @@ jobs:
         env:
           VERSION: ${{ steps.get_current_version.outputs.current-version }}
 
-      - name: Add labels
+      - name: Add new label
         uses: actions-ecosystem/action-add-labels@v1
         with:
           labels: ${{ steps.get_label.outputs.label }}

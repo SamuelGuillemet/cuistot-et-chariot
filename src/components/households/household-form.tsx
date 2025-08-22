@@ -31,7 +31,7 @@ import { PasswordInput } from '../ui/password-input';
 const debouncedExistsByName = debounceAsync(
   async (queryClient: QueryClient, name: string) => {
     return await queryClient.fetchQuery(
-      convexQuery(api.households.existsByName, {
+      convexQuery(api.households.queries.existsByName, {
         name,
       }),
     );
@@ -99,10 +99,12 @@ export function HouseholdForm({
   onSubmit,
   isPending,
   values,
+  readOnly,
 }: {
   onSubmit: (values: HouseholdFormValues) => void;
   isPending: boolean;
   values?: HouseholdFormValues;
+  readOnly: boolean;
 }) {
   const queryClient = useQueryClient();
 
@@ -140,7 +142,7 @@ export function HouseholdForm({
                 <FormItem className="sm:col-span-2">
                   <FormLabel>Nom</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} disabled={readOnly} />
                   </FormControl>
                   <FormDescription>
                     Ce nom sera visible par les membres du foyer.
@@ -156,7 +158,7 @@ export function HouseholdForm({
                 <FormItem>
                   <FormLabel>Question secrète</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} disabled={readOnly} />
                   </FormControl>
                   <FormDescription>
                     Cette question sera utilisée pour vérifier l'identité des
@@ -173,7 +175,7 @@ export function HouseholdForm({
                 <FormItem>
                   <FormLabel>Réponse</FormLabel>
                   <FormControl>
-                    <PasswordInput {...field} />
+                    <PasswordInput {...field} disabled={readOnly} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -183,6 +185,7 @@ export function HouseholdForm({
           <CardFooter className="flex justify-end border-t">
             <Button
               type="submit"
+              hidden={readOnly}
               disabled={isPending}
               className="gap-2 w-full sm:w-auto"
             >

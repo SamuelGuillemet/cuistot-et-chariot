@@ -1,3 +1,5 @@
+import { ConvexError } from 'convex/values';
+import { nullThrows } from 'convex-helpers';
 import { query } from './_generated/server';
 import { getAuthUserId } from './helpers';
 
@@ -6,8 +8,8 @@ export const viewer = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
-      return null;
+      throw new ConvexError('User not authenticated');
     }
-    return ctx.db.get(userId);
+    return nullThrows(await ctx.db.get(userId));
   },
 });

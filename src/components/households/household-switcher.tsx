@@ -1,5 +1,5 @@
 import { convexQuery } from '@convex-dev/react-query';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link, useRouter } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import type { Household } from 'convex/types';
@@ -7,7 +7,6 @@ import {
   CheckIcon,
   ChevronsUpDownIcon,
   EditIcon,
-  Loader2Icon,
   MapPinHouseIcon,
   PlusIcon,
 } from 'lucide-react';
@@ -27,6 +26,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useDidUpdateEffect } from '@/hooks/use-did-update-effect';
 import { Route as AuthedRoute } from '@/routes/_authed';
 import { householdStore, useHousehold } from '@/stores/household';
 import { Button } from '../ui/button';
@@ -45,9 +45,9 @@ export function Households() {
     householdStore.getState().initialize(householdId);
   }, [householdId]);
 
-  const { data } = useQuery(convexQuery(api.households.getOwnHouseholds, {}));
-
-  if (!data) return <Loader2Icon className="animate-spin" />;
+  const { data } = useSuspenseQuery(
+    convexQuery(api.households.queries.getOwnHouseholds, {}),
+  );
 
   if (data.length === 0) {
     return (
@@ -59,11 +59,11 @@ export function Households() {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Link to="/household/new">
-                  <div className="flex justify-center items-center bg-transparent border rounded-md size-6">
+                <Link to="/household/new" className="flex items-center gap-2">
+                  <div className="flex justify-center items-center bg-transparent border rounded-md size-8">
                     <PlusIcon className="size-4" />
                   </div>
-                  <div className="font-medium text-muted-foreground">
+                  <div className="font-medium text-muted-foreground truncate">
                     Ajouter un foyer
                   </div>
                 </Link>
@@ -87,17 +87,21 @@ export function HouseholdSwitcher({ households }: Props) {
 
   const selectedHousehold = React.useMemo(
     () =>
-      households.find((h) => h.household._id === householdId) || households[0],
+      households.find((h) => h.household.publicId === householdId) ||
+      households[0],
     [households, householdId],
   );
 
   React.useEffect(() => {
-    setHouseholdId(selectedHousehold.household._id);
-    toast.info(`Foyer sélectionné : ${selectedHousehold.household.name}`);
+    setHouseholdId(selectedHousehold.household.publicId);
   }, [selectedHousehold, setHouseholdId]);
 
+  useDidUpdateEffect(() => {
+    toast.info(`Foyer sélectionné : ${selectedHousehold.household.name}`);
+  }, [selectedHousehold]);
+
   const onSelectionChange = async (household: (typeof households)[0]) => {
-    await setHouseholdId(household.household._id);
+    await setHouseholdId(household.household.publicId);
     router.invalidate();
   };
 
@@ -139,7 +143,7 @@ export function HouseholdSwitcher({ households }: Props) {
                 onClick={() => onSelectionChange(value)}
                 className="gap-2 p-2"
               >
-                {value.household._id === householdId ? (
+                {value.household.publicId === householdId ? (
                   <CheckIcon className="size-3.5 shrink-0" />
                 ) : (
                   <span className="size-3.5 shrink-0" />

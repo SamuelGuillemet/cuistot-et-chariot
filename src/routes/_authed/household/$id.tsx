@@ -9,6 +9,8 @@ import {
   HouseholdForm,
   type HouseholdFormValues,
 } from '@/components/households/household-form';
+import { HouseholdMembersCard } from '@/components/households/household-members-card';
+import { useCurrentMember } from '@/hooks/use-current-member';
 
 const householdId = z.object({
   id: z.guid(),
@@ -21,9 +23,23 @@ export const Route = createFileRoute('/_authed/household/$id')({
   },
   loader: async (opts) => {
     try {
-      await opts.context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.households.getHousehold, { publicId: opts.params.id }),
-      );
+      await Promise.all([
+        opts.context.convexQueryClient.queryClient.ensureQueryData(
+          convexQuery(api.households.queries.getHousehold, {
+            publicId: opts.params.id,
+          }),
+        ),
+        opts.context.convexQueryClient.queryClient.ensureQueryData(
+          convexQuery(api.households_members.queries.getHouseholdMembers, {
+            publicId: opts.params.id,
+          }),
+        ),
+        opts.context.convexQueryClient.queryClient.ensureQueryData(
+          convexQuery(api.households_members.queries.getCurrentUserMember, {
+            publicId: opts.params.id,
+          }),
+        ),
+      ]);
     } catch (_) {
       throw redirect({
         to: '/dashboard',
@@ -39,10 +55,14 @@ export const Route = createFileRoute('/_authed/household/$id')({
 function RouteComponent() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(
-    convexQuery(api.households.getHousehold, { publicId: id }),
+    convexQuery(api.households.queries.getHousehold, { publicId: id }),
   );
 
-  const mutationFn = useConvexMutation(api.households.updateHousehold);
+  const { currentMember } = useCurrentMember(id);
+
+  const mutationFn = useConvexMutation(
+    api.households.mutations.updateHousehold,
+  );
   const { mutate, isPending } = useMutation({
     mutationFn,
     onError: (error) => {
@@ -68,13 +88,20 @@ function RouteComponent() {
           <h1 className="font-semibold text-2xl tracking-tight">
             Modifier le foyer
           </h1>
-          <HouseholdDeleteButton householdId={id} />
+          <HouseholdDeleteButton
+            householdId={id}
+            hidden={!currentMember.canEditHousehold}
+          />
         </div>
-        <HouseholdForm
-          onSubmit={onSubmit}
-          isPending={isPending}
-          values={data}
-        />
+        <div className="flex flex-col gap-6">
+          <HouseholdForm
+            onSubmit={onSubmit}
+            isPending={isPending}
+            values={data}
+            readOnly={!currentMember.canEditHousehold}
+          />
+          <HouseholdMembersCard householdPublicId={id} />
+        </div>
       </div>
     </div>
   );

@@ -16,7 +16,9 @@ export const Route = createFileRoute('/_authed/household/new')({
 
 function RouteComponent() {
   const router = useRouter();
-  const mutationFn = useConvexMutation(api.households.createHousehold);
+  const mutationFn = useConvexMutation(
+    api.households.mutations.createHousehold,
+  );
   const { mutate, isPending } = useMutation({
     mutationFn,
     onError: (error) => {

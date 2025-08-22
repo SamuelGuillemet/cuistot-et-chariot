@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useUniqueElementIds: We are on the landing page with non-exported components */
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Authenticated, Unauthenticated } from 'convex/react';
 import {

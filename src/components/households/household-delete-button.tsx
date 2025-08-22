@@ -18,11 +18,15 @@ import { Button } from '../ui/button';
 
 export function HouseholdDeleteButton({
   householdId,
+  hidden = false,
 }: {
   householdId: string;
+  hidden?: boolean;
 }) {
   const router = useRouter();
-  const mutationFn = useConvexMutation(api.households.deleteHousehold);
+  const mutationFn = useConvexMutation(
+    api.households.mutations.deleteHousehold,
+  );
 
   const { mutate } = useMutation({
     mutationFn,
@@ -41,6 +45,10 @@ export function HouseholdDeleteButton({
   const handleDelete = async () => {
     mutate({ publicId: householdId });
   };
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <AlertDialog>

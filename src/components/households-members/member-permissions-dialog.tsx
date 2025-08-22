@@ -1,7 +1,7 @@
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { api } from 'convex/_generated/api';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,6 +31,8 @@ export function MemberPermissionsDialog({
   onOpenChange,
 }: MemberPermissionsDialogProps) {
   const { currentMember } = useCurrentMember(householdPublicId);
+
+  const canEditHouseholdId = useId();
 
   const [permissions, setPermissions] = useState({
     canEditHousehold: member.canEditHousehold,
@@ -94,7 +96,7 @@ export function MemberPermissionsDialog({
         <div className="gap-4 grid py-4">
           <div className="flex justify-between items-center">
             <div className="space-y-0.5">
-              <Label htmlFor="canEditHousehold" className="text-base">
+              <Label htmlFor={canEditHouseholdId} className="text-base">
                 Modifier le foyer
               </Label>
               <p className="text-muted-foreground text-sm">
@@ -102,7 +104,7 @@ export function MemberPermissionsDialog({
               </p>
             </div>
             <Switch
-              id="canEditHousehold"
+              id={canEditHouseholdId}
               checked={permissions.canEditHousehold}
               onCheckedChange={(checked) =>
                 setPermissions((prev) => ({

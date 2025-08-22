@@ -28,9 +28,13 @@ export function debounceAsync<TArgs extends unknown[], TResult>(
         timer = null;
         try {
           const result = await fn(...(lastArgs as TArgs));
-          waiters.forEach((w) => w.resolve(result));
+          waiters.forEach((w) => {
+            w.resolve(result);
+          });
         } catch (err) {
-          waiters.forEach((w) => w.reject(err));
+          waiters.forEach((w) => {
+            w.reject(err);
+          });
         }
       }, wait);
     });

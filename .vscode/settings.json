@@ -23,7 +23,10 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
     "node_modules": true,
-    "dist": true
+    ".output": true,
+    ".nitro": true,
+    ".tanstack": true,
+    ".vercel": true
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -42,5 +45,6 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "terminal.integrated.shellIntegration.enabled": true,
-  "typescript.preferences.autoImportFileExcludePatterns": ["lucide-react"]
+  "typescript.preferences.autoImportFileExcludePatterns": ["lucide-react"],
+  "css.customData": [".vscode/tailwind.json"]
 }

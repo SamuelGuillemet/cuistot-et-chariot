@@ -7,7 +7,7 @@
   },
   "files": {
     "includes": [
-      "convex/*",
+      "convex/**/*",
       "!convex/_generated/*",
       "src/**/*",
       "vite.config.ts",
@@ -16,8 +16,7 @@
       "components.json",
       "biome.json",
       "!src/routeTree.gen.ts"
-    ],
-    "ignoreUnknown": false
+    ]
   },
   "formatter": {
     "enabled": true,

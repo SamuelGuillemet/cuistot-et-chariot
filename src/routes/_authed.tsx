@@ -38,24 +38,8 @@ export const Route = createFileRoute('/_authed')({
   gcTime: 1000 * 60 * 5, // 5 minutes
   staleTime: 1000 * 60 * 1, // 1 minute
   component: () => (
-    <>
-      <Layout>
-        <Outlet />
-      </Layout>
-      {/* <Authenticated>
-      </Authenticated>
-      <AuthLoading>
-        <div className="flex justify-center items-center w-screen h-screen">
-          <Loader2Icon className="animate-spin" />
-        </div>
-      </AuthLoading>
-      <Unauthenticated>
-        <div className="flex justify-center items-center w-screen h-screen">
-          <p className="text-lg">
-            Vous devez être connecté pour accéder à cette page.
-          </p>
-        </div>
-      </Unauthenticated> */}
-    </>
+    <Layout>
+      <Outlet />
+    </Layout>
   ),
 });

@@ -22,11 +22,9 @@ export function createRouter() {
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
   if (!CONVEX_URL) {
-    console.error('missing envar CONVEX_URL');
+    throw new Error('Missing required environment variable: VITE_CONVEX_URL');
   }
-  const convexQueryClient = new ConvexQueryClient(CONVEX_URL, {
-    expectAuth: true,
-  });
+  const convexQueryClient = new ConvexQueryClient(CONVEX_URL);
 
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {

@@ -8,9 +8,9 @@ import {
   wrapDatabaseReader,
   wrapDatabaseWriter,
 } from 'convex-helpers/server/rowLevelSecurity';
-import type { DataModel, Id } from './_generated/dataModel';
-import { mutation, type QueryCtx, query } from './_generated/server';
-import { getAuthUserId } from './helpers';
+import type { DataModel, Id } from '../_generated/dataModel';
+import { mutation, type QueryCtx, query } from '../_generated/server';
+import { getAuthUserId } from '../helpers';
 
 async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
   return {
@@ -25,7 +25,7 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
             q.eq('userId', userId).eq('householdId', household._id),
           )
           .first();
-        return householdMember !== null;
+        return householdMember?.status === 'accepted';
       },
       modify: async (_, household) => {
         const householdMember = await ctx.db
@@ -34,7 +34,10 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
             q.eq('userId', userId).eq('householdId', household._id),
           )
           .first();
-        return householdMember !== null;
+        return (
+          householdMember?.status === 'accepted' &&
+          (householdMember?.canEditHousehold ?? false)
+        );
       },
     },
   } satisfies Rules<QueryCtx, DataModel>;
@@ -42,9 +45,8 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
 
 export const queryWithRLS = customQuery(query, {
   args: {},
-  input: async (ctx, args) => {
+  input: async (ctx) => {
     const userId = await getAuthUserId(ctx);
-    console.log('User ID:', userId);
     if (!userId) {
       throw new ConvexError('Unauthorized');
     }
@@ -53,14 +55,14 @@ export const queryWithRLS = customQuery(query, {
         userId,
         db: wrapDatabaseReader(ctx, ctx.db, await rlsRules(ctx, userId)),
       },
-      args,
+      args: {},
     };
   },
 });
 
 export const mutationWithRLS = customMutation(mutation, {
   args: {},
-  input: async (ctx, args) => {
+  input: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) {
       throw new ConvexError('Unauthorized');
@@ -70,7 +72,7 @@ export const mutationWithRLS = customMutation(mutation, {
         userId,
         db: wrapDatabaseWriter(ctx, ctx.db, await rlsRules(ctx, userId)),
       },
-      args,
+      args: {},
     };
   },
 });

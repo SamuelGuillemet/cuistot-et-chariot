@@ -1,5 +1,5 @@
 import { convexQuery } from '@convex-dev/react-query';
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { useMemo } from 'react';
@@ -17,14 +17,11 @@ import { authClient } from '@/lib/auth-client';
 
 export default function UserBadge() {
   const router = useRouter();
-  const { data } = useQuery(convexQuery(api.users.viewer, {}));
+  const { data } = useSuspenseQuery(convexQuery(api.users.viewer, {}));
 
   const nameInitials = useMemo(() => {
-    if (data) {
-      const [firstName, lastName] = data.name?.split(' ') ?? [];
-      return ((firstName?.[0] || '') + (lastName?.[0] || '')).toUpperCase();
-    }
-    return '';
+    const [firstName, lastName] = data.name.split(' ') ?? [];
+    return ((firstName?.[0] || '') + (lastName?.[0] || '')).toUpperCase();
   }, [data]);
 
   const onLogout = () => {
@@ -46,13 +43,13 @@ export default function UserBadge() {
           className="rounded-full overflow-hidden"
         >
           <Avatar>
-            <AvatarImage src={data?.image} />
+            <AvatarImage src={data.image} />
             <AvatarFallback>{nameInitials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Mon compte ({data?.name})</DropdownMenuLabel>
+        <DropdownMenuLabel>Mon compte ({data.name})</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
           Se déconnecter

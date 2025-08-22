@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as AuthedHouseholdNewRouteImport } from './routes/_authed/household/new'
 import { Route as AuthedHouseholdIdRouteImport } from './routes/_authed/household/$id'
+import { Route as AuthedHouseholdJoinIdRouteImport } from './routes/_authed/household/join.$id'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -50,6 +51,11 @@ const AuthedHouseholdIdRoute = AuthedHouseholdIdRouteImport.update({
   path: '/household/$id',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedHouseholdJoinIdRoute = AuthedHouseholdJoinIdRouteImport.update({
+  id: '/household/join/$id',
+  path: '/household/join/$id',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthedDashboardRoute
   '/household/$id': typeof AuthedHouseholdIdRoute
   '/household/new': typeof AuthedHouseholdNewRoute
+  '/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthedDashboardRoute
   '/household/$id': typeof AuthedHouseholdIdRoute
   '/household/new': typeof AuthedHouseholdNewRoute
+  '/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,12 +86,25 @@ export interface FileRoutesById {
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/household/$id': typeof AuthedHouseholdIdRoute
   '/_authed/household/new': typeof AuthedHouseholdNewRoute
+  '/_authed/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/household/$id' | '/household/new'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/household/$id'
+    | '/household/new'
+    | '/household/join/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/household/$id' | '/household/new'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/household/$id'
+    | '/household/new'
+    | '/household/join/$id'
   id:
     | '__root__'
     | '/'
@@ -92,6 +113,7 @@ export interface FileRouteTypes {
     | '/_authed/dashboard'
     | '/_authed/household/$id'
     | '/_authed/household/new'
+    | '/_authed/household/join/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -165,6 +187,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedHouseholdIdRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/household/join/$id': {
+      id: '/_authed/household/join/$id'
+      path: '/household/join/$id'
+      fullPath: '/household/join/$id'
+      preLoaderRoute: typeof AuthedHouseholdJoinIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -183,12 +212,14 @@ interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedHouseholdIdRoute: typeof AuthedHouseholdIdRoute
   AuthedHouseholdNewRoute: typeof AuthedHouseholdNewRoute
+  AuthedHouseholdJoinIdRoute: typeof AuthedHouseholdJoinIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedHouseholdIdRoute: AuthedHouseholdIdRoute,
   AuthedHouseholdNewRoute: AuthedHouseholdNewRoute,
+  AuthedHouseholdJoinIdRoute: AuthedHouseholdJoinIdRoute,
 }
 
 const AuthedRouteWithChildren =

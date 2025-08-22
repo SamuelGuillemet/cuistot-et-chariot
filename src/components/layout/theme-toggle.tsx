@@ -1,4 +1,5 @@
 import { MoonIcon, SunIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTheme } from '@/components/layout/theme-provider';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,6 +10,27 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
+
+  // Ensure component is mounted before accessing theme context
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Return a placeholder during SSR to avoid hydration mismatch
+    return (
+      <Button variant="ghost" size="icon">
+        <SunIcon className="!w-[1.2rem] !h-[1.2rem]" />
+        <span className="sr-only">Changer de thème</span>
+      </Button>
+    );
+  }
+
+  return <ThemeToggleContent />;
+}
+
+function ThemeToggleContent() {
   const { setTheme } = useTheme();
   return (
     <DropdownMenu>

@@ -1,12 +1,10 @@
 import { convexQuery } from '@convex-dev/react-query';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { Link, useRouter } from '@tanstack/react-router';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
-import type { Household } from 'convex/types';
 import {
   CheckIcon,
   ChevronsUpDownIcon,
-  EditIcon,
   MapPinHouseIcon,
   PlusIcon,
 } from 'lucide-react';
@@ -27,82 +25,46 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useDidUpdateEffect } from '@/hooks/use-did-update-effect';
-import { Route as AuthedRoute } from '@/routes/_authed';
-import { householdStore, useHousehold } from '@/stores/household';
-import { Button } from '../ui/button';
+import {
+  householdIdQueryOptions,
+  useHouseholdMutationOptions,
+} from '@/lib/server-queries';
 
-type Props = {
-  households: {
-    household: Household;
-    role: string;
-  }[];
-};
+function AddHouseholdIcon() {
+  return (
+    <Link to="/household/new" className="flex items-center gap-2">
+      <div className="flex justify-center items-center bg-transparent border rounded-md size-8">
+        <PlusIcon className="size-4" />
+      </div>
+      <div className="font-medium text-muted-foreground truncate">
+        Ajouter un foyer
+      </div>
+    </Link>
+  );
+}
 
 export function Households() {
-  const { householdId } = AuthedRoute.useLoaderData();
-
-  React.useEffect(() => {
-    householdStore.getState().initialize(householdId);
-  }, [householdId]);
-
-  const { data } = useSuspenseQuery(
+  const { data: households } = useSuspenseQuery(
     convexQuery(api.households.queries.getOwnHouseholds, {}),
   );
 
-  if (data.length === 0) {
-    return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <Link to="/household/new" className="flex items-center gap-2">
-                  <div className="flex justify-center items-center bg-transparent border rounded-md size-8">
-                    <PlusIcon className="size-4" />
-                  </div>
-                  <div className="font-medium text-muted-foreground truncate">
-                    Ajouter un foyer
-                  </div>
-                </Link>
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-          </DropdownMenu>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    );
-  }
+  const { isMobile, setOpenMobile } = useSidebar();
 
-  return <HouseholdSwitcher households={data} />;
-}
-
-export function HouseholdSwitcher({ households }: Props) {
-  const { isMobile } = useSidebar();
-  const router = useRouter();
-
-  const householdId = useHousehold.use.householdId();
-  const setHouseholdId = useHousehold.use.setHouseholdId();
+  const { data: householdId } = useSuspenseQuery(householdIdQueryOptions());
+  const householdMutation = useMutation(useHouseholdMutationOptions());
 
   const selectedHousehold = React.useMemo(
-    () =>
-      households.find((h) => h.household.publicId === householdId) ||
-      households[0],
+    () => households.find((h) => h.household.publicId === householdId),
     [households, householdId],
   );
 
-  React.useEffect(() => {
-    setHouseholdId(selectedHousehold.household.publicId);
-  }, [selectedHousehold, setHouseholdId]);
-
   useDidUpdateEffect(() => {
+    if (!selectedHousehold) return;
     toast.info(`Foyer sélectionné : ${selectedHousehold.household.name}`);
   }, [selectedHousehold]);
 
   const onSelectionChange = async (household: (typeof households)[0]) => {
-    await setHouseholdId(household.household.publicId);
-    router.invalidate();
+    await householdMutation.mutateAsync(household.household.publicId);
   };
 
   return (
@@ -114,17 +76,23 @@ export function HouseholdSwitcher({ households }: Props) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex justify-center items-center bg-sidebar-primary rounded-lg size-8 aspect-square text-sidebar-primary-foreground">
-                <MapPinHouseIcon className="size-4" />
-              </div>
-              <div className="flex-1 grid text-sm text-left leading-tight">
-                <span className="font-medium truncate">
-                  {selectedHousehold.household.name}
-                </span>
-                <span className="text-xs truncate">
-                  {selectedHousehold.role}
-                </span>
-              </div>
+              {selectedHousehold ? (
+                <>
+                  <div className="flex justify-center items-center bg-sidebar-primary rounded-lg size-8 aspect-square text-sidebar-primary-foreground">
+                    <MapPinHouseIcon className="size-4" />
+                  </div>
+                  <div className="flex-1 grid text-sm text-left leading-tight">
+                    <span className="font-medium truncate">
+                      {selectedHousehold.household.name}
+                    </span>
+                    <span className="text-xs truncate">
+                      {selectedHousehold.role}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <AddHouseholdIcon />
+              )}
               <ChevronsUpDownIcon className="ml-auto" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -152,27 +120,11 @@ export function HouseholdSwitcher({ households }: Props) {
                   <MapPinHouseIcon className="size-3.5 shrink-0" />
                 </div>
                 {value.household.name}
-                <Button
-                  variant="ghost"
-                  asChild
-                  className="ml-auto p-0"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Close the dropdown menu
-                  }}
-                >
-                  <Link
-                    to="/household/$id"
-                    params={{ id: value.household.publicId }}
-                  >
-                    <EditIcon className="size-3.5 shrink-0" />
-                  </Link>
-                </Button>
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="gap-2 p-2" asChild>
-              <Link to="/household/new">
+              <Link to="/household/new" onClick={() => setOpenMobile(false)}>
                 <div className="flex justify-center items-center bg-transparent border rounded-md size-6">
                   <PlusIcon className="size-4" />
                 </div>

@@ -1,6 +1,7 @@
+import { useSuspenseQuery } from '@tanstack/react-query';
 import type { PropsWithChildren } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { Route } from '@/routes/_authed';
+import { sidebarStateQueryOptions } from '@/lib/server-queries';
 import Breadcrumbs from './layout/breadcrumbs';
 import { AppSidebar } from './layout/sidebar';
 import { ThemeToggle } from './layout/theme-toggle';
@@ -8,7 +9,7 @@ import UserBadge from './layout/user-badge';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar';
 
 export function Layout({ children }: PropsWithChildren) {
-  const { sidebar } = Route.useLoaderData();
+  const { data: sidebar } = useSuspenseQuery(sidebarStateQueryOptions());
 
   return (
     <SidebarProvider defaultOpen={sidebar}>

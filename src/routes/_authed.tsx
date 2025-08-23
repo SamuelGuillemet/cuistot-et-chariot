@@ -2,41 +2,64 @@ import { convexQuery } from '@convex-dev/react-query';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { Layout } from '@/components/layout';
-import { getHouseholdIdServerFn } from '@/server/misc';
-import { getSideBarStateServerFn } from '@/server/sidebar';
+import {
+  householdIdQueryOptions,
+  setHouseholdIdServerFn,
+  sidebarStateQueryOptions,
+} from '@/lib/server-queries';
 
 export const Route = createFileRoute('/_authed')({
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: async ({ context, location }) => {
     if (!context.userId) {
       throw redirect({ to: '/login', search: { redirect: location.pathname } });
     }
-  },
-  loader: async (opts) => {
-    const householdId = await getHouseholdIdServerFn();
 
-    await Promise.all([
-      opts.context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.users.viewer, {}),
-      ),
-      opts.context.convexQueryClient.queryClient.ensureQueryData(
+    // Setup householdId
+    const [householdId, ownHouseholds] = await Promise.all([
+      context.queryClient.ensureQueryData(householdIdQueryOptions()),
+      context.convexQueryClient.queryClient.ensureQueryData(
         convexQuery(api.households.queries.getOwnHouseholds, {}),
       ),
-      householdId &&
-        opts.context.convexQueryClient.queryClient.ensureQueryData(
+    ]);
+
+    const ownHousehold = ownHouseholds.find(
+      (h) => h.household.publicId === householdId,
+    );
+
+    if (!ownHousehold && householdId !== null) {
+      context.queryClient.setQueryData(
+        householdIdQueryOptions().queryKey,
+        null,
+      );
+      await setHouseholdIdServerFn({ data: null });
+    }
+    return {
+      householdId: ownHousehold ? householdId : null,
+    };
+  },
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(householdIdQueryOptions()),
+      context.queryClient.ensureQueryData(sidebarStateQueryOptions()),
+      context.convexQueryClient.queryClient.ensureQueryData(
+        convexQuery(api.households.queries.getOwnHouseholds, {}),
+      ),
+      context.convexQueryClient.queryClient.ensureQueryData(
+        convexQuery(api.users.viewer, {}),
+      ),
+      context.householdId &&
+        context.convexQueryClient.queryClient.ensureQueryData(
           convexQuery(api.households_members.queries.getCurrentUserMember, {
-            publicId: householdId,
+            publicId: context.householdId,
           }),
         ),
     ]);
+
     return {
       breadcrumbs: 'Dashboard',
       pathname: '/dashboard',
-      sidebar: await getSideBarStateServerFn(),
-      householdId: householdId,
     };
   },
-  gcTime: 1000 * 60 * 5, // 5 minutes
-  staleTime: 1000 * 60 * 1, // 1 minute
   component: () => (
     <Layout>
       <Outlet />

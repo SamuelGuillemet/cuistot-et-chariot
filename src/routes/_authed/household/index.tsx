@@ -1,9 +1,8 @@
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { toast } from 'sonner';
-import z from 'zod';
 import { HouseholdDeleteButton } from '@/components/households/household-delete-button';
 import {
   HouseholdForm,
@@ -12,53 +11,51 @@ import {
 import { HouseholdMembersCard } from '@/components/households/household-members-card';
 import { useCurrentMember } from '@/hooks/use-current-member';
 
-const householdId = z.object({
-  id: z.guid(),
-});
-
-export const Route = createFileRoute('/_authed/household/$id')({
+export const Route = createFileRoute('/_authed/household/')({
   component: RouteComponent,
-  params: {
-    parse: householdId.parse,
-  },
-  loader: async (opts) => {
-    try {
-      await Promise.all([
-        opts.context.convexQueryClient.queryClient.ensureQueryData(
-          convexQuery(api.households.queries.getHousehold, {
-            publicId: opts.params.id,
-          }),
-        ),
-        opts.context.convexQueryClient.queryClient.ensureQueryData(
-          convexQuery(api.households_members.queries.getHouseholdMembers, {
-            publicId: opts.params.id,
-          }),
-        ),
-        opts.context.convexQueryClient.queryClient.ensureQueryData(
-          convexQuery(api.households_members.queries.getCurrentUserMember, {
-            publicId: opts.params.id,
-          }),
-        ),
-      ]);
-    } catch (_) {
-      throw redirect({
-        to: '/dashboard',
-      });
+  beforeLoad: async ({ context }) => {
+    const householdId = context.householdId;
+    if (!householdId) {
+      throw redirect({ to: '/dashboard' });
     }
+
+    return { householdId };
+  },
+  loader: async ({ context }) => {
+    const householdId = context.householdId;
+    await Promise.all([
+      context.convexQueryClient.queryClient.ensureQueryData(
+        convexQuery(api.households.queries.getHousehold, {
+          publicId: householdId,
+        }),
+      ),
+      context.convexQueryClient.queryClient.ensureQueryData(
+        convexQuery(api.households_members.queries.getHouseholdMembers, {
+          publicId: householdId,
+        }),
+      ),
+      context.convexQueryClient.queryClient.ensureQueryData(
+        convexQuery(api.households_members.queries.getCurrentUserMember, {
+          publicId: householdId,
+        }),
+      ),
+    ]);
 
     return {
       breadcrumbs: 'Modifier un foyer',
+      id: householdId,
     };
   },
 });
 
 function RouteComponent() {
-  const { id } = Route.useParams();
+  const { id } = Route.useLoaderData();
+  const router = useRouter();
   const { data } = useSuspenseQuery(
     convexQuery(api.households.queries.getHousehold, { publicId: id }),
   );
 
-  const { currentMember } = useCurrentMember(id);
+  const { currentMember } = useCurrentMember();
 
   const mutationFn = useConvexMutation(
     api.households.mutations.updateHousehold,
@@ -86,7 +83,7 @@ function RouteComponent() {
       <div className="flex flex-col gap-6 sm:gap-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full max-w-4xl">
         <div className="flex justify-between items-center gap-4">
           <h1 className="font-semibold text-2xl tracking-tight">
-            Modifier le foyer
+            Modifier mon foyer
           </h1>
           <HouseholdDeleteButton
             householdId={id}

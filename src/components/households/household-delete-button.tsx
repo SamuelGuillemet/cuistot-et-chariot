@@ -34,7 +34,7 @@ export function HouseholdDeleteButton({
       console.error('Error deleting household:', error);
       toast.error('Impossible de supprimer le foyer');
     },
-    onSuccess: async () => {
+    onSuccess: () => {
       toast.success('Foyer supprimé avec succès');
       router.navigate({
         to: '/dashboard',
@@ -42,7 +42,7 @@ export function HouseholdDeleteButton({
     },
   });
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     mutate({ publicId: householdId });
   };
 

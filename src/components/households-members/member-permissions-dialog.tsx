@@ -30,7 +30,7 @@ export function MemberPermissionsDialog({
   isOpen,
   onOpenChange,
 }: MemberPermissionsDialogProps) {
-  const { currentMember } = useCurrentMember(householdPublicId);
+  const { currentMember } = useCurrentMember();
 
   const canEditHouseholdId = useId();
 

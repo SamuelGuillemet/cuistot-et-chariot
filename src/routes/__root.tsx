@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 import type { ConvexQueryClient } from '@convex-dev/react-query';
-import type { QueryClient } from '@tanstack/react-query';
+import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {
   createRootRouteWithContext,
@@ -15,16 +15,16 @@ import { Page404 } from '@/components/404';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { setupSSR } from '@/server/auth';
-import { getThemeServerFn } from '@/server/theme';
+import {
+  authSessionQueryOptions,
+  themeQueryOptions,
+} from '@/lib/server-queries';
 import mainCss from '@/styles/main.css?url';
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
   breadcrumbs?: string;
-  userId?: string;
-  token?: string;
 }>()({
   head: () => ({
     meta: [
@@ -50,13 +50,22 @@ export const Route = createRootRouteWithContext<{
       </RootDocument>
     );
   },
-  beforeLoad: async (ctx) => setupSSR(ctx.context),
-  loader: async () => ({
-    breadcrumbs: null,
-    theme: await getThemeServerFn(),
-  }),
-  gcTime: 1000 * 60 * 5, // 5 minutes
-  staleTime: 1000 * 60 * 1, // 1 minute
+  beforeLoad: async (opts) => {
+    const { token, userId } = await opts.context.queryClient.ensureQueryData(
+      authSessionQueryOptions(),
+    );
+    if (token) {
+      opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+
+    return { userId };
+  },
+  loader: async (opts) => {
+    await opts.context.queryClient.ensureQueryData(themeQueryOptions());
+    return {
+      breadcrumbs: null,
+    };
+  },
 });
 
 function RootComponent() {
@@ -68,15 +77,15 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: PropsWithChildren) {
-  const data = Route.useLoaderData();
+  const { data: theme } = useSuspenseQuery(themeQueryOptions());
 
   return (
-    <html lang="fr" className={data.theme} suppressHydrationWarning>
+    <html lang="fr" className={theme} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body className="font-regular antialiased tracking-wide">
-        <ThemeProvider theme={data.theme}>
+        <ThemeProvider theme={theme}>
           {children}
           <Toaster richColors />
         </ThemeProvider>

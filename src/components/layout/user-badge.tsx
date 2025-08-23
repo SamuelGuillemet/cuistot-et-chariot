@@ -1,5 +1,5 @@
 import { convexQuery } from '@convex-dev/react-query';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { useMemo } from 'react';
@@ -14,9 +14,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { authClient } from '@/lib/auth-client';
+import { authSessionQueryOptions } from '@/lib/server-queries';
 
 export default function UserBadge() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data } = useSuspenseQuery(convexQuery(api.users.viewer, {}));
 
   const nameInitials = useMemo(() => {
@@ -28,6 +30,10 @@ export default function UserBadge() {
     authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
+          queryClient.setQueryData(authSessionQueryOptions().queryKey, {
+            token: undefined,
+            userId: undefined,
+          });
           router.navigate({ to: '/login' });
         },
       },

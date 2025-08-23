@@ -4,6 +4,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { toast } from 'sonner';
 import { HouseholdForm } from '@/components/households/household-form';
+import { useHouseholdMutationOptions } from '@/lib/server-queries';
 
 export const Route = createFileRoute('/_authed/household/new')({
   component: RouteComponent,
@@ -16,6 +17,9 @@ export const Route = createFileRoute('/_authed/household/new')({
 
 function RouteComponent() {
   const router = useRouter();
+
+  const householdMutation = useMutation(useHouseholdMutationOptions());
+
   const mutationFn = useConvexMutation(
     api.households.mutations.createHousehold,
   );
@@ -25,11 +29,11 @@ function RouteComponent() {
       console.error('Error creating household:', error);
       toast.error('Impossible de créer le foyer');
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       toast.success('Foyer créé avec succès');
+      await householdMutation.mutateAsync(data.publicId);
       router.navigate({
-        to: '/household/$id',
-        params: { id: data.publicId },
+        to: '/household',
       });
     },
   });
@@ -40,7 +44,11 @@ function RouteComponent() {
         <h1 className="font-semibold text-2xl tracking-tight">
           Créer un foyer
         </h1>
-        <HouseholdForm onSubmit={mutate} isPending={isPending} />
+        <HouseholdForm
+          onSubmit={mutate}
+          isPending={isPending}
+          readOnly={false}
+        />
       </div>
     </div>
   );

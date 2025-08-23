@@ -1,9 +1,9 @@
 import { convexQuery } from '@convex-dev/react-query';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { api } from 'convex/_generated/api';
 import type { Id } from 'convex/_generated/dataModel';
 import type { FunctionReturnType } from 'convex/server';
-import { useHousehold } from '@/stores/household';
+import { householdIdQueryOptions } from '@/lib/server-queries';
 
 type CurrentMember = NonNullable<
   FunctionReturnType<typeof api.households_members.queries.getCurrentUserMember>
@@ -19,20 +19,22 @@ const defaultCurrentMember: CurrentMember = {
   canEditHousehold: false,
 };
 
-export function useCurrentMember(householdPublicId?: string): {
+export function useCurrentMember(): {
   currentMember: CurrentMember;
+  householdPublicId: string | null;
 } {
-  const householdId = useHousehold.use.householdId();
-
-  const usePublicId = householdPublicId ?? householdId;
+  const { data: householdId } = useSuspenseQuery(householdIdQueryOptions());
 
   const { data: currentMember } = useQuery({
     ...convexQuery(
       api.households_members.queries.getCurrentUserMember,
-      usePublicId ? { publicId: usePublicId } : 'skip',
+      householdId ? { publicId: householdId } : 'skip',
     ),
-    enabled: !!usePublicId,
+    enabled: !!householdId,
   });
 
-  return { currentMember: currentMember || defaultCurrentMember };
+  return {
+    currentMember: currentMember || defaultCurrentMember,
+    householdPublicId: householdId,
+  };
 }

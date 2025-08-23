@@ -15,8 +15,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedHouseholdIndexRouteImport } from './routes/_authed/household/index'
 import { Route as AuthedHouseholdNewRouteImport } from './routes/_authed/household/new'
-import { Route as AuthedHouseholdIdRouteImport } from './routes/_authed/household/$id'
 import { Route as AuthedHouseholdJoinIdRouteImport } from './routes/_authed/household/join.$id'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth/$'
 
@@ -41,14 +41,14 @@ const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedHouseholdIndexRoute = AuthedHouseholdIndexRouteImport.update({
+  id: '/household/',
+  path: '/household/',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedHouseholdNewRoute = AuthedHouseholdNewRouteImport.update({
   id: '/household/new',
   path: '/household/new',
-  getParentRoute: () => AuthedRoute,
-} as any)
-const AuthedHouseholdIdRoute = AuthedHouseholdIdRouteImport.update({
-  id: '/household/$id',
-  path: '/household/$id',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedHouseholdJoinIdRoute = AuthedHouseholdJoinIdRouteImport.update({
@@ -66,16 +66,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthedDashboardRoute
-  '/household/$id': typeof AuthedHouseholdIdRoute
   '/household/new': typeof AuthedHouseholdNewRoute
+  '/household': typeof AuthedHouseholdIndexRoute
   '/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthedDashboardRoute
-  '/household/$id': typeof AuthedHouseholdIdRoute
   '/household/new': typeof AuthedHouseholdNewRoute
+  '/household': typeof AuthedHouseholdIndexRoute
   '/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRoutesById {
@@ -84,8 +84,8 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
-  '/_authed/household/$id': typeof AuthedHouseholdIdRoute
   '/_authed/household/new': typeof AuthedHouseholdNewRoute
+  '/_authed/household/': typeof AuthedHouseholdIndexRoute
   '/_authed/household/join/$id': typeof AuthedHouseholdJoinIdRoute
 }
 export interface FileRouteTypes {
@@ -94,16 +94,16 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
-    | '/household/$id'
     | '/household/new'
+    | '/household'
     | '/household/join/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/dashboard'
-    | '/household/$id'
     | '/household/new'
+    | '/household'
     | '/household/join/$id'
   id:
     | '__root__'
@@ -111,8 +111,8 @@ export interface FileRouteTypes {
     | '/_authed'
     | '/login'
     | '/_authed/dashboard'
-    | '/_authed/household/$id'
     | '/_authed/household/new'
+    | '/_authed/household/'
     | '/_authed/household/join/$id'
   fileRoutesById: FileRoutesById
 }
@@ -173,18 +173,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedDashboardRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/household/': {
+      id: '/_authed/household/'
+      path: '/household'
+      fullPath: '/household'
+      preLoaderRoute: typeof AuthedHouseholdIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/household/new': {
       id: '/_authed/household/new'
       path: '/household/new'
       fullPath: '/household/new'
       preLoaderRoute: typeof AuthedHouseholdNewRouteImport
-      parentRoute: typeof AuthedRoute
-    }
-    '/_authed/household/$id': {
-      id: '/_authed/household/$id'
-      path: '/household/$id'
-      fullPath: '/household/$id'
-      preLoaderRoute: typeof AuthedHouseholdIdRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/household/join/$id': {
@@ -210,15 +210,15 @@ declare module '@tanstack/react-start/server' {
 
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
-  AuthedHouseholdIdRoute: typeof AuthedHouseholdIdRoute
   AuthedHouseholdNewRoute: typeof AuthedHouseholdNewRoute
+  AuthedHouseholdIndexRoute: typeof AuthedHouseholdIndexRoute
   AuthedHouseholdJoinIdRoute: typeof AuthedHouseholdJoinIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
-  AuthedHouseholdIdRoute: AuthedHouseholdIdRoute,
   AuthedHouseholdNewRoute: AuthedHouseholdNewRoute,
+  AuthedHouseholdIndexRoute: AuthedHouseholdIndexRoute,
   AuthedHouseholdJoinIdRoute: AuthedHouseholdJoinIdRoute,
 }
 

@@ -1,8 +1,8 @@
-import { useRouter } from '@tanstack/react-router';
+import { useMutation } from '@tanstack/react-query';
 import { createContext, type PropsWithChildren, use } from 'react';
-import { setThemeServerFn } from '@/server/theme';
+import { useThemeMutationOptions } from '@/lib/server-queries';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'system';
 
 type ThemeContextVal = { theme: Theme; setTheme: (val: Theme) => void };
 type Props = PropsWithChildren<{ theme: Theme }>;
@@ -10,11 +10,10 @@ type Props = PropsWithChildren<{ theme: Theme }>;
 const ThemeContext = createContext<ThemeContextVal | null>(null);
 
 export function ThemeProvider({ children, theme }: Props) {
-  const router = useRouter();
+  const mutation = useMutation(useThemeMutationOptions());
 
   function setTheme(val: Theme) {
-    setThemeServerFn({ data: val });
-    router.invalidate();
+    mutation.mutate(val);
   }
 
   return <ThemeContext value={{ theme, setTheme }}>{children}</ThemeContext>;

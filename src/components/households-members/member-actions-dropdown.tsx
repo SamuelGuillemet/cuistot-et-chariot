@@ -31,7 +31,7 @@ export function MemberActionsDropdown({
   member,
   householdPublicId,
 }: MemberActionsProps) {
-  const { currentMember } = useCurrentMember(householdPublicId);
+  const { currentMember } = useCurrentMember();
 
   const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
 

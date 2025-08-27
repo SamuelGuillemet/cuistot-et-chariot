@@ -1,4 +1,5 @@
-import { ConvexError, v } from 'convex/values';
+import { validateUserAndHousehold } from 'convex/helpers';
+import { v } from 'convex/values';
 import {
   customMutation,
   customQuery,
@@ -10,22 +11,6 @@ import {
 } from 'convex-helpers/server/rowLevelSecurity';
 import type { DataModel, Id } from '../_generated/dataModel';
 import { mutation, type QueryCtx, query } from '../_generated/server';
-import { getAuthUserId } from '../helpers';
-
-async function preCheck(ctx: QueryCtx, args: { publicId: string }) {
-  const userId = await getAuthUserId(ctx);
-  if (!userId) {
-    throw new ConvexError('Unauthorized');
-  }
-  const household = await ctx.db
-    .query('households')
-    .withIndex('by_publicId', (q) => q.eq('publicId', args.publicId))
-    .first();
-  if (!household) {
-    throw new ConvexError('Household not found');
-  }
-  return { userId, household };
-}
 
 async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
   return {
@@ -65,7 +50,7 @@ export const queryWithRLS = customQuery(query, {
     publicId: v.string(),
   },
   input: async (ctx, args) => {
-    const { userId, household } = await preCheck(ctx, args);
+    const { userId, household } = await validateUserAndHousehold(ctx, args);
     return {
       ctx: {
         userId,
@@ -82,7 +67,7 @@ export const mutationWithRLS = customMutation(mutation, {
     publicId: v.string(),
   },
   input: async (ctx, args) => {
-    const { userId, household } = await preCheck(ctx, args);
+    const { userId, household } = await validateUserAndHousehold(ctx, args);
     return {
       ctx: {
         userId,

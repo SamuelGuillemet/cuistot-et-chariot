@@ -12,10 +12,6 @@ export type HouseholdMember = FunctionReturnType<
   typeof api.households_members.queries.getHouseholdMembers
 >[number];
 
-export type CurrentMember = FunctionReturnType<
-  typeof api.households_members.queries.getCurrentUserMember
->;
-
 export type MemberActionsProps = {
   member: HouseholdMember;
   householdPublicId: string;

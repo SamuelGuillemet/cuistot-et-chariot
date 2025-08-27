@@ -1,6 +1,6 @@
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { toast } from 'sonner';
 import { HouseholdDeleteButton } from '@/components/households/household-delete-button';
@@ -43,16 +43,15 @@ export const Route = createFileRoute('/_authed/household/')({
 
     return {
       breadcrumbs: 'Modifier un foyer',
-      id: householdId,
+      householdId,
     };
   },
 });
 
 function RouteComponent() {
-  const { id } = Route.useLoaderData();
-  const router = useRouter();
+  const { householdId } = Route.useLoaderData();
   const { data } = useSuspenseQuery(
-    convexQuery(api.households.queries.getHousehold, { publicId: id }),
+    convexQuery(api.households.queries.getHousehold, { publicId: householdId }),
   );
 
   const { currentMember } = useCurrentMember();
@@ -74,7 +73,7 @@ function RouteComponent() {
   const onSubmit = (submitData: HouseholdFormValues) => {
     mutate({
       ...submitData,
-      publicId: id,
+      publicId: householdId,
     });
   };
 
@@ -86,7 +85,7 @@ function RouteComponent() {
             Modifier mon foyer
           </h1>
           <HouseholdDeleteButton
-            householdId={id}
+            householdId={householdId}
             hidden={!currentMember.canEditHousehold}
           />
         </div>
@@ -97,7 +96,7 @@ function RouteComponent() {
             values={data}
             readOnly={!currentMember.canEditHousehold}
           />
-          <HouseholdMembersCard householdPublicId={id} />
+          <HouseholdMembersCard householdPublicId={householdId} />
         </div>
       </div>
     </div>

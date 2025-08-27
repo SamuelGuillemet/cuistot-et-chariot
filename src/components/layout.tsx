@@ -15,7 +15,7 @@ export function Layout({ children }: PropsWithChildren) {
     <SidebarProvider defaultOpen={sidebar}>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex items-center gap-2 p-4 h-16 shrink-0">
+        <header className="flex items-center gap-2 p-4 pb-0 shrink-0">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -31,7 +31,7 @@ export function Layout({ children }: PropsWithChildren) {
             </div>
           </div>
         </header>
-        <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 sm:py-0 grow">
+        <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 grow">
           {children}
         </div>
       </SidebarInset>

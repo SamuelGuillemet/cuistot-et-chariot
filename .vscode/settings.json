@@ -13,7 +13,7 @@
     "source.fixAll.biome": "always"
   },
   "files.associations": {
-    "**/styles/*.css": "tailwindcss"
+    "**/styles/main.css": "tailwindcss"
   },
   "files.exclude": {
     "**/.git": true,

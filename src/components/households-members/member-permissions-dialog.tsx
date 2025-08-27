@@ -1,7 +1,7 @@
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { api } from 'convex/_generated/api';
-import { useEffect, useId, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +15,12 @@ import {
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useCurrentMember } from '@/hooks/use-current-member';
+import {
+  getChangedPermissions,
+  hasPermissionChanges,
+  initializePermissionsFromMember,
+  PERMISSIONS_CONFIG,
+} from './permissions-config';
 import type { HouseholdMember } from './types';
 
 type MemberPermissionsDialogProps = {
@@ -32,11 +38,12 @@ export function MemberPermissionsDialog({
 }: MemberPermissionsDialogProps) {
   const { currentMember } = useCurrentMember();
 
-  const canEditHouseholdId = useId();
+  // Initialize permissions state from member data
+  const initializePermissions = useCallback(() => {
+    return initializePermissionsFromMember(member);
+  }, [member]);
 
-  const [permissions, setPermissions] = useState({
-    canEditHousehold: member.canEditHousehold,
-  });
+  const [permissions, setPermissions] = useState(initializePermissions);
 
   const updatePermissionsMutation = useConvexMutation(
     api.households_members.mutations.updateMemberPermissions,
@@ -57,30 +64,37 @@ export function MemberPermissionsDialog({
   // Reset permissions when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setPermissions({
-        canEditHousehold: member.canEditHousehold,
-      });
+      setPermissions(initializePermissions());
     }
-  }, [isOpen, member.canEditHousehold]);
+  }, [isOpen, initializePermissions]);
 
   // Only admins can manage permissions
   if (currentMember.role !== 'admin') return null;
 
-  const hasChanges = permissions.canEditHousehold !== member.canEditHousehold;
+  // Check if any permissions have changed
+  const hasChanges = hasPermissionChanges(member, permissions);
 
   const handleSave = () => {
+    // Get only the changed permissions
+    const updates = getChangedPermissions(member, permissions);
+
     updatePermissions({
       publicId: householdPublicId,
       memberId: member._id,
-      canEditHousehold: permissions.canEditHousehold,
+      ...updates,
     });
   };
 
   const handleCancel = () => {
-    setPermissions({
-      canEditHousehold: member.canEditHousehold,
-    });
+    setPermissions(initializePermissions());
     onOpenChange(false);
+  };
+
+  const handlePermissionChange = (permissionKey: string, checked: boolean) => {
+    setPermissions((prev) => ({
+      ...prev,
+      [permissionKey]: checked,
+    }));
   };
 
   return (
@@ -94,27 +108,29 @@ export function MemberPermissionsDialog({
         </DialogHeader>
 
         <div className="gap-4 grid py-4">
-          <div className="flex justify-between items-center">
-            <div className="space-y-0.5">
-              <Label htmlFor={canEditHouseholdId} className="text-base">
-                Modifier le foyer
-              </Label>
-              <p className="text-muted-foreground text-sm">
-                Permet de modifier les informations du foyer
-              </p>
+          {PERMISSIONS_CONFIG.map((permission) => (
+            <div
+              key={permission.key}
+              className="flex justify-between items-center"
+            >
+              <div className="space-y-0.5">
+                <Label htmlFor={permission.key} className="text-base">
+                  {permission.label}
+                </Label>
+                <p className="text-muted-foreground text-sm">
+                  {permission.description}
+                </p>
+              </div>
+              <Switch
+                id={permission.key}
+                checked={permissions[permission.key] ?? false}
+                onCheckedChange={(checked) =>
+                  handlePermissionChange(permission.key, checked)
+                }
+                disabled={isPending}
+              />
             </div>
-            <Switch
-              id={canEditHouseholdId}
-              checked={permissions.canEditHousehold}
-              onCheckedChange={(checked) =>
-                setPermissions((prev) => ({
-                  ...prev,
-                  canEditHousehold: checked,
-                }))
-              }
-              disabled={isPending}
-            />
-          </div>
+          ))}
         </div>
 
         <DialogFooter>

@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ChevronRightIcon, HomeIcon, WarehouseIcon } from 'lucide-react';
 import { useMemo } from 'react';
@@ -21,7 +20,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import { householdIdQueryOptions } from '@/lib/server-queries';
+import { useCurrentMember } from '@/hooks/use-current-member';
 import type { FileRoutesByTo } from '@/routeTree.gen';
 import { Households } from '../households/household-switcher';
 
@@ -39,7 +38,8 @@ type MenuItem = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: householdId } = useSuspenseQuery(householdIdQueryOptions());
+  const { currentMember } = useCurrentMember();
+
   const menuItems: MenuItem[] = useMemo(() => {
     const menu: MenuItem[] = [];
     menu.push({
@@ -48,7 +48,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: <HomeIcon className="w-5 h-5" />,
     });
 
-    if (householdId) {
+    if (currentMember.canEditHousehold) {
       menu.push({
         title: 'Gestion du foyer',
         url: '/household',
@@ -57,7 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
 
     return menu;
-  }, [householdId]);
+  }, [currentMember]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

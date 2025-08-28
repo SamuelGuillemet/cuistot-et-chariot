@@ -1,15 +1,16 @@
 /// <reference types="vite/client" />
 
 import type { ConvexQueryClient } from '@convex-dev/react-query';
+import { TanStackDevtools } from '@tanstack/react-devtools';
 import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import {
   createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
 } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import type { PropsWithChildren } from 'react';
 import { Page404 } from '@/components/404';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
@@ -89,8 +90,18 @@ function RootDocument({ children }: PropsWithChildren) {
           {children}
           <Toaster richColors />
         </ThemeProvider>
-        <TanStackRouterDevtools position="bottom-right" />
-        <ReactQueryDevtools buttonPosition="bottom-left" />
+        <TanStackDevtools
+          plugins={[
+            {
+              name: 'TanStack Query',
+              render: <ReactQueryDevtoolsPanel />,
+            },
+            {
+              name: 'TanStack Router',
+              render: <TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />
         <Scripts />
       </body>
     </html>

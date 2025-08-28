@@ -17,6 +17,7 @@ import type * as households_members_mutations from "../households_members/mutati
 import type * as households_members_queries from "../households_members/queries.js";
 import type * as households_members_rls from "../households_members/rls.js";
 import type * as http from "../http.js";
+import type * as migrations from "../migrations.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
 
@@ -44,6 +45,10 @@ declare const fullApi: ApiFromModules<{
   "households_members/queries": typeof households_members_queries;
   "households_members/rls": typeof households_members_rls;
   http: typeof http;
+  migrations: typeof migrations;
+  "products/mutations": typeof products_mutations;
+  "products/queries": typeof products_queries;
+  "products/rls": typeof products_rls;
   types: typeof types;
   users: typeof users;
 }>;
@@ -231,6 +236,23 @@ export declare const components: {
             | {
                 data: {
                   createdAt: number;
+                  name: string;
+                  organizationId: string;
+                  updatedAt?: null | number;
+                };
+                model: "team";
+              }
+            | {
+                data: {
+                  createdAt?: null | number;
+                  teamId: string;
+                  userId: string;
+                };
+                model: "teamMember";
+              }
+            | {
+                data: {
+                  createdAt: number;
                   logo?: null | string;
                   metadata?: null | string;
                   name: string;
@@ -258,23 +280,6 @@ export declare const components: {
                   teamId?: null | string;
                 };
                 model: "invitation";
-              }
-            | {
-                data: {
-                  createdAt: number;
-                  name: string;
-                  organizationId: string;
-                  updatedAt?: null | number;
-                };
-                model: "team";
-              }
-            | {
-                data: {
-                  createdAt?: null | number;
-                  teamId: string;
-                  userId: string;
-                };
-                model: "teamMember";
               }
             | {
                 data: {
@@ -1000,6 +1005,93 @@ export declare const components: {
               }
             | {
                 limit?: number;
+                model: "team";
+                offset?: number;
+                paginationOpts: {
+                  cursor: string | null;
+                  endCursor?: string | null;
+                  id?: number;
+                  maximumBytesRead?: number;
+                  maximumRowsRead?: number;
+                  numItems: number;
+                };
+                select?: Array<string>;
+                sortBy?: { direction: "asc" | "desc"; field: string };
+                unique?: boolean;
+                update: {
+                  createdAt?: number;
+                  name?: string;
+                  organizationId?: string;
+                  updatedAt?: null | number;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field: string;
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                limit?: number;
+                model: "teamMember";
+                offset?: number;
+                paginationOpts: {
+                  cursor: string | null;
+                  endCursor?: string | null;
+                  id?: number;
+                  maximumBytesRead?: number;
+                  maximumRowsRead?: number;
+                  numItems: number;
+                };
+                select?: Array<string>;
+                sortBy?: { direction: "asc" | "desc"; field: string };
+                unique?: boolean;
+                update: {
+                  createdAt?: null | number;
+                  teamId?: string;
+                  userId?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field: string;
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                limit?: number;
                 model: "organization";
                 offset?: number;
                 paginationOpts: {
@@ -1110,93 +1202,6 @@ export declare const components: {
                   role?: null | string;
                   status?: string;
                   teamId?: null | string;
-                };
-                where?: Array<{
-                  connector?: "AND" | "OR";
-                  field: string;
-                  operator?:
-                    | "lt"
-                    | "lte"
-                    | "gt"
-                    | "gte"
-                    | "eq"
-                    | "in"
-                    | "ne"
-                    | "contains"
-                    | "starts_with"
-                    | "ends_with";
-                  value:
-                    | string
-                    | number
-                    | boolean
-                    | Array<string>
-                    | Array<number>
-                    | null;
-                }>;
-              }
-            | {
-                limit?: number;
-                model: "team";
-                offset?: number;
-                paginationOpts: {
-                  cursor: string | null;
-                  endCursor?: string | null;
-                  id?: number;
-                  maximumBytesRead?: number;
-                  maximumRowsRead?: number;
-                  numItems: number;
-                };
-                select?: Array<string>;
-                sortBy?: { direction: "asc" | "desc"; field: string };
-                unique?: boolean;
-                update: {
-                  createdAt?: number;
-                  name?: string;
-                  organizationId?: string;
-                  updatedAt?: null | number;
-                };
-                where?: Array<{
-                  connector?: "AND" | "OR";
-                  field: string;
-                  operator?:
-                    | "lt"
-                    | "lte"
-                    | "gt"
-                    | "gte"
-                    | "eq"
-                    | "in"
-                    | "ne"
-                    | "contains"
-                    | "starts_with"
-                    | "ends_with";
-                  value:
-                    | string
-                    | number
-                    | boolean
-                    | Array<string>
-                    | Array<number>
-                    | null;
-                }>;
-              }
-            | {
-                limit?: number;
-                model: "teamMember";
-                offset?: number;
-                paginationOpts: {
-                  cursor: string | null;
-                  endCursor?: string | null;
-                  id?: number;
-                  maximumBytesRead?: number;
-                  maximumRowsRead?: number;
-                  numItems: number;
-                };
-                select?: Array<string>;
-                sortBy?: { direction: "asc" | "desc"; field: string };
-                unique?: boolean;
-                update: {
-                  createdAt?: null | number;
-                  teamId?: string;
-                  userId?: string;
                 };
                 where?: Array<{
                   connector?: "AND" | "OR";
@@ -1832,6 +1837,67 @@ export declare const components: {
                 }>;
               }
             | {
+                model: "team";
+                update: {
+                  createdAt?: number;
+                  name?: string;
+                  organizationId?: string;
+                  updatedAt?: null | number;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field: string;
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
+                model: "teamMember";
+                update: {
+                  createdAt?: null | number;
+                  teamId?: string;
+                  userId?: string;
+                };
+                where?: Array<{
+                  connector?: "AND" | "OR";
+                  field: string;
+                  operator?:
+                    | "lt"
+                    | "lte"
+                    | "gt"
+                    | "gte"
+                    | "eq"
+                    | "in"
+                    | "ne"
+                    | "contains"
+                    | "starts_with"
+                    | "ends_with";
+                  value:
+                    | string
+                    | number
+                    | boolean
+                    | Array<string>
+                    | Array<number>
+                    | null;
+                }>;
+              }
+            | {
                 model: "organization";
                 update: {
                   createdAt?: number;
@@ -1904,67 +1970,6 @@ export declare const components: {
                   role?: null | string;
                   status?: string;
                   teamId?: null | string;
-                };
-                where?: Array<{
-                  connector?: "AND" | "OR";
-                  field: string;
-                  operator?:
-                    | "lt"
-                    | "lte"
-                    | "gt"
-                    | "gte"
-                    | "eq"
-                    | "in"
-                    | "ne"
-                    | "contains"
-                    | "starts_with"
-                    | "ends_with";
-                  value:
-                    | string
-                    | number
-                    | boolean
-                    | Array<string>
-                    | Array<number>
-                    | null;
-                }>;
-              }
-            | {
-                model: "team";
-                update: {
-                  createdAt?: number;
-                  name?: string;
-                  organizationId?: string;
-                  updatedAt?: null | number;
-                };
-                where?: Array<{
-                  connector?: "AND" | "OR";
-                  field: string;
-                  operator?:
-                    | "lt"
-                    | "lte"
-                    | "gt"
-                    | "gte"
-                    | "eq"
-                    | "in"
-                    | "ne"
-                    | "contains"
-                    | "starts_with"
-                    | "ends_with";
-                  value:
-                    | string
-                    | number
-                    | boolean
-                    | Array<string>
-                    | Array<number>
-                    | null;
-                }>;
-              }
-            | {
-                model: "teamMember";
-                update: {
-                  createdAt?: null | number;
-                  teamId?: string;
-                  userId?: string;
                 };
                 where?: Array<{
                   connector?: "AND" | "OR";
@@ -2153,6 +2158,91 @@ export declare const components: {
               };
         },
         any
+      >;
+    };
+  };
+  migrations: {
+    lib: {
+      cancel: FunctionReference<
+        "mutation",
+        "internal",
+        { name: string },
+        {
+          batchSize?: number;
+          cursor?: string | null;
+          error?: string;
+          isDone: boolean;
+          latestEnd?: number;
+          latestStart: number;
+          name: string;
+          next?: Array<string>;
+          processed: number;
+          state: "inProgress" | "success" | "failed" | "canceled" | "unknown";
+        }
+      >;
+      cancelAll: FunctionReference<
+        "mutation",
+        "internal",
+        { sinceTs?: number },
+        Array<{
+          batchSize?: number;
+          cursor?: string | null;
+          error?: string;
+          isDone: boolean;
+          latestEnd?: number;
+          latestStart: number;
+          name: string;
+          next?: Array<string>;
+          processed: number;
+          state: "inProgress" | "success" | "failed" | "canceled" | "unknown";
+        }>
+      >;
+      clearAll: FunctionReference<
+        "mutation",
+        "internal",
+        { before?: number },
+        null
+      >;
+      getStatus: FunctionReference<
+        "query",
+        "internal",
+        { limit?: number; names?: Array<string> },
+        Array<{
+          batchSize?: number;
+          cursor?: string | null;
+          error?: string;
+          isDone: boolean;
+          latestEnd?: number;
+          latestStart: number;
+          name: string;
+          next?: Array<string>;
+          processed: number;
+          state: "inProgress" | "success" | "failed" | "canceled" | "unknown";
+        }>
+      >;
+      migrate: FunctionReference<
+        "mutation",
+        "internal",
+        {
+          batchSize?: number;
+          cursor?: string | null;
+          dryRun: boolean;
+          fnHandle: string;
+          name: string;
+          next?: Array<{ fnHandle: string; name: string }>;
+        },
+        {
+          batchSize?: number;
+          cursor?: string | null;
+          error?: string;
+          isDone: boolean;
+          latestEnd?: number;
+          latestStart: number;
+          name: string;
+          next?: Array<string>;
+          processed: number;
+          state: "inProgress" | "success" | "failed" | "canceled" | "unknown";
+        }
       >;
     };
   };

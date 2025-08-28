@@ -96,14 +96,12 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
           <DialogHeader>
             <DialogTitle>Sélectionner une icône</DialogTitle>
           </DialogHeader>
-          <div className="p-1">
-            <FoodIconSelector
-              onIconSelect={handleIconSelect}
-              selectedIcon={selectedIcon}
-              showCategories={showCategories}
-              className="shadow-none border-0 w-full"
-            />
-          </div>
+          <FoodIconSelector
+            onIconSelect={handleIconSelect}
+            selectedIcon={selectedIcon}
+            showCategories={showCategories}
+            className="shadow-none border-0 w-full"
+          />
           <DialogFooter>
             <Button variant="outline" onClick={handleCancel}>
               Annuler

@@ -15,10 +15,11 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "type-check": "tsc --noEmit",
-    "pre-commit": "pre-commit run --all-files"
+    "pre-commit": "pre-commit run --all-files",
+    "migrate": "convex run convex/migrations.ts:runAll"
   },
   "dependencies": {
-    "@convex-dev/better-auth": "^0.7.15",
+    "@convex-dev/migrations": "^0.2.9",
     "@convex-dev/react-query": "0.0.0-alpha.11",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-alert-dialog": "^1.1.15",

@@ -16,6 +16,8 @@ import { fetchSession, getCookieName } from '@/lib/auth-server-utils';
 const THEME_COOKIE_NAME = 'ui-theme';
 const HOUSEHOLD_COOKIE_NAME = 'household-id';
 
+const DEFAULT_COOKIE_OPTIONS = { httpOnly: true, maxAge: 60 * 60 * 24 * 30 };
+
 // Server Functions
 export const getAuthSessionServerFn = createServerFn().handler(async () => {
   const sessionCookieName = await getCookieName();
@@ -37,7 +39,7 @@ const ThemeValidator = z.enum(['light', 'dark', 'system']);
 export const setThemeServerFn = createServerFn({ method: 'POST' })
   .validator((data: unknown) => ThemeValidator.parse(data))
   .handler(async ({ data }) => {
-    setCookie(THEME_COOKIE_NAME, data);
+    setCookie(THEME_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     return data;
   });
 
@@ -50,7 +52,7 @@ const SidebarStateValidator = z.boolean();
 export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
   .validator((data: unknown) => SidebarStateValidator.parse(data))
   .handler(async ({ data }) => {
-    setCookie(SIDEBAR_COOKIE_NAME, String(data));
+    setCookie(SIDEBAR_COOKIE_NAME, String(data), DEFAULT_COOKIE_OPTIONS);
     return data;
   });
 
@@ -73,7 +75,7 @@ export const setHouseholdIdServerFn = createServerFn({ method: 'POST' })
     if (data === null) {
       deleteCookie(HOUSEHOLD_COOKIE_NAME);
     } else {
-      setCookie(HOUSEHOLD_COOKIE_NAME, data, { httpOnly: true });
+      setCookie(HOUSEHOLD_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     }
     return data;
   });

@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { ProductForm, type ProductFormValues } from './product-form';
 
 interface ProductActionsProps {
@@ -67,26 +68,34 @@ export function ProductActions({ product, householdId }: ProductActionsProps) {
   return (
     <>
       <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-8 h-8"
-          onClick={() => setIsEditDialogOpen(true)}
-          title="Modifier"
-        >
-          <PenIcon className="w-4 h-4" />
-          <span className="sr-only">Modifier</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="w-8 h-8 text-destructive hover:text-destructive"
-          onClick={() => setIsDeleteDialogOpen(true)}
-          title="Supprimer"
-        >
-          <TrashIcon className="w-4 h-4" />
-          <span className="sr-only">Supprimer</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-8 h-8"
+              onClick={() => setIsEditDialogOpen(true)}
+            >
+              <PenIcon className="w-4 h-4" />
+              <span className="sr-only">Modifier</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Modifier</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-8 h-8 text-destructive hover:text-destructive"
+              onClick={() => setIsDeleteDialogOpen(true)}
+            >
+              <TrashIcon className="w-4 h-4" />
+              <span className="sr-only">Supprimer</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Supprimer</TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Edit Dialog */}

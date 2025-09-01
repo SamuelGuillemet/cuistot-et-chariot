@@ -2,6 +2,7 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 import { householdsSchema } from './households/schema';
 import { householdMembersSchema } from './households_members/schema';
+import { productsSchema } from './products/schema';
 
 const usersSchema = defineTable({
   name: v.string(),
@@ -13,4 +14,5 @@ export default defineSchema({
   users: usersSchema,
   households: householdsSchema,
   householdMembers: householdMembersSchema,
+  products: productsSchema,
 });

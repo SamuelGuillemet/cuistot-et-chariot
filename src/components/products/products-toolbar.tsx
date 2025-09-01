@@ -1,7 +1,10 @@
-import type { Doc } from 'convex/_generated/dataModel';
+import { useConvexMutation } from '@convex-dev/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { api } from 'convex/_generated/api';
 import { CATEGORY_DISPLAY_NAMES } from 'convex/types';
 import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,20 +24,32 @@ import {
 import { ProductForm, type ProductFormValues } from './product-form';
 
 export interface ProductsToolbarProps {
-  products: Doc<'products'>[];
-  onCreate: (values: ProductFormValues) => void;
-  isCreating: boolean;
+  householdId: string;
   onFilter: (data: { search: string; category: string }) => void;
 }
 
 export function ProductsToolbar({
-  onCreate,
-  isCreating,
   onFilter,
+  householdId,
 }: ProductsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: useConvexMutation(api.products.mutations.createProduct),
+    onSuccess: () => {
+      toast.success('Produit créé avec succès');
+      setIsOpen(false);
+    },
+  });
+
+  const handleCreateProduct = (values: ProductFormValues) => {
+    mutate({
+      publicId: householdId,
+      ...values,
+    });
+  };
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
@@ -106,7 +121,7 @@ export function ProductsToolbar({
           <DialogHeader>
             <DialogTitle>Nouveau produit</DialogTitle>
           </DialogHeader>
-          <ProductForm onSubmit={onCreate} isLoading={isCreating} />
+          <ProductForm onSubmit={handleCreateProduct} isLoading={isPending} />
         </DialogContent>
       </Dialog>
     </div>

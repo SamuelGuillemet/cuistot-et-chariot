@@ -1,11 +1,9 @@
-import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { convexQuery } from '@convex-dev/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { api } from 'convex/_generated/api';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
 import { createProductColumns } from '@/components/products/product-columns';
-import type { ProductFormValues } from '@/components/products/product-form';
 import { ProductsToolbar } from '@/components/products/products-toolbar';
 import { DataTable } from '@/components/table/data-table';
 
@@ -31,7 +29,7 @@ export const Route = createFileRoute('/_authed/products')({
 
     return {
       breadcrumbs: 'Produits',
-      householdId: householdId as string,
+      householdId: householdId,
     };
   },
 });
@@ -46,24 +44,6 @@ function RouteComponent() {
   const { data: products = [] } = useSuspenseQuery(
     convexQuery(api.products.queries.getProducts, { publicId: householdId }),
   );
-
-  const createProductMutation = useMutation({
-    mutationFn: useConvexMutation(api.products.mutations.createProduct),
-    onSuccess: () => {
-      toast.success('Produit créé avec succès');
-    },
-  });
-
-  const handleCreateProduct = (values: ProductFormValues) => {
-    createProductMutation.mutate({
-      publicId: householdId,
-      icon: values.icon,
-      name: values.name,
-      description: values.description || undefined,
-      category: values.category,
-      defaultUnit: values.defaultUnit,
-    });
-  };
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -95,12 +75,7 @@ function RouteComponent() {
         </p>
       </div>
 
-      <ProductsToolbar
-        products={products}
-        onCreate={handleCreateProduct}
-        isCreating={createProductMutation.isPending}
-        onFilter={setFilters}
-      />
+      <ProductsToolbar householdId={householdId} onFilter={setFilters} />
 
       {filtered.length === 0 ? (
         <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
@@ -114,10 +89,7 @@ function RouteComponent() {
           </div>
         </div>
       ) : (
-        <DataTable
-          columns={columns}
-          data={filtered.map((p) => ({ ...p, id: p._id }))}
-        />
+        <DataTable columns={columns} data={filtered} />
       )}
     </div>
   );

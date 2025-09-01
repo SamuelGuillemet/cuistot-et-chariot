@@ -46,8 +46,8 @@ export function ProductsToolbar({
 
   const handleCreateProduct = (values: ProductFormValues) => {
     mutate({
-      publicId: householdId,
       ...values,
+      publicId: householdId,
     });
   };
 

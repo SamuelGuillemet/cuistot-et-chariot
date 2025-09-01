@@ -36,6 +36,12 @@ export const PERMISSIONS_CONFIG: AllValuesArray<PermissionKeys> = [
     description: 'Permet de modifier les informations du foyer',
     defaultValue: false,
   },
+  {
+    key: 'canManageProducts',
+    label: 'Gérer les produits',
+    description: 'Permet de gérer les produits du foyer',
+    defaultValue: false,
+  },
 ];
 
 /**

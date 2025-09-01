@@ -18,7 +18,7 @@ export const householdMembersSchema = defineTable({
 
   // Permissions
   canEditHousehold: v.boolean(),
-  canManageProducts: v.optional(v.boolean()), // TODO: Revert back to v.boolean()
+  canManageProducts: v.boolean(),
 })
   .index('by_userId', ['userId'])
   .index('by_householdId', ['householdId'])

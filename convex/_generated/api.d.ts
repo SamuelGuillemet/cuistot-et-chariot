@@ -18,6 +18,9 @@ import type * as households_members_queries from "../households_members/queries.
 import type * as households_members_rls from "../households_members/rls.js";
 import type * as http from "../http.js";
 import type * as migrations from "../migrations.js";
+import type * as products_mutations from "../products/mutations.js";
+import type * as products_queries from "../products/queries.js";
+import type * as products_rls from "../products/rls.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
 

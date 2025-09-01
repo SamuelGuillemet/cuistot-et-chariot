@@ -1,5 +1,10 @@
 import { Link } from '@tanstack/react-router';
-import { ChevronRightIcon, HomeIcon, WarehouseIcon } from 'lucide-react';
+import {
+  ChevronRightIcon,
+  HomeIcon,
+  PackageIcon,
+  WarehouseIcon,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import {
   Collapsible,
@@ -53,6 +58,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: 'Gestion du foyer',
         url: '/household',
         icon: <WarehouseIcon className="w-5 h-5" />,
+      });
+    }
+
+    if (currentMember.canManageProducts) {
+      menu.push({
+        title: 'Produits',
+        url: '/products',
+        icon: <PackageIcon className="w-5 h-5" />,
       });
     }
 

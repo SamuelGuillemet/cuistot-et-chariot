@@ -44,15 +44,31 @@ export async function validateUserAndHousehold(
   return { userId, householdId: household._id, household };
 }
 
-export function buildPatchData<
-  T extends Record<string, unknown>,
-  K extends keyof T,
->(args: Partial<T>, excludeKeys: K[]): Prettify<Partial<BetterOmit<T, K>>> {
-  const patchData: Partial<T> = {};
-  for (const key in args) {
-    if (args[key] !== undefined && !excludeKeys.includes(key as string as K)) {
-      patchData[key] = args[key];
+type ValidateKeys<T, U, K extends keyof T> = Exclude<keyof T, K> extends keyof U
+  ? Prettify<Partial<BetterOmit<T, K>>>
+  : {
+      __error: 'Contains invalid properties';
+      __invalidKeys: Exclude<Exclude<keyof T, K>, keyof U>;
+      __expectedKeys: keyof U;
+    };
+
+export function createPatchBuilder<
+  U extends Record<string, unknown> = Record<string, unknown>,
+>() {
+  return function buildPatchData<
+    T extends Record<string, unknown>,
+    K extends keyof T,
+  >(args: T, excludeKeys: K[]): ValidateKeys<T, U, K> {
+    const patchData: Partial<T> = {};
+    for (const key in args) {
+      if (
+        args[key] !== undefined &&
+        !excludeKeys.includes(key as string as K)
+      ) {
+        patchData[key] = args[key];
+      }
     }
-  }
-  return patchData;
+    // biome-ignore lint/suspicious/noExplicitAny: Type 'Partial<T>' is not assignable to type 'ValidateKeys<T, U, K>'.
+    return patchData as any;
+  };
 }

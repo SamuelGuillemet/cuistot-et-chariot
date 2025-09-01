@@ -17,6 +17,7 @@ const defaultCurrentMember: CurrentMember = {
   role: 'member',
   status: 'pending',
   canEditHousehold: false,
+  canManageProducts: false,
 };
 
 export function useCurrentMember(): {

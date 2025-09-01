@@ -46,7 +46,7 @@ export function createRouter() {
     mutationCache: new MutationCache({
       onError: (error) => {
         if (error instanceof ConvexError) {
-          toast(error.data);
+          toast.error(error.data);
         }
       },
     }),

@@ -99,11 +99,7 @@ export function ProductActions({ product, householdId }: ProductActionsProps) {
             onSubmit={handleEditProduct}
             isLoading={updateProductMutation.isPending}
             defaultValues={{
-              icon: product.icon,
-              name: product.name,
-              description: product.description || '',
-              category: product.category,
-              defaultUnit: product.defaultUnit,
+              ...product,
             }}
             submitText="Modifier le produit"
           />

@@ -9,8 +9,6 @@ import type { ProductFormValues } from '@/components/products/product-form';
 import { ProductsToolbar } from '@/components/products/products-toolbar';
 import { DataTable } from '@/components/table/data-table';
 
-// Remove temporary placeholder types
-
 export const Route = createFileRoute('/_authed/products')({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {

@@ -52,6 +52,10 @@ export function DataTableColumnHeader<TData, TValue>({
             <ArrowDownIcon className="mr-2 w-3.5 h-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => column.clearSorting()}>
+            <ChevronsUpDownIcon className="mr-2 w-3.5 h-3.5 text-muted-foreground/70" />
+            None
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

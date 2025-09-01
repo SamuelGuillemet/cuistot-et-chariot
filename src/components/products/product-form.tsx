@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CATEGORY_DISPLAY_NAMES, PRODUCT_UNITS } from 'convex/types';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v3';
 import { IconSelectorControlled } from '@/components/food-icons/IconSelectorField';
@@ -21,73 +22,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-
-// Product categories and units
-const productCategories = [
-  { value: 'dairy', label: 'Produits laitiers' },
-  { value: 'meat', label: 'Viande' },
-  { value: 'vegetables', label: 'Légumes' },
-  { value: 'fruits', label: 'Fruits' },
-  { value: 'grains', label: 'Céréales' },
-  { value: 'bakery', label: 'Boulangerie' },
-  { value: 'frozen', label: 'Surgelés' },
-  { value: 'beverages', label: 'Boissons' },
-  { value: 'snacks', label: 'Collations' },
-  { value: 'cleaning', label: 'Nettoyage' },
-  { value: 'personal-care', label: 'Hygiène' },
-  { value: 'other', label: 'Autres' },
-] as const;
-
-const productUnits = [
-  { value: 'kg', label: 'kg' },
-  { value: 'g', label: 'g' },
-  { value: 'l', label: 'l' },
-  { value: 'ml', label: 'ml' },
-  { value: 'pieces', label: 'pièces' },
-  { value: 'pack', label: 'paquet' },
-  { value: 'bottle', label: 'bouteille' },
-  { value: 'can', label: 'boîte' },
-  { value: 'box', label: 'boîte' },
-  { value: 'bag', label: 'sac' },
-  { value: 'cup', label: 'tasse' },
-  { value: 'tablespoon', label: 'cuillère à soupe' },
-  { value: 'teaspoon', label: 'cuillère à café' },
-] as const;
+import { typedEnum } from '@/utils/zod';
 
 const productFormSchema = z.object({
   icon: z.string().min(1, 'Veuillez sélectionner une icône'),
   name: z.string().min(1, 'Le nom est requis').max(100, 'Le nom est trop long'),
   description: z.string().max(500, 'La description est trop longue').optional(),
-  category: z.enum([
-    'dairy',
-    'meat',
-    'vegetables',
-    'fruits',
-    'grains',
-    'bakery',
-    'frozen',
-    'beverages',
-    'snacks',
-    'condiments',
-    'cleaning',
-    'personal-care',
-    'other',
-  ]),
-  defaultUnit: z.enum([
-    'kg',
-    'g',
-    'l',
-    'ml',
-    'pieces',
-    'pack',
-    'bottle',
-    'can',
-    'box',
-    'bag',
-    'cup',
-    'tablespoon',
-    'teaspoon',
-  ]),
+  category: typedEnum(CATEGORY_DISPLAY_NAMES),
+  defaultUnit: typedEnum(PRODUCT_UNITS),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;
@@ -191,11 +133,13 @@ export function ProductForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {productCategories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
+                      {Object.entries(CATEGORY_DISPLAY_NAMES).map(
+                        ([value, label]) => (
+                          <SelectItem key={value} value={value}>
+                            {label}
+                          </SelectItem>
+                        ),
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -218,9 +162,9 @@ export function ProductForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {productUnits.map((unit) => (
-                        <SelectItem key={unit.value} value={unit.value}>
-                          {unit.label}
+                      {Object.entries(PRODUCT_UNITS).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
                         </SelectItem>
                       ))}
                     </SelectContent>

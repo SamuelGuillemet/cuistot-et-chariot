@@ -1,40 +1,21 @@
 import type { Doc } from 'convex/_generated/dataModel';
 import { createPatchBuilder, makeEnum } from 'convex/helpers';
 import { defineTable } from 'convex/server';
-import type { ProductCategory, ProductUnit } from 'convex/types';
+import {
+  CATEGORY_DISPLAY_NAMES,
+  PRODUCT_UNITS,
+  type ProductCategory,
+  type ProductUnit,
+} from 'convex/types';
 import { v } from 'convex/values';
 
-export const productCategoryEnum = makeEnum<ProductCategory>([
-  'dairy',
-  'meat',
-  'vegetables',
-  'fruits',
-  'grains',
-  'bakery',
-  'frozen',
-  'beverages',
-  'snacks',
-  'condiments',
-  'cleaning',
-  'personal-care',
-  'other',
-]);
+export const productCategoryEnum = makeEnum<ProductCategory>(
+  Object.keys(CATEGORY_DISPLAY_NAMES) as ProductCategory[],
+);
 
-export const productUnitEnum = makeEnum<ProductUnit>([
-  'kg',
-  'g',
-  'l',
-  'ml',
-  'pieces',
-  'pack',
-  'bottle',
-  'can',
-  'box',
-  'bag',
-  'cup',
-  'tablespoon',
-  'teaspoon',
-]);
+export const productUnitEnum = makeEnum<ProductUnit>(
+  Object.keys(PRODUCT_UNITS) as ProductUnit[],
+);
 
 export const productsSchema = defineTable({
   icon: v.string(),

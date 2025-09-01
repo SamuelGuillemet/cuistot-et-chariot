@@ -1,4 +1,5 @@
 import type { Doc } from 'convex/_generated/dataModel';
+import { CATEGORY_DISPLAY_NAMES } from 'convex/types';
 import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -18,23 +19,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { ProductForm, type ProductFormValues } from './product-form';
-
-const categoryOptions = [
-  { value: 'all', label: 'Toutes les catégories' },
-  { value: 'dairy', label: 'Produits laitiers' },
-  { value: 'meat', label: 'Viande' },
-  { value: 'vegetables', label: 'Légumes' },
-  { value: 'fruits', label: 'Fruits' },
-  { value: 'grains', label: 'Céréales' },
-  { value: 'bakery', label: 'Boulangerie' },
-  { value: 'frozen', label: 'Surgelés' },
-  { value: 'beverages', label: 'Boissons' },
-  { value: 'snacks', label: 'Collations' },
-  { value: 'condiments', label: 'Condiments' },
-  { value: 'cleaning', label: 'Nettoyage' },
-  { value: 'personal-care', label: 'Hygiène' },
-  { value: 'other', label: 'Autres' },
-];
 
 export interface ProductsToolbarProps {
   products: Doc<'products'>[];
@@ -92,11 +76,12 @@ export function ProductsToolbar({
               <SelectValue placeholder="Catégorie" />
             </SelectTrigger>
             <SelectContent>
-              {categoryOptions.map((c) => (
-                <SelectItem key={c.value} value={c.value}>
-                  {c.label}
+              {Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
+              <SelectItem value="all">Toutes catégories</SelectItem>
             </SelectContent>
           </Select>
           {hasFilters && (

@@ -1,6 +1,11 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import type { Doc } from 'convex/_generated/dataModel';
-import type { ProductCategory, ProductUnit } from 'convex/types';
+import {
+  CATEGORY_DISPLAY_NAMES,
+  PRODUCT_UNITS,
+  type ProductCategory,
+  type ProductUnit,
+} from 'convex/types';
 import {
   type FoodIcons,
   getIconClass,
@@ -9,48 +14,14 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Badge } from '@/components/ui/badge';
 import { ProductActions } from './product-actions';
 
-// Product type with id for table
-export type ProductWithId = Doc<'products'> & { id: string };
-
-// Category display names in French
-const categoryDisplayNames: Record<string, string> = {
-  dairy: 'Produits laitiers',
-  meat: 'Viande',
-  vegetables: 'Légumes',
-  fruits: 'Fruits',
-  grains: 'Céréales',
-  bakery: 'Boulangerie',
-  frozen: 'Surgelés',
-  beverages: 'Boissons',
-  snacks: 'Collations',
-  condiments: 'Condiments',
-  cleaning: 'Nettoyage',
-  'personal-care': 'Hygiène',
-  other: 'Autres',
-};
-
-// Unit display names in French
-const unitDisplayNames: Record<string, string> = {
-  kg: 'kg',
-  g: 'g',
-  l: 'l',
-  ml: 'ml',
-  pieces: 'pièces',
-  pack: 'paquet',
-  bottle: 'bouteille',
-  can: 'boîte',
-  box: 'boîte',
-  bag: 'sac',
-  cup: 'tasse',
-  tablespoon: 'cuillère à soupe',
-  teaspoon: 'cuillère à café',
-};
-
-// Component to create columns with householdId
 export function createProductColumns(
   householdId: string,
-): ColumnDef<ProductWithId>[] {
+): ColumnDef<Doc<'products'>>[] {
   return [
+    {
+      id: 'id',
+      accessorKey: '_id',
+    },
     {
       accessorKey: 'icon',
       header: ({ column }) => (
@@ -99,7 +70,7 @@ export function createProductColumns(
         const category = row.getValue<ProductCategory>('category');
         return (
           <Badge variant="secondary">
-            {categoryDisplayNames[category] || category}
+            {CATEGORY_DISPLAY_NAMES[category] || category}
           </Badge>
         );
       },
@@ -114,11 +85,7 @@ export function createProductColumns(
       ),
       cell: ({ row }) => {
         const unit = row.getValue<ProductUnit>('defaultUnit');
-        return (
-          <span className="text-muted-foreground">
-            {unitDisplayNames[unit] || unit}
-          </span>
-        );
+        return <Badge variant="outline">{PRODUCT_UNITS[unit] || unit}</Badge>;
       },
       enableSorting: false,
     },

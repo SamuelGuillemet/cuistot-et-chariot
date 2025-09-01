@@ -22,13 +22,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface DataTableProps<TData extends { id: string | number }, TValue> {
+interface DataTableProps<TData extends { _id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pagination?: boolean;
 }
 
-export function DataTable<TData extends { id: string | number }, TValue>({
+export function DataTable<TData extends { _id: string | number }, TValue>({
   columns,
   data,
   pagination = true,
@@ -36,7 +36,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const columnVisibility: VisibilityState = { id: false };
   const [sorting, setSorting] = useState<SortingState>([
-    { id: 'id', desc: true },
+    { id: '_id', desc: true },
   ]);
 
   const table = useReactTable({
@@ -64,7 +64,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   }
 
   return (
-    <div className="space-y-4 mx-2 lg:mx-8">
+    <div className="space-y-4">
       <div className="border rounded-md">
         <Table>
           <TableHeader>

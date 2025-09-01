@@ -1,5 +1,6 @@
 import { ConvexError, v } from 'convex/values';
 import { mutationWithRLS } from './rls';
+import { householdMembersPatchBuilder } from './schema';
 
 export const joinHousehold = mutationWithRLS({
   args: {
@@ -29,6 +30,7 @@ export const joinHousehold = mutationWithRLS({
       householdId: household._id,
       userId,
       canEditHousehold: false,
+      canManageProducts: false, // Default to false for new members
       role: 'member',
       status: 'pending',
     });
@@ -118,7 +120,8 @@ export const updateMemberStatus = mutationWithRLS({
 export const updateMemberPermissions = mutationWithRLS({
   args: {
     memberId: v.id('householdMembers'),
-    canEditHousehold: v.boolean(),
+    canEditHousehold: v.optional(v.boolean()),
+    canManageProducts: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const { household } = ctx;
@@ -140,9 +143,10 @@ export const updateMemberPermissions = mutationWithRLS({
       throw new ConvexError('Member not found in this household');
     }
 
-    await ctx.db.patch(args.memberId, {
-      canEditHousehold: args.canEditHousehold,
-    });
+    // Build the patch object with only provided permissions
+    const patch = householdMembersPatchBuilder(args, ['memberId']);
+
+    await ctx.db.patch(args.memberId, patch);
   },
 });
 

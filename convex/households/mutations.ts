@@ -20,6 +20,7 @@ export const createHousehold = mutationWithRLS({
       householdId: householdId,
       role: 'admin',
       canEditHousehold: true,
+      canManageProducts: true,
       status: 'accepted',
     });
 

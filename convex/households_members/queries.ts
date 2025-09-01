@@ -16,6 +16,7 @@ export const getHouseholdMembers = queryWithRLS({
       role: member.role,
       status: member.status,
       canEditHousehold: member.canEditHousehold,
+      canManageProducts: member.canManageProducts ?? false,
       householdId: member.householdId,
       user: nullThrows(await ctx.db.get(member.userId)),
     }));

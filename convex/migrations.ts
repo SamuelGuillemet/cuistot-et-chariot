@@ -1,8 +1,17 @@
 import { Migrations } from '@convex-dev/migrations';
-import { components } from './_generated/api.js';
+import { components, internal } from './_generated/api.js';
 import type { DataModel } from './_generated/dataModel.js';
 
 export const migrations = new Migrations<DataModel>(components.migrations);
 export const run = migrations.runner();
 
-export const runAll = migrations.runner([]);
+export const addCanManageProductsField = migrations.define({
+  table: 'householdMembers',
+  migrateOne: async (_, doc) => ({
+    canManageProducts: doc.role === 'admin', // Admins get true, members get false
+  }),
+});
+
+export const runAll = migrations.runner([
+  internal.migrations.addCanManageProductsField,
+]);

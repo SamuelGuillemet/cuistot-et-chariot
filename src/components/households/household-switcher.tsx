@@ -1,7 +1,7 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import {
   CheckIcon,
   ChevronsUpDownIcon,

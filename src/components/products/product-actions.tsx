@@ -1,7 +1,7 @@
+import { api } from '@api/api';
+import type { Doc } from '@api/dataModel';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
-import type { Doc } from 'convex/_generated/dataModel';
 import { PenIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';

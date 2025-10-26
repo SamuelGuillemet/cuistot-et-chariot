@@ -1,5 +1,5 @@
+import type { Doc } from '@api/dataModel';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { Doc } from 'convex/_generated/dataModel';
 import {
   CATEGORY_DISPLAY_NAMES,
   PRODUCT_UNITS,

@@ -9,7 +9,7 @@ repos:
       - id: check-yaml
       - id: check-added-large-files
       - id: check-json
-        exclude: ^(tsconfig\.json|.*\.jsonc|\.vscode.*\.json)$
+        exclude: (tsconfig\.json|.*\.jsonc|\.vscode.*\.json)$
       - id: check-toml
       - id: check-merge-conflict
       - id: check-case-conflict

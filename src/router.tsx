@@ -15,7 +15,7 @@ import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
 import { authClient } from './lib/auth-client';
 import { routeTree } from './routeTree.gen';
 
-export function createRouter() {
+export function getRouter() {
   if (typeof document !== 'undefined') {
     notifyManager.setScheduler(window.requestAnimationFrame);
   }
@@ -81,6 +81,6 @@ export function createRouter() {
 
 declare module '@tanstack/react-router' {
   interface Register {
-    router: ReturnType<typeof createRouter>;
+    router: ReturnType<typeof getRouter>;
   }
 }

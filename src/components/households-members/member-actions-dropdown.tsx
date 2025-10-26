@@ -1,6 +1,6 @@
+import { api } from '@api/api';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
 import type { Role, Status } from 'convex/types';
 import {
   CrownIcon,

@@ -1,7 +1,7 @@
+import { api } from '@api/api';
+import type { Id } from '@api/dataModel';
 import { convexQuery } from '@convex-dev/react-query';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
-import type { Id } from 'convex/_generated/dataModel';
 import type { FunctionReturnType } from 'convex/server';
 import { householdIdQueryOptions } from '@/lib/server-queries';
 

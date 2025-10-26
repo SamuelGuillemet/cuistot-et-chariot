@@ -1,6 +1,6 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import { Layout } from '@/components/layout';
 import {
   householdIdQueryOptions,

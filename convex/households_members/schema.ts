@@ -1,8 +1,8 @@
-import type { Doc } from 'convex/_generated/dataModel';
-import { createPatchBuilder, makeEnum } from 'convex/helpers';
 import { defineTable } from 'convex/server';
-import type { Role, Status } from 'convex/types';
 import { v } from 'convex/values';
+import type { Doc } from '../_generated/dataModel';
+import { createPatchBuilder, makeEnum } from '../helpers';
+import type { Role, Status } from '../types';
 
 const rolesEnum = makeEnum<Role>(['admin', 'member']);
 

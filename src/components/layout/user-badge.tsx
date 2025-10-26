@@ -1,7 +1,7 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import { useMemo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

@@ -1,8 +1,8 @@
+import { api } from '@api/api';
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import { HomeIcon, Loader2Icon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';

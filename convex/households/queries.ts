@@ -1,8 +1,8 @@
-import { query } from 'convex/_generated/server';
 import { ConvexError, v } from 'convex/values';
 import { asyncMap, nullThrows } from 'convex-helpers';
-import { withoutSystemFields } from '@/utils/convex';
-import { getAuthUserId } from '../helpers';
+import { query } from '../_generated/server';
+import { getAuthUserId } from '../auth';
+import { withoutSystemFields } from '../utils';
 import { queryWithRLS } from './rls';
 
 export const getJoinHousehold = query({

@@ -1,7 +1,7 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
 import { Loader2Icon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v3';

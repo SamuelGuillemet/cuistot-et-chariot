@@ -1,16 +1,19 @@
+import {
+  fetchSession,
+  getCookieName,
+} from '@convex-dev/better-auth/react-start';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import {
   deleteCookie,
   getCookie,
-  getWebRequest,
+  getRequest,
   setCookie,
 } from '@tanstack/react-start/server';
 import * as z from 'zod/mini';
 import type { Theme } from '@/components/layout/theme-provider';
 import { SIDEBAR_COOKIE_NAME } from '@/components/ui/sidebar';
-import { fetchSession, getCookieName } from '@/lib/auth-server-utils';
 
 // Constants
 const THEME_COOKIE_NAME = 'ui-theme';
@@ -19,16 +22,18 @@ const HOUSEHOLD_COOKIE_NAME = 'household-id';
 const DEFAULT_COOKIE_OPTIONS = { httpOnly: true, maxAge: 60 * 60 * 24 * 30 };
 
 // Server Functions
-export const getAuthSessionServerFn = createServerFn().handler(async () => {
-  const sessionCookieName = await getCookieName();
-  const token = getCookie(sessionCookieName);
-  const request = getWebRequest();
-  const { session } = await fetchSession(request);
-  return {
-    userId: session?.user.id,
-    token,
-  };
-});
+export const getAuthSessionServerFn = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const { createAuth } = await import('../../convex/auth');
+    const { session } = await fetchSession(getRequest());
+    const sessionCookieName = getCookieName(createAuth);
+    const token = getCookie(sessionCookieName);
+    return {
+      userId: session?.user.id,
+      token,
+    };
+  },
+);
 
 export const getThemeServerFn = createServerFn().handler(async () => {
   return (getCookie(THEME_COOKIE_NAME) || 'system') as Theme;
@@ -37,7 +42,7 @@ export const getThemeServerFn = createServerFn().handler(async () => {
 const ThemeValidator = z.enum(['light', 'dark', 'system']);
 
 export const setThemeServerFn = createServerFn({ method: 'POST' })
-  .validator((data: unknown) => ThemeValidator.parse(data))
+  .inputValidator((data: unknown) => ThemeValidator.parse(data))
   .handler(async ({ data }) => {
     setCookie(THEME_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -50,7 +55,7 @@ export const getSidebarStateServerFn = createServerFn().handler(async () => {
 const SidebarStateValidator = z.boolean();
 
 export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
-  .validator((data: unknown) => SidebarStateValidator.parse(data))
+  .inputValidator((data: unknown) => SidebarStateValidator.parse(data))
   .handler(async ({ data }) => {
     setCookie(SIDEBAR_COOKIE_NAME, String(data), DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -70,7 +75,7 @@ export const getHouseholdIdServerFn = createServerFn().handler(async () => {
 const HouseholdIdValidator = z.union([z.guid(), z.null()]);
 
 export const setHouseholdIdServerFn = createServerFn({ method: 'POST' })
-  .validator((data: unknown) => HouseholdIdValidator.parse(data))
+  .inputValidator((data: unknown) => HouseholdIdValidator.parse(data))
   .handler(async ({ data }) => {
     if (data === null) {
       deleteCookie(HOUSEHOLD_COOKIE_NAME);

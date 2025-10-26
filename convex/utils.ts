@@ -1,5 +1,12 @@
-import type { Id } from 'convex/_generated/dataModel';
-import type { Prettify } from './types';
+import type { Id } from './_generated/dataModel';
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
+
+export type BetterOmit<T, K extends keyof T> = {
+  [Property in keyof T as Property extends K ? never : Property]: T[Property];
+};
 
 // biome-ignore lint/suspicious/noExplicitAny: Use any because its a utility function generic
 type SystemFields = { _id: Id<any>; _creationTime: number };

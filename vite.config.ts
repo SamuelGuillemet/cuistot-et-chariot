@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { devtools } from '@tanstack/devtools-vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
+import { nitro } from 'nitro/vite';
 import { defineConfig, type UserConfig } from 'vite';
 import tsConfigPaths from 'vite-tsconfig-paths';
 
@@ -18,9 +19,9 @@ const config: UserConfig = {
     tsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-    tanstackStart({
-      target: 'vercel',
-      customViteReactPlugin: true,
+    tanstackStart(),
+    nitro({
+      config: { preset: 'vercel' },
     }),
     tailwindcss(),
     react(),

@@ -1,6 +1,6 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useQuery } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
 import { LinkIcon, UsersIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { toast } from 'sonner';

@@ -290,7 +290,8 @@ export const ICON_FONT_MAP: Record<string, [string, string, Category]> = {
 export type FoodIcons = keyof typeof ICON_FONT_MAP;
 
 // Helper function to get CSS class name for an icon
-export const getIconClass = (iconId: FoodIcons): string => {
+export const getIconClass = (iconId: FoodIcons | undefined): string => {
+  if (!iconId) return 'food-icon';
   return `food-icon food-icon-${iconId}`;
 };
 
@@ -310,7 +311,7 @@ export const getIconData = (iconId: FoodIcons): FoodIconData | undefined => {
 // Export the data
 export const ICON_DATA: FoodIconData[] = Object.entries(ICON_FONT_MAP)
   .map(([id, [unicode, name, category]]) => ({
-    id: id as FoodIcons,
+    id,
     unicode,
     name,
     category: CATEGORY_TRANSLATIONS[category],

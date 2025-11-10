@@ -58,10 +58,19 @@ export const PRODUCT_UNITS: Record<ProductUnit, string> = {
   pieces: 'Pièces',
   pack: 'Paquet',
   bottle: 'Bouteille',
-  can: 'Boîte',
+  can: 'Conserve',
   box: 'Boîte',
   bag: 'Sac',
   cup: 'Tasse',
   tablespoon: 'Cuillère à soupe',
   teaspoon: 'Cuillère à café',
 };
+
+export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
+
+export const RECIPE_DIFFICULTY_DISPLAY_NAMES: Record<RecipeDifficulty, string> =
+  {
+    easy: 'Facile',
+    medium: 'Moyen',
+    hard: 'Difficile',
+  } as const;

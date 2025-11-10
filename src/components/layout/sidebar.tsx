@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import {
+  ChefHatIcon,
   ChevronRightIcon,
   HomeIcon,
   PackageIcon,
@@ -69,6 +70,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       });
     }
 
+    // Recettes disponibles pour tous les membres acceptés
+    if (currentMember.status === 'accepted') {
+      menu.push({
+        title: 'Recettes',
+        url: '/recipes',
+        icon: <ChefHatIcon className="w-5 h-5" />,
+      });
+    }
+
     return menu;
   }, [currentMember]);
 
@@ -84,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   );
 }
 
-export function NavMain({ items }: { items: MenuItem[] }) {
+export function NavMain({ items }: { readonly items: MenuItem[] }) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Navigation</SidebarGroupLabel>

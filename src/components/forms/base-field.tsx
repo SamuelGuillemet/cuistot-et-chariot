@@ -126,7 +126,6 @@ export function BaseField({
   readonly field: AnyFieldApi | NeverParentSubmitMetaFieldApi;
   readonly children: (props: { isInvalid: boolean }) => React.ReactNode;
 }) {
-  'use no memo';
   return (
     <BaseFieldComposer.Root field={field} required={required}>
       <BaseFieldComposer.Label>{label}</BaseFieldComposer.Label>

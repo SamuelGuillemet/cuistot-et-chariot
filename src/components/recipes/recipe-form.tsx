@@ -66,11 +66,6 @@ interface RecipeFormProps {
   readonly householdId: string;
 }
 
-const fakeData = Array.from({ length: 100 }).map((_, index) => ({
-  _id: `product-${index + 1}`,
-  icon: 'apple',
-  name: `Produit ${index + 1}`,
-}));
 export function RecipeForm({
   onSubmit,
   isLoading = false,

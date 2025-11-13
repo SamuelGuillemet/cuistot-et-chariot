@@ -1,13 +1,13 @@
-import type { Doc } from 'convex/_generated/dataModel';
-import { createPatchBuilder, makeEnum } from 'convex/helpers';
 import { defineTable } from 'convex/server';
+import { v } from 'convex/values';
+import type { Doc } from '../_generated/dataModel';
+import { createPatchBuilder, makeEnum } from '../helpers';
 import {
   CATEGORY_DISPLAY_NAMES,
   PRODUCT_UNITS,
   type ProductCategory,
   type ProductUnit,
-} from 'convex/types';
-import { v } from 'convex/values';
+} from '../types';
 
 export const productCategoryEnum = makeEnum<ProductCategory>(
   Object.keys(CATEGORY_DISPLAY_NAMES) as ProductCategory[],

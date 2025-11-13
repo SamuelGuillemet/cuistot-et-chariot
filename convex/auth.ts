@@ -1,45 +1,127 @@
 import {
   type AuthFunctions,
-  BetterAuth,
-  type PublicAuthFunctions,
+  createClient,
+  type GenericCtx,
 } from '@convex-dev/better-auth';
+import { convex } from '@convex-dev/better-auth/plugins';
+import { betterAuth } from 'better-auth';
 import { ConvexError } from 'convex/values';
-import { api, components, internal } from './_generated/api';
+import { components, internal } from './_generated/api';
 import type { DataModel, Id } from './_generated/dataModel';
+import type { MutationCtx, QueryCtx } from './_generated/server';
 
 const authFunctions: AuthFunctions = internal.auth;
-const publicAuthFunctions: PublicAuthFunctions = api.auth;
 
-export const betterAuthComponent = new BetterAuth(components.betterAuth, {
+export const authComponent = createClient<DataModel>(components.betterAuth, {
   authFunctions,
-  publicAuthFunctions,
+  triggers: {
+    user: {
+      onCreate: async (ctx, authUser) => {
+        const authorized_emails =
+          process.env.AUTHORIZED_EMAILS?.split(',')
+            .map((email) => email.trim())
+            .filter(Boolean) || [];
+        if (!authUser.email || !authorized_emails.includes(authUser.email)) {
+          // Reject the user if their email is not in the authorized list
+          throw new ConvexError('Unauthorized email address');
+        }
+
+        await ctx.db.insert('users', {
+          name: authUser.name,
+          image: authUser.image ?? undefined,
+          email: authUser.email,
+          authId: authUser._id,
+        });
+      },
+      onDelete: async (ctx, authUser) => {
+        const user = await ctx.db
+          .query('users')
+          .withIndex('by_authId', (q) => q.eq('authId', authUser._id))
+          .unique();
+        if (!user) {
+          throw new ConvexError('User not found');
+        }
+        await ctx.db.delete(user._id);
+      },
+    },
+  },
 });
 
-export const {
-  createUser,
-  updateUser,
-  deleteUser,
-  createSession,
-  isAuthenticated,
-} = betterAuthComponent.createAuthFunctions<DataModel>({
-  onCreateUser: async (ctx, user) => {
-    const authorized_emails =
-      process.env.AUTHORIZED_EMAILS?.split(',')
-        .map((email) => email.trim())
-        .filter(Boolean) || [];
-    if (!user.email || !authorized_emails.includes(user.email)) {
-      // Reject the user if their email is not in the authorized list
-      throw new ConvexError('Unauthorized email address');
+export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
+
+export const createAuth = (
+  ctx: GenericCtx<DataModel>,
+  { optionsOnly } = { optionsOnly: false },
+) =>
+  betterAuth({
+    baseURL: process.env.SITE_URL,
+    database: authComponent.adapter(ctx),
+    rateLimit: {
+      enabled: false,
+    },
+    account: {
+      accountLinking: {
+        enabled: true,
+      },
+    },
+    emailAndPassword: {
+      enabled: false,
+    },
+    socialProviders: {
+      google: {
+        clientId: process.env.AUTH_GOOGLE_ID as string,
+        clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
+      },
+    },
+    user: {
+      deleteUser: {
+        enabled: true,
+      },
+    },
+    plugins: [convex()],
+    logger: {
+      disabled: optionsOnly,
+    },
+  });
+
+export async function getAuthUserId(
+  ctx: QueryCtx | MutationCtx,
+  shouldThrow: boolean = false,
+): Promise<Id<'users'> | null> {
+  const authUser = await authComponent.safeGetAuthUser(ctx);
+  if (!authUser) {
+    if (shouldThrow) {
+      throw new Error('User not authenticated');
     }
+    return null;
+  }
 
-    return ctx.db.insert('users', {
-      name: user.name,
-      image: user.image ?? undefined,
-      email: user.email,
-    });
-  },
+  const user = await ctx.db
+    .query('users')
+    .withIndex('by_authId', (q) => q.eq('authId', authUser._id))
+    .unique();
 
-  onDeleteUser: async (ctx, userId) => {
-    await ctx.db.delete(userId as Id<'users'>);
-  },
-});
+  if (!user) {
+    return null;
+  }
+
+  return user._id;
+}
+
+export async function validateUserAndHousehold(
+  ctx: QueryCtx,
+  args: { publicId: string },
+) {
+  const userId = await getAuthUserId(ctx);
+  if (!userId) {
+    throw new ConvexError('Unauthorized');
+  }
+  const household = await ctx.db
+    .query('households')
+    .withIndex('by_publicId', (q) => q.eq('publicId', args.publicId))
+    .first();
+  if (!household) {
+    throw new ConvexError('Household not found');
+  }
+  return { userId, householdId: household._id, household };
+}

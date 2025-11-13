@@ -100,6 +100,10 @@ function RootDocument({ children }: PropsWithChildren) {
               name: 'TanStack Router',
               render: <TanStackRouterDevtoolsPanel />,
             },
+            {
+              name: 'TanStack Form',
+              render: <FormDevtools />,
+            },
           ]}
         />
         <Scripts />

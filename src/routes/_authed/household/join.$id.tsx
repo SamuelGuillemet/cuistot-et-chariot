@@ -1,13 +1,10 @@
+import { api } from '@api/api';
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
-import { HomeIcon, Loader2Icon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { HomeIcon } from 'lucide-react';
 import { toast } from 'sonner';
-import { z } from 'zod/v3';
-import { Button } from '@/components/ui/button';
+import * as v from 'valibot';
 import {
   Card,
   CardContent,
@@ -16,30 +13,22 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { useAppForm } from '@/hooks/use-app-form';
 
-const joinParams = z.object({
-  id: z.string(),
+const joinParams = v.object({
+  id: v.string(),
 });
 
-const joinSchema = z.object({
-  answer: z.string().min(1, 'La réponse est requise'),
+const JoinSchema = v.object({
+  answer: v.pipe(v.string(), v.minLength(1, 'La réponse est requise')),
 });
 
-type JoinFormValues = z.infer<typeof joinSchema>;
+type JoinSchema = v.InferOutput<typeof JoinSchema>;
 
 export const Route = createFileRoute('/_authed/household/join/$id')({
   component: RouteComponent,
   params: {
-    parse: joinParams.parse,
+    parse: (params) => v.parse(joinParams, params),
   },
   loader: async (opts) => {
     try {
@@ -48,7 +37,7 @@ export const Route = createFileRoute('/_authed/household/join/$id')({
           publicId: opts.params.id,
         }),
       );
-    } catch (_) {
+    } catch {
       throw redirect({
         to: '/dashboard',
       });
@@ -89,19 +78,20 @@ function RouteComponent() {
     },
   });
 
-  const form = useForm<JoinFormValues>({
-    resolver: zodResolver(joinSchema),
+  const form = useAppForm<JoinSchema>({
     defaultValues: {
       answer: '',
     },
+    validator: {
+      validateFn: JoinSchema,
+    },
+    onSubmit: (value) => {
+      mutate({
+        publicId: id,
+        answer: value.answer,
+      });
+    },
   });
-
-  const onSubmit = (data: JoinFormValues) => {
-    mutate({
-      publicId: id,
-      answer: data.answer,
-    });
-  };
 
   return (
     <div className="flex justify-center items-center bg-background p-4 w-full min-h-screen">
@@ -116,47 +106,35 @@ function RouteComponent() {
             <span className="font-semibold">{household.name}</span>
           </CardDescription>
         </CardHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className="flex flex-col gap-6 mb-6">
-              <div className="space-y-2">
-                <p className="font-medium text-sm">Question secrète :</p>
-                <p className="bg-muted p-3 rounded-md text-muted-foreground text-sm">
-                  {household.joinQuestion}
-                </p>
-              </div>
-              <FormField
-                control={form.control}
-                name="answer"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Votre réponse</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Entrez votre réponse"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" disabled={isPending} className="w-full">
-                {isPending ? (
-                  <>
-                    <Loader2Icon className="mr-2 size-4 animate-spin" />
-                    Connexion en cours...
-                  </>
-                ) : (
-                  'Rejoindre le foyer'
-                )}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
+          <CardContent className="flex flex-col gap-6 mb-6">
+            <div className="space-y-2">
+              <p className="font-medium text-sm">Question secrète :</p>
+              <p className="bg-muted p-3 rounded-md text-muted-foreground text-sm">
+                {household.joinQuestion}
+              </p>
+            </div>
+            <form.AppField name="answer">
+              {(field) => (
+                <field.TextField
+                  label="Votre réponse"
+                  placeholder="Entrez votre réponse"
+                  required
+                />
+              )}
+            </form.AppField>
+          </CardContent>
+          <CardFooter>
+            <form.AppForm>
+              <form.SubmitButton isLoading={isPending} className="w-full" />
+            </form.AppForm>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );

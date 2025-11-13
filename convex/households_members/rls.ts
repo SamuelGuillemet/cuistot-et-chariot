@@ -1,4 +1,3 @@
-import { validateUserAndHousehold } from 'convex/helpers';
 import { v } from 'convex/values';
 import {
   customMutation,
@@ -11,6 +10,7 @@ import {
 } from 'convex-helpers/server/rowLevelSecurity';
 import type { DataModel, Id } from '../_generated/dataModel';
 import { mutation, type QueryCtx, query } from '../_generated/server';
+import { validateUserAndHousehold } from '../auth';
 
 async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
   return {

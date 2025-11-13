@@ -1,7 +1,7 @@
 import { v } from 'convex/values';
 import { nullThrows } from 'convex-helpers';
 import { v4 as uuid } from 'uuid';
-import { withoutSystemFields } from '@/utils/convex';
+import { withoutSystemFields } from '../utils';
 import { mutationWithRLS } from './rls';
 
 export const createHousehold = mutationWithRLS({

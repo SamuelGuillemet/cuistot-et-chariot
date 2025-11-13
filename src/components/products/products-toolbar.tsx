@@ -1,6 +1,6 @@
+import { api } from '@api/api';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { api } from 'convex/_generated/api';
 import { CATEGORY_DISPLAY_NAMES } from 'convex/types';
 import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ProductForm, type ProductFormValues } from './product-form';
+import { type Product, ProductForm } from './product-form';
 
 export interface ProductsToolbarProps {
   householdId: string;
@@ -44,7 +44,7 @@ export function ProductsToolbar({
     },
   });
 
-  const handleCreateProduct = (values: ProductFormValues) => {
+  const handleCreateProduct = (values: Product) => {
     mutate({
       ...values,
       publicId: householdId,

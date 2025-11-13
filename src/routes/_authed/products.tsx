@@ -1,7 +1,7 @@
+import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import { useMemo, useState } from 'react';
 import { createProductColumns } from '@/components/products/product-columns';
 import { ProductsToolbar } from '@/components/products/products-toolbar';

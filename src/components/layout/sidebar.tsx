@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import {
+  ChefHatIcon,
   ChevronRightIcon,
   HomeIcon,
   PackageIcon,
@@ -53,19 +54,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: <HomeIcon className="w-5 h-5" />,
     });
 
-    if (currentMember.canEditHousehold) {
-      menu.push({
-        title: 'Gestion du foyer',
-        url: '/household',
-        icon: <WarehouseIcon className="w-5 h-5" />,
-      });
-    }
+    menu.push({
+      title: 'Gestion du foyer',
+      url: '/household',
+      icon: <WarehouseIcon className="w-5 h-5" />,
+    });
 
     if (currentMember.canManageProducts) {
       menu.push({
         title: 'Produits',
         url: '/products',
         icon: <PackageIcon className="w-5 h-5" />,
+      });
+    }
+
+    if (currentMember.status === 'accepted') {
+      menu.push({
+        title: 'Recettes',
+        url: '/recipes',
+        icon: <ChefHatIcon className="w-5 h-5" />,
       });
     }
 
@@ -84,7 +91,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   );
 }
 
-export function NavMain({ items }: { items: MenuItem[] }) {
+export function NavMain({ items }: { readonly items: MenuItem[] }) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Navigation</SidebarGroupLabel>

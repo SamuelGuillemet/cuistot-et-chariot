@@ -1,7 +1,7 @@
+import { api } from '@api/api';
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { api } from 'convex/_generated/api';
 import { toast } from 'sonner';
 import { HouseholdDeleteButton } from '@/components/households/household-delete-button';
 import {

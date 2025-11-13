@@ -8,15 +8,11 @@ interface RecipeProductsListProps {
   readonly recipeProducts: (Doc<'recipeProducts'> & {
     readonly product: Doc<'products'> | null;
   })[];
-  readonly canEdit: boolean;
-  readonly onRemove?: (recipeProductId: Doc<'recipeProducts'>['_id']) => void;
   readonly originalServings?: number;
 }
 
 export function RecipeProductsList({
   recipeProducts,
-  canEdit,
-  onRemove,
   originalServings,
 }: RecipeProductsListProps) {
   const [currentServings, setCurrentServings] = useState(originalServings ?? 1);
@@ -58,8 +54,6 @@ export function RecipeProductsList({
             <RecipeProductItem
               key={rp._id}
               recipeProduct={rp}
-              canEdit={canEdit}
-              onRemove={onRemove}
               adjustedQuantity={
                 showAdjustment
                   ? Number((rp.quantity * ratio).toFixed(2))

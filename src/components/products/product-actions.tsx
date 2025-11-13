@@ -23,14 +23,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { ProductForm, type ProductFormValues } from './product-form';
+import { type Product, ProductForm } from './product-form';
 
 interface ProductActionsProps {
   product: Doc<'products'>;
   householdId: string;
 }
 
-export function ProductActions({ product, householdId }: ProductActionsProps) {
+export function ProductActions({
+  product,
+  householdId,
+}: Readonly<ProductActionsProps>) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -50,7 +53,7 @@ export function ProductActions({ product, householdId }: ProductActionsProps) {
     },
   });
 
-  const handleEditProduct = (values: ProductFormValues) => {
+  const handleEditProduct = (values: Product) => {
     updateProductMutation.mutate({
       ...values,
       publicId: householdId,

@@ -1,6 +1,6 @@
+import { useForm, useStore } from '@tanstack/react-form';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
 import { IconSelectorControlled } from '@/components/food-icons/IconSelectorField';
 import { getIconData } from '@/components/food-icons/icon-food-font-config';
 import {
@@ -10,28 +10,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
 
 export const Route = createFileRoute('/_authed/dashboard')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const form = useForm<{ icon: string }>({
+  const form = useForm({
     defaultValues: {
       icon: '',
     },
   });
 
-  const selectedFoodIconId = form.watch('icon');
+  const selectedFoodIconId = useStore(form.store, (state) => state.values.icon);
 
   const selectedFoodIcon = useMemo(() => {
     return getIconData(selectedFoodIconId);
@@ -47,36 +38,32 @@ function RouteComponent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <FormField
-            control={form.control}
-            name="icon"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Icône</FormLabel>
-                <FormControl>
-                  <IconSelectorControlled {...field} />
-                </FormControl>
-                <FormDescription>
-                  {selectedFoodIcon && (
-                    <div className="flex items-center gap-4">
-                      <div>
-                        <p className="font-medium">{selectedFoodIcon.name}</p>
-                        <p className="text-muted-foreground text-sm">
-                          Catégorie: {selectedFoodIcon.category}
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                          ID: {selectedFoodIcon.id}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </Form>
+        <form.Field name="icon">
+          {(field) => (
+            <div className="space-y-2">
+              <label htmlFor={field.name} className="font-medium text-sm">
+                Icône
+              </label>
+              <IconSelectorControlled
+                value={field.state.value}
+                onChange={field.handleChange}
+              />
+              {selectedFoodIcon && (
+                <div className="flex items-center gap-4 text-muted-foreground text-sm">
+                  <div>
+                    <p className="font-medium">{selectedFoodIcon.name}</p>
+                    <p className="text-muted-foreground text-sm">
+                      Catégorie: {selectedFoodIcon.category}
+                    </p>
+                    <p className="text-muted-foreground text-sm">
+                      ID: {selectedFoodIcon.id}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </form.Field>
       </CardContent>
     </Card>
   );

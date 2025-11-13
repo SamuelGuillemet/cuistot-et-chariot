@@ -54,13 +54,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: <HomeIcon className="w-5 h-5" />,
     });
 
-    if (currentMember.canEditHousehold) {
-      menu.push({
-        title: 'Gestion du foyer',
-        url: '/household',
-        icon: <WarehouseIcon className="w-5 h-5" />,
-      });
-    }
+    menu.push({
+      title: 'Gestion du foyer',
+      url: '/household',
+      icon: <WarehouseIcon className="w-5 h-5" />,
+    });
 
     if (currentMember.canManageProducts) {
       menu.push({
@@ -70,7 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       });
     }
 
-    // Recettes disponibles pour tous les membres acceptés
     if (currentMember.status === 'accepted') {
       menu.push({
         title: 'Recettes',

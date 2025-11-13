@@ -21,10 +21,8 @@ interface IconSelectorControlledProps {
   onChange: (iconId: FoodIcons) => void;
   disabled?: boolean;
   error?: boolean;
-  maxResults?: number;
   showCategories?: boolean;
   className?: string;
-  placeholder?: string;
 }
 
 export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({

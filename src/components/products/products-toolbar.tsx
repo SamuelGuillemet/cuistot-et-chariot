@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ProductForm, type ProductFormValues } from './product-form';
+import { type Product, ProductForm } from './product-form';
 
 export interface ProductsToolbarProps {
   householdId: string;
@@ -44,7 +44,7 @@ export function ProductsToolbar({
     },
   });
 
-  const handleCreateProduct = (values: ProductFormValues) => {
+  const handleCreateProduct = (values: Product) => {
     mutate({
       ...values,
       publicId: householdId,

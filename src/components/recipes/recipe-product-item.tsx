@@ -1,7 +1,5 @@
 import type { Doc } from 'convex/_generated/dataModel';
 import { PRODUCT_UNITS } from 'convex/types';
-import { Trash2Icon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { getIconClass } from '../food-icons/icon-food-font-config';
 
@@ -9,16 +7,12 @@ interface RecipeProductItemProps {
   readonly recipeProduct: Doc<'recipeProducts'> & {
     readonly product: Doc<'products'> | null;
   };
-  readonly canEdit: boolean;
-  readonly onRemove?: (recipeProductId: Doc<'recipeProducts'>['_id']) => void;
   readonly adjustedQuantity?: number;
   readonly showOriginal?: boolean;
 }
 
 export function RecipeProductItem({
   recipeProduct,
-  canEdit,
-  onRemove,
   adjustedQuantity,
   showOriginal = false,
 }: RecipeProductItemProps) {
@@ -58,17 +52,6 @@ export function RecipeProductItem({
           </p>
         )}
       </div>
-
-      {canEdit && onRemove && (
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => onRemove(recipeProduct._id)}
-          className="hover:bg-destructive/10 opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive transition-opacity shrink-0"
-        >
-          <Trash2Icon className="w-4 h-4" />
-        </Button>
-      )}
     </div>
   );
 }

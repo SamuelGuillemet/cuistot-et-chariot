@@ -11,7 +11,7 @@ import {
   getRequest,
   setCookie,
 } from '@tanstack/react-start/server';
-import * as z from 'zod/mini';
+import * as v from 'valibot';
 import type { Theme } from '@/components/layout/theme-provider';
 import { SIDEBAR_COOKIE_NAME } from '@/components/ui/sidebar';
 
@@ -39,10 +39,10 @@ export const getThemeServerFn = createServerFn().handler(async () => {
   return (getCookie(THEME_COOKIE_NAME) || 'system') as Theme;
 });
 
-const ThemeValidator = z.enum(['light', 'dark', 'system']);
+const ThemeValidator = v.picklist(['light', 'dark', 'system']);
 
 export const setThemeServerFn = createServerFn({ method: 'POST' })
-  .inputValidator((data: unknown) => ThemeValidator.parse(data))
+  .inputValidator(ThemeValidator)
   .handler(async ({ data }) => {
     setCookie(THEME_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -52,10 +52,10 @@ export const getSidebarStateServerFn = createServerFn().handler(async () => {
   return (getCookie(SIDEBAR_COOKIE_NAME) || 'false') === 'true';
 });
 
-const SidebarStateValidator = z.boolean();
+const SidebarStateValidator = v.boolean();
 
 export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
-  .inputValidator((data: unknown) => SidebarStateValidator.parse(data))
+  .inputValidator(SidebarStateValidator)
   .handler(async ({ data }) => {
     setCookie(SIDEBAR_COOKIE_NAME, String(data), DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -63,7 +63,7 @@ export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
 
 export const getHouseholdIdServerFn = createServerFn().handler(async () => {
   const householdId = getCookie(HOUSEHOLD_COOKIE_NAME);
-  if (householdId && !HouseholdIdValidator.safeParse(householdId).success) {
+  if (householdId && !v.safeParse(HouseholdIdValidator, householdId).success) {
     // Invalid household ID, clear the cookie
     deleteCookie(HOUSEHOLD_COOKIE_NAME);
     return null;
@@ -72,10 +72,10 @@ export const getHouseholdIdServerFn = createServerFn().handler(async () => {
   return householdId || null;
 });
 
-const HouseholdIdValidator = z.union([z.guid(), z.null()]);
+const HouseholdIdValidator = v.union([v.pipe(v.string(), v.uuid()), v.null()]);
 
 export const setHouseholdIdServerFn = createServerFn({ method: 'POST' })
-  .inputValidator((data: unknown) => HouseholdIdValidator.parse(data))
+  .inputValidator(HouseholdIdValidator)
   .handler(async ({ data }) => {
     if (data === null) {
       deleteCookie(HOUSEHOLD_COOKIE_NAME);

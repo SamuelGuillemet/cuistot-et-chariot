@@ -87,7 +87,6 @@ function RouteComponent() {
         <div className="space-y-6">
           <RecipeProductsList
             recipeProducts={recipeData.products}
-            canEdit={false}
             originalServings={recipeData.servings}
           />
         </div>

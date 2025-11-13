@@ -12,7 +12,6 @@ export function RecipeInstructionsDisplay({
   instructions,
   className,
 }: RecipeInstructionsDisplayProps) {
-  // Normalize to an array of steps and strip any numeric prefixes ("1. ", "2) ", etc.)
   const steps = useMemo(() => {
     return instructions
       .toSorted((a, b) => a.order - b.order)

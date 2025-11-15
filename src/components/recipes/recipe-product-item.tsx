@@ -27,11 +27,9 @@ export function RecipeProductItem({
 
   return (
     <div className="group relative flex items-center gap-3 hover:bg-accent/50 p-3 rounded-lg transition-colors">
-      <div className="flex justify-center items-center bg-linear-to-br from-primary/20 to-primary/5 shadow-sm rounded-full w-12 h-12 shrink-0">
-        <i
-          className={cn(getIconClass(recipeProduct.product?.icon), 'text-3xl')}
-        />
-      </div>
+      <i
+        className={cn(getIconClass(recipeProduct.product?.icon), 'text-3xl')}
+      />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">

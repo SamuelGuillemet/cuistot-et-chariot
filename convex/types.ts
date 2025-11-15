@@ -16,7 +16,9 @@ export type ProductCategory =
   | 'condiments'
   | 'cleaning'
   | 'personal-care'
-  | 'other';
+  | 'other'
+  | 'prepared-meals'
+  | 'desserts';
 
 export const CATEGORY_DISPLAY_NAMES: Record<ProductCategory, string> = {
   dairy: 'Produits laitiers',
@@ -33,6 +35,8 @@ export const CATEGORY_DISPLAY_NAMES: Record<ProductCategory, string> = {
   cleaning: 'Nettoyage',
   'personal-care': 'Hygiène',
   other: 'Autres',
+  'prepared-meals': 'Plats préparés',
+  desserts: 'Desserts',
 } as const;
 
 export type ProductUnit =

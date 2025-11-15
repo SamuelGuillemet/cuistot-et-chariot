@@ -8,6 +8,11 @@
 
 .food-icon {
   display: inline-block;
+  aspect-ratio: 1 / 1;
+  padding-top: 0.40rem;
+  padding-right: 0.25rem;
+  padding-bottom: 0.10rem;
+  padding-left: 0.25rem;
   font-family: "food-icons", Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -16,9 +21,10 @@
   -moz-osx-font-smoothing: grayscale;
   line-height: 1;
   text-transform: none;
+  background-color: rgba(0, 0, 0, 0.065);
+  border-radius: 100%;
 }
 
-/* Icon font classes - auto-generated from your font */
 .food-icon-wine_2:before {
   content: "\f101";
 }
@@ -31,1030 +37,1126 @@
   content: "\f103";
 }
 
-.food-icon-whisky_2:before {
+.food-icon-white-circle:before {
   content: "\f104";
 }
 
-.food-icon-whisky:before {
+.food-icon-whisky_2:before {
   content: "\f105";
 }
 
-.food-icon-weeding_cake:before {
+.food-icon-whisky:before {
   content: "\f106";
 }
 
-.food-icon-watermelon_split:before {
+.food-icon-weeding_cake:before {
   content: "\f107";
 }
 
-.food-icon-watermelon_slice:before {
+.food-icon-watermelon_split:before {
   content: "\f108";
 }
 
-.food-icon-watermelon:before {
+.food-icon-watermelon_slice:before {
   content: "\f109";
 }
 
-.food-icon-walnut:before {
+.food-icon-watermelon:before {
   content: "\f10a";
 }
 
-.food-icon-waffle_2:before {
+.food-icon-walnut:before {
   content: "\f10b";
 }
 
-.food-icon-wafer:before {
+.food-icon-waffle_2:before {
   content: "\f10c";
 }
 
-.food-icon-turnip:before {
+.food-icon-wafer:before {
   content: "\f10d";
 }
 
-.food-icon-tomato_split:before {
+.food-icon-turnip:before {
   content: "\f10e";
 }
 
-.food-icon-tomato:before {
+.food-icon-tropical-drink:before {
   content: "\f10f";
 }
 
-.food-icon-toast_marmalade:before {
+.food-icon-toothbrush:before {
   content: "\f110";
 }
 
-.food-icon-toast:before {
+.food-icon-tomato_split:before {
   content: "\f111";
 }
 
-.food-icon-teapot:before {
+.food-icon-tomato:before {
   content: "\f112";
 }
 
-.food-icon-tea_kettle:before {
+.food-icon-toast_marmalade:before {
   content: "\f113";
 }
 
-.food-icon-tea_bag:before {
+.food-icon-toast:before {
   content: "\f114";
 }
 
-.food-icon-tea:before {
+.food-icon-teapot:before {
   content: "\f115";
 }
 
-.food-icon-tangerine:before {
+.food-icon-tea_kettle:before {
   content: "\f116";
 }
 
-.food-icon-t_bone_steak:before {
+.food-icon-tea_bag:before {
   content: "\f117";
 }
 
-.food-icon-sweet_potato:before {
+.food-icon-tea:before {
   content: "\f118";
 }
 
-.food-icon-sushi_nigiri:before {
+.food-icon-tangerine:before {
   content: "\f119";
 }
 
-.food-icon-sushi_maki:before {
+.food-icon-t_bone_steak:before {
   content: "\f11a";
 }
 
-.food-icon-sugarcane:before {
+.food-icon-sweet_potato:before {
   content: "\f11b";
 }
 
-.food-icon-sugar_cubes:before {
+.food-icon-sushi_nigiri:before {
   content: "\f11c";
 }
 
-.food-icon-sugar_cube:before {
+.food-icon-sushi_maki:before {
   content: "\f11d";
 }
 
-.food-icon-strawberry_jam:before {
+.food-icon-sugarcane:before {
   content: "\f11e";
 }
 
-.food-icon-strawberry:before {
+.food-icon-sugar_cubes:before {
   content: "\f11f";
 }
 
-.food-icon-steak:before {
+.food-icon-sugar_cube:before {
   content: "\f120";
 }
 
-.food-icon-squash_split:before {
+.food-icon-strawberry_jam:before {
   content: "\f121";
 }
 
-.food-icon-squash:before {
+.food-icon-strawberry:before {
   content: "\f122";
 }
 
-.food-icon-spicy:before {
+.food-icon-steak:before {
   content: "\f123";
 }
 
-.food-icon-spaghetti:before {
+.food-icon-squash_split:before {
   content: "\f124";
 }
 
-.food-icon-soup:before {
+.food-icon-squash:before {
   content: "\f125";
 }
 
-.food-icon-soft_cream_cone_2:before {
+.food-icon-sponge:before {
   content: "\f126";
 }
 
-.food-icon-soft_cream_cone:before {
+.food-icon-spicy:before {
   content: "\f127";
 }
 
-.food-icon-soda_can:before {
+.food-icon-spaghetti:before {
   content: "\f128";
 }
 
-.food-icon-sliced_bread:before {
+.food-icon-soup:before {
   content: "\f129";
 }
 
-.food-icon-skewer:before {
+.food-icon-soft_cream_cone_2:before {
   content: "\f12a";
 }
 
-.food-icon-shrimp:before {
+.food-icon-soft_cream_cone:before {
   content: "\f12b";
 }
 
-.food-icon-shot_glass_2:before {
+.food-icon-soda_can:before {
   content: "\f12c";
 }
 
-.food-icon-shot_glass:before {
+.food-icon-soap:before {
   content: "\f12d";
 }
 
-.food-icon-sausage:before {
+.food-icon-snowflake:before {
   content: "\f12e";
 }
 
-.food-icon-salt_shaker:before {
+.food-icon-sneezing-face:before {
   content: "\f12f";
 }
 
-.food-icon-salt:before {
+.food-icon-sliced_bread:before {
   content: "\f130";
 }
 
-.food-icon-salad:before {
+.food-icon-skewer:before {
   content: "\f131";
 }
 
-.food-icon-romaine_lettuce:before {
+.food-icon-shrimp:before {
   content: "\f132";
 }
 
-.food-icon-rollcake:before {
+.food-icon-shot_glass_2:before {
   content: "\f133";
 }
 
-.food-icon-rocket_popsicle:before {
+.food-icon-shot_glass:before {
   content: "\f134";
 }
 
-.food-icon-rock_candy:before {
+.food-icon-sheaf-of-rice:before {
   content: "\f135";
 }
 
-.food-icon-roasted_chicken:before {
+.food-icon-shallow-pan-of-food:before {
   content: "\f136";
 }
 
-.food-icon-rice_cracker:before {
+.food-icon-sausage:before {
   content: "\f137";
 }
 
-.food-icon-red_pitahaya:before {
+.food-icon-salt_shaker:before {
   content: "\f138";
 }
 
-.food-icon-raspberry:before {
+.food-icon-salt:before {
   content: "\f139";
 }
 
-.food-icon-radish:before {
+.food-icon-salad:before {
   content: "\f13a";
 }
 
-.food-icon-pumpkin_split:before {
+.food-icon-sake:before {
   content: "\f13b";
 }
 
-.food-icon-pumpkin:before {
+.food-icon-romaine_lettuce:before {
   content: "\f13c";
 }
 
-.food-icon-pretzel:before {
+.food-icon-rollcake:before {
   content: "\f13d";
 }
 
-.food-icon-poultry:before {
+.food-icon-roll-of-paper:before {
   content: "\f13e";
 }
 
-.food-icon-potato:before {
+.food-icon-rocket_popsicle:before {
   content: "\f13f";
 }
 
-.food-icon-portobello:before {
+.food-icon-rock_candy:before {
   content: "\f140";
 }
 
-.food-icon-pork:before {
+.food-icon-roasted_chicken:before {
   content: "\f141";
 }
 
-.food-icon-popsicle_double:before {
+.food-icon-rice_cracker:before {
   content: "\f142";
 }
 
-.food-icon-popsicle:before {
+.food-icon-red_pitahaya:before {
   content: "\f143";
 }
 
-.food-icon-popcorn:before {
+.food-icon-raspberry:before {
   content: "\f144";
 }
 
-.food-icon-plum_split:before {
+.food-icon-ram:before {
   content: "\f145";
 }
 
-.food-icon-plum:before {
+.food-icon-radish:before {
   content: "\f146";
 }
 
-.food-icon-pizza_round:before {
+.food-icon-pumpkin_split:before {
   content: "\f147";
 }
 
-.food-icon-pizza:before {
+.food-icon-pumpkin:before {
   content: "\f148";
 }
 
-.food-icon-pitahaya:before {
+.food-icon-pretzel:before {
   content: "\f149";
 }
 
-.food-icon-pistachios:before {
+.food-icon-poultry:before {
   content: "\f14a";
 }
 
-.food-icon-pineapple_2:before {
+.food-icon-potato:before {
   content: "\f14b";
 }
 
-.food-icon-pineapple:before {
+.food-icon-portobello:before {
   content: "\f14c";
 }
 
-.food-icon-pie_slice:before {
+.food-icon-pork:before {
   content: "\f14d";
 }
 
-.food-icon-pie_2:before {
+.food-icon-popsicle_double:before {
   content: "\f14e";
 }
 
-.food-icon-pie:before {
+.food-icon-popsicle:before {
   content: "\f14f";
 }
 
-.food-icon-pickles:before {
+.food-icon-popcorn:before {
   content: "\f150";
 }
 
-.food-icon-pepper_shaker:before {
+.food-icon-plum_split:before {
   content: "\f151";
 }
 
-.food-icon-pepper_grinder:before {
+.food-icon-plum:before {
   content: "\f152";
 }
 
-.food-icon-pecan:before {
+.food-icon-pizza_round:before {
   content: "\f153";
 }
 
-.food-icon-peas:before {
+.food-icon-pizza:before {
   content: "\f154";
 }
 
-.food-icon-pear_split:before {
+.food-icon-pitahaya:before {
   content: "\f155";
 }
 
-.food-icon-pear:before {
+.food-icon-pistachios:before {
   content: "\f156";
 }
 
-.food-icon-peanut_butter:before {
+.food-icon-pineapple_2:before {
   content: "\f157";
 }
 
-.food-icon-peanut:before {
+.food-icon-pineapple:before {
   content: "\f158";
 }
 
-.food-icon-peach_split:before {
+.food-icon-pie_slice:before {
   content: "\f159";
 }
 
-.food-icon-peach:before {
+.food-icon-pie_2:before {
   content: "\f15a";
 }
 
-.food-icon-papaya:before {
+.food-icon-pie:before {
   content: "\f15b";
 }
 
-.food-icon-pancakes:before {
+.food-icon-pickles:before {
   content: "\f15c";
 }
 
-.food-icon-pancake:before {
+.food-icon-pepper_shaker:before {
   content: "\f15d";
 }
 
-.food-icon-orange_split:before {
+.food-icon-pepper_grinder:before {
   content: "\f15e";
 }
 
-.food-icon-orange:before {
+.food-icon-pecan:before {
   content: "\f15f";
 }
 
-.food-icon-onion:before {
+.food-icon-peas:before {
   content: "\f160";
 }
 
-.food-icon-omelette:before {
+.food-icon-pear_split:before {
   content: "\f161";
 }
 
-.food-icon-olives:before {
+.food-icon-pear:before {
   content: "\f162";
 }
 
-.food-icon-olive_oil:before {
+.food-icon-peanut_butter:before {
   content: "\f163";
 }
 
-.food-icon-noodles:before {
+.food-icon-peanut:before {
   content: "\f164";
 }
 
-.food-icon-mustard:before {
+.food-icon-peach_split:before {
   content: "\f165";
 }
 
-.food-icon-mushrooms_2:before {
+.food-icon-peach:before {
   content: "\f166";
 }
 
-.food-icon-mushrooms:before {
+.food-icon-papaya:before {
   content: "\f167";
 }
 
-.food-icon-muffin:before {
+.food-icon-pancakes:before {
   content: "\f168";
 }
 
-.food-icon-milkshake:before {
+.food-icon-pancake:before {
   content: "\f169";
 }
 
-.food-icon-milk:before {
+.food-icon-orange_split:before {
   content: "\f16a";
 }
 
-.food-icon-meatballs_2:before {
+.food-icon-orange:before {
   content: "\f16b";
 }
 
-.food-icon-meatballs:before {
+.food-icon-onion:before {
   content: "\f16c";
 }
 
-.food-icon-mayonnaise:before {
+.food-icon-omelette:before {
   content: "\f16d";
 }
 
-.food-icon-martini:before {
+.food-icon-olives:before {
   content: "\f16e";
 }
 
-.food-icon-marshmallow:before {
+.food-icon-olive_oil:before {
   content: "\f16f";
 }
 
-.food-icon-margarita:before {
+.food-icon-noodles:before {
   content: "\f170";
 }
 
-.food-icon-maple_syrup_bottle:before {
+.food-icon-mustard:before {
   content: "\f171";
 }
 
-.food-icon-maple_syrup:before {
+.food-icon-mushrooms_2:before {
   content: "\f172";
 }
 
-.food-icon-macaron:before {
+.food-icon-mushrooms:before {
   content: "\f173";
 }
 
-.food-icon-macadamia_nuts:before {
+.food-icon-muffin:before {
   content: "\f174";
 }
 
-.food-icon-lollipop:before {
+.food-icon-milkshake:before {
   content: "\f175";
 }
 
-.food-icon-lobster:before {
+.food-icon-milk:before {
   content: "\f176";
 }
 
-.food-icon-lime_2:before {
+.food-icon-meatballs_2:before {
   content: "\f177";
 }
 
-.food-icon-lime:before {
+.food-icon-meatballs:before {
   content: "\f178";
 }
 
-.food-icon-lettuce:before {
+.food-icon-mayonnaise:before {
   content: "\f179";
 }
 
-.food-icon-lentils:before {
+.food-icon-martini:before {
   content: "\f17a";
 }
 
-.food-icon-lemon_2:before {
+.food-icon-marshmallow:before {
   content: "\f17b";
 }
 
-.food-icon-lemon:before {
+.food-icon-margarita:before {
   content: "\f17c";
 }
 
-.food-icon-leek:before {
+.food-icon-maple_syrup_bottle:before {
   content: "\f17d";
 }
 
-.food-icon-kiwi:before {
+.food-icon-maple_syrup:before {
   content: "\f17e";
 }
 
-.food-icon-ketchup:before {
+.food-icon-magic-wand:before {
   content: "\f17f";
 }
 
-.food-icon-jar:before {
+.food-icon-macaron:before {
   content: "\f180";
 }
 
-.food-icon-ice_cubes:before {
+.food-icon-macadamia_nuts:before {
   content: "\f181";
 }
 
-.food-icon-ice_cream_double_cone:before {
+.food-icon-lotion-bottle:before {
   content: "\f182";
 }
 
-.food-icon-ice_cream_cup_2:before {
+.food-icon-lollipop:before {
   content: "\f183";
 }
 
-.food-icon-ice_cream_cup:before {
+.food-icon-lobster:before {
   content: "\f184";
 }
 
-.food-icon-ice_cream_cone_2:before {
+.food-icon-lime_2:before {
   content: "\f185";
 }
 
-.food-icon-ice_cream_cone:before {
+.food-icon-lime:before {
   content: "\f186";
 }
 
-.food-icon-ice_cream_bar:before {
+.food-icon-lettuce:before {
   content: "\f187";
 }
 
-.food-icon-ice_cream:before {
+.food-icon-lentils:before {
   content: "\f188";
 }
 
-.food-icon-hotdog:before {
+.food-icon-lemon_2:before {
   content: "\f189";
 }
 
-.food-icon-hot_chocolate:before {
+.food-icon-lemon:before {
   content: "\f18a";
 }
 
-.food-icon-honey:before {
+.food-icon-leek:before {
   content: "\f18b";
 }
 
-.food-icon-hazelnuts:before {
+.food-icon-leaf-fluttering-in-wind:before {
   content: "\f18c";
 }
 
-.food-icon-hard_boiled_egg:before {
+.food-icon-kiwi:before {
   content: "\f18d";
 }
 
-.food-icon-hamburger:before {
+.food-icon-ketchup:before {
   content: "\f18e";
 }
 
-.food-icon-ham:before {
+.food-icon-jar:before {
   content: "\f18f";
 }
 
-.food-icon-green_beans:before {
+.food-icon-ice_cubes:before {
   content: "\f190";
 }
 
-.food-icon-grapes_2:before {
+.food-icon-ice_cream_double_cone:before {
   content: "\f191";
 }
 
-.food-icon-grapes:before {
+.food-icon-ice_cream_cup_2:before {
   content: "\f192";
 }
 
-.food-icon-grapefruit_2:before {
+.food-icon-ice_cream_cup:before {
   content: "\f193";
 }
 
-.food-icon-grapefruit:before {
+.food-icon-ice_cream_cone_2:before {
   content: "\f194";
 }
 
-.food-icon-goldenberries:before {
+.food-icon-ice_cream_cone:before {
   content: "\f195";
 }
 
-.food-icon-glass_2:before {
+.food-icon-ice_cream_bar:before {
   content: "\f196";
 }
 
-.food-icon-glass:before {
+.food-icon-ice_cream:before {
   content: "\f197";
 }
 
-.food-icon-garlic:before {
+.food-icon-hotdog:before {
   content: "\f198";
 }
 
-.food-icon-frozen_2:before {
+.food-icon-hot_chocolate:before {
   content: "\f199";
 }
 
-.food-icon-frozen:before {
+.food-icon-honey:before {
   content: "\f19a";
 }
 
-.food-icon-fried_egg_2:before {
+.food-icon-hazelnuts:before {
   content: "\f19b";
 }
 
-.food-icon-fried_egg:before {
+.food-icon-hard_boiled_egg:before {
   content: "\f19c";
 }
 
-.food-icon-french_fries:before {
+.food-icon-hamburger:before {
   content: "\f19d";
 }
 
-.food-icon-flour:before {
+.food-icon-ham:before {
   content: "\f19e";
 }
 
-.food-icon-fish_steak:before {
+.food-icon-green_beans:before {
   content: "\f19f";
 }
 
-.food-icon-fish_filet:before {
+.food-icon-grapes_2:before {
   content: "\f1a0";
 }
 
-.food-icon-fish:before {
+.food-icon-grapes:before {
   content: "\f1a1";
 }
 
-.food-icon-fig_2:before {
+.food-icon-grapefruit_2:before {
   content: "\f1a2";
 }
 
-.food-icon-fig:before {
+.food-icon-grapefruit:before {
   content: "\f1a3";
 }
 
-.food-icon-eggplant:before {
+.food-icon-goldenberries:before {
   content: "\f1a4";
 }
 
-.food-icon-egg:before {
+.food-icon-glass_2:before {
   content: "\f1a5";
 }
 
-.food-icon-eclair:before {
+.food-icon-glass:before {
   content: "\f1a6";
 }
 
-.food-icon-doughnut_3:before {
+.food-icon-glass-of-milk:before {
   content: "\f1a7";
 }
 
-.food-icon-doughnut_2:before {
+.food-icon-garlic:before {
   content: "\f1a8";
 }
 
-.food-icon-doughnut:before {
+.food-icon-frozen_2:before {
   content: "\f1a9";
 }
 
-.food-icon-cutlet:before {
+.food-icon-frozen:before {
   content: "\f1aa";
 }
 
-.food-icon-cupcake:before {
+.food-icon-fried_egg_2:before {
   content: "\f1ab";
 }
 
-.food-icon-cucumber_2:before {
+.food-icon-fried_egg:before {
   content: "\f1ac";
 }
 
-.food-icon-cucumber:before {
+.food-icon-french_fries:before {
   content: "\f1ad";
 }
 
-.food-icon-croissant:before {
+.food-icon-flour:before {
   content: "\f1ae";
 }
 
-.food-icon-cranberries:before {
+.food-icon-fish_steak:before {
   content: "\f1af";
 }
 
-.food-icon-cracker:before {
+.food-icon-fish_filet:before {
   content: "\f1b0";
 }
 
-.food-icon-crab:before {
+.food-icon-fish:before {
   content: "\f1b1";
 }
 
-.food-icon-cotton_candy_2:before {
+.food-icon-fig_2:before {
   content: "\f1b2";
 }
 
-.food-icon-cotton_candy:before {
+.food-icon-fig:before {
   content: "\f1b3";
 }
 
-.food-icon-corn:before {
+.food-icon-eggplant:before {
   content: "\f1b4";
 }
 
-.food-icon-cookie_3:before {
+.food-icon-egg:before {
   content: "\f1b5";
 }
 
-.food-icon-cookie_1:before {
+.food-icon-eclair:before {
   content: "\f1b6";
 }
 
-.food-icon-cookie5:before {
+.food-icon-dumpling:before {
   content: "\f1b7";
 }
 
-.food-icon-cookie4:before {
+.food-icon-drop-of-blood:before {
   content: "\f1b8";
 }
 
-.food-icon-cookie:before {
+.food-icon-doughnut_3:before {
   content: "\f1b9";
 }
 
-.food-icon-cognac:before {
+.food-icon-doughnut_2:before {
   content: "\f1ba";
 }
 
-.food-icon-coffee_pot:before {
+.food-icon-doughnut:before {
   content: "\f1bb";
 }
 
-.food-icon-coffee_bean:before {
+.food-icon-cutlet:before {
   content: "\f1bc";
 }
 
-.food-icon-coffee:before {
+.food-icon-cupcake:before {
   content: "\f1bd";
 }
 
-.food-icon-coconut_split_2:before {
+.food-icon-cucumber_2:before {
   content: "\f1be";
 }
 
-.food-icon-coconut_split:before {
+.food-icon-cucumber:before {
   content: "\f1bf";
 }
 
-.food-icon-coconut:before {
+.food-icon-croissant:before {
   content: "\f1c0";
 }
 
-.food-icon-cocoa:before {
+.food-icon-cranberries:before {
   content: "\f1c1";
 }
 
-.food-icon-cocktail:before {
+.food-icon-cracker:before {
   content: "\f1c2";
 }
 
-.food-icon-cinnamon:before {
+.food-icon-crab:before {
   content: "\f1c3";
 }
 
-.food-icon-chopsticks_bowl:before {
+.food-icon-cotton_candy_2:before {
   content: "\f1c4";
 }
 
-.food-icon-chocolate_chip_cookie:before {
+.food-icon-cotton_candy:before {
   content: "\f1c5";
 }
 
-.food-icon-chocolate_bonbon:before {
+.food-icon-corn:before {
   content: "\f1c6";
 }
 
-.food-icon-chocolate_bar:before {
+.food-icon-cookie_3:before {
   content: "\f1c7";
 }
 
-.food-icon-chocolate:before {
+.food-icon-cookie_1:before {
   content: "\f1c8";
 }
 
-.food-icon-chili_pepper:before {
+.food-icon-cookie5:before {
   content: "\f1c9";
 }
 
-.food-icon-chickpeas:before {
+.food-icon-cookie4:before {
   content: "\f1ca";
 }
 
-.food-icon-chicken_leg_fried:before {
+.food-icon-cookie:before {
   content: "\f1cb";
 }
 
-.food-icon-chicken_leg:before {
+.food-icon-cognac:before {
   content: "\f1cc";
 }
 
-.food-icon-chestnut:before {
+.food-icon-coffee_pot:before {
   content: "\f1cd";
 }
 
-.food-icon-cherry_tomatoes:before {
+.food-icon-coffee_bean:before {
   content: "\f1ce";
 }
 
-.food-icon-cherries:before {
+.food-icon-coffee:before {
   content: "\f1cf";
 }
 
-.food-icon-cheese:before {
+.food-icon-coconut_split_2:before {
   content: "\f1d0";
 }
 
-.food-icon-champagne:before {
+.food-icon-coconut_split:before {
   content: "\f1d1";
 }
 
-.food-icon-cellery:before {
+.food-icon-coconut:before {
   content: "\f1d2";
 }
 
-.food-icon-cauliflower:before {
+.food-icon-coconut-copy:before {
   content: "\f1d3";
 }
 
-.food-icon-cassava:before {
+.food-icon-cocoa:before {
   content: "\f1d4";
 }
 
-.food-icon-cashew_nuts:before {
+.food-icon-cocktail:before {
   content: "\f1d5";
 }
 
-.food-icon-carrot:before {
+.food-icon-cinnamon:before {
   content: "\f1d6";
 }
 
-.food-icon-caramel_apple:before {
+.food-icon-chopsticks_bowl:before {
   content: "\f1d7";
 }
 
-.food-icon-cantaloupe_slice:before {
+.food-icon-chopsticks:before {
   content: "\f1d8";
 }
 
-.food-icon-cantaloupe:before {
+.food-icon-chocolate_chip_cookie:before {
   content: "\f1d9";
 }
 
-.food-icon-candy_cane:before {
+.food-icon-chocolate_bonbon:before {
   content: "\f1da";
 }
 
-.food-icon-candy:before {
+.food-icon-chocolate_bar:before {
   content: "\f1db";
 }
 
-.food-icon-cake_slice_nuts:before {
+.food-icon-chocolate:before {
   content: "\f1dc";
 }
 
-.food-icon-cake_slice:before {
+.food-icon-chili_pepper:before {
   content: "\f1dd";
 }
 
-.food-icon-cake:before {
+.food-icon-chickpeas:before {
   content: "\f1de";
 }
 
-.food-icon-cabbage:before {
+.food-icon-chicken_leg_fried:before {
   content: "\f1df";
 }
 
-.food-icon-butter:before {
+.food-icon-chicken_leg:before {
   content: "\f1e0";
 }
 
-.food-icon-bun:before {
+.food-icon-chestnut:before {
   content: "\f1e1";
 }
 
-.food-icon-bubblegum_machine:before {
+.food-icon-cherry_tomatoes:before {
   content: "\f1e2";
 }
 
-.food-icon-bubblegum:before {
+.food-icon-cherries:before {
   content: "\f1e3";
 }
 
-.food-icon-brown_bread:before {
+.food-icon-cheese:before {
   content: "\f1e4";
 }
 
-.food-icon-broccoli:before {
+.food-icon-champagne:before {
   content: "\f1e5";
 }
 
-.food-icon-bread_slice:before {
+.food-icon-cellery:before {
   content: "\f1e6";
 }
 
-.food-icon-bread:before {
+.food-icon-cauliflower:before {
   content: "\f1e7";
 }
 
-.food-icon-brazil_nuts:before {
+.food-icon-cassava:before {
   content: "\f1e8";
 }
 
-.food-icon-bottle_wine:before {
+.food-icon-cashew_nuts:before {
   content: "\f1e9";
 }
 
-.food-icon-bottle_scotch_2:before {
+.food-icon-carrot:before {
   content: "\f1ea";
 }
 
-.food-icon-bottle_scotch:before {
+.food-icon-caramel_apple:before {
   content: "\f1eb";
 }
 
-.food-icon-bottle_gallon:before {
+.food-icon-cantaloupe_slice:before {
   content: "\f1ec";
 }
 
-.food-icon-blueberries:before {
+.food-icon-cantaloupe:before {
   content: "\f1ed";
 }
 
-.food-icon-blackberry:before {
+.food-icon-canned-food:before {
   content: "\f1ee";
 }
 
-.food-icon-biscuit:before {
+.food-icon-candy_cane:before {
   content: "\f1ef";
 }
 
-.food-icon-biscotti:before {
+.food-icon-candy:before {
   content: "\f1f0";
 }
 
-.food-icon-birthday_cake:before {
+.food-icon-cake_slice_nuts:before {
   content: "\f1f1";
 }
 
-.food-icon-bell_pepper_split:before {
+.food-icon-cake_slice:before {
   content: "\f1f2";
 }
 
-.food-icon-bell_pepper:before {
+.food-icon-cake:before {
   content: "\f1f3";
 }
 
-.food-icon-beetroot:before {
+.food-icon-cabbage:before {
   content: "\f1f4";
 }
 
-.food-icon-beef:before {
+.food-icon-butter:before {
   content: "\f1f5";
 }
 
-.food-icon-beans:before {
+.food-icon-bun:before {
   content: "\f1f6";
 }
 
-.food-icon-banana_split:before {
+.food-icon-bubbles:before {
   content: "\f1f7";
 }
 
-.food-icon-banana_peeled:before {
+.food-icon-bubblegum_machine:before {
   content: "\f1f8";
 }
 
-.food-icon-banana:before {
+.food-icon-bubblegum:before {
   content: "\f1f9";
 }
 
-.food-icon-bacon:before {
+.food-icon-brown_bread:before {
   content: "\f1fa";
 }
 
-.food-icon-avocado_split:before {
+.food-icon-broccoli:before {
   content: "\f1fb";
 }
 
-.food-icon-avocado:before {
+.food-icon-bread_slice:before {
   content: "\f1fc";
 }
 
-.food-icon-asparagus:before {
+.food-icon-bread:before {
   content: "\f1fd";
 }
 
-.food-icon-artichoke:before {
+.food-icon-brazil_nuts:before {
   content: "\f1fe";
 }
 
-.food-icon-apple_split:before {
+.food-icon-bowl-with-spoon:before {
   content: "\f1ff";
 }
 
-.food-icon-apple_green_split:before {
+.food-icon-bottle_wine:before {
   content: "\f200";
 }
 
-.food-icon-apple_green:before {
+.food-icon-bottle_scotch_2:before {
   content: "\f201";
 }
 
-.food-icon-apple:before {
+.food-icon-bottle_scotch:before {
   content: "\f202";
 }
 
-.food-icon-almonds:before {
+.food-icon-bottle_gallon:before {
   content: "\f203";
 }
 
-.food-icon-almond:before {
+.food-icon-books:before {
   content: "\f204";
+}
+
+.food-icon-blueberries:before {
+  content: "\f205";
+}
+
+.food-icon-blackberry:before {
+  content: "\f206";
+}
+
+.food-icon-biscuit:before {
+  content: "\f207";
+}
+
+.food-icon-biscotti:before {
+  content: "\f208";
+}
+
+.food-icon-birthday_cake:before {
+  content: "\f209";
+}
+
+.food-icon-bell_pepper_split:before {
+  content: "\f20a";
+}
+
+.food-icon-bell_pepper:before {
+  content: "\f20b";
+}
+
+.food-icon-beetroot:before {
+  content: "\f20c";
+}
+
+.food-icon-beef:before {
+  content: "\f20d";
+}
+
+.food-icon-beans:before {
+  content: "\f20e";
+}
+
+.food-icon-banana_split:before {
+  content: "\f20f";
+}
+
+.food-icon-banana_peeled:before {
+  content: "\f210";
+}
+
+.food-icon-banana:before {
+  content: "\f211";
+}
+
+.food-icon-bacon:before {
+  content: "\f212";
+}
+
+.food-icon-avocado_split:before {
+  content: "\f213";
+}
+
+.food-icon-avocado:before {
+  content: "\f214";
+}
+
+.food-icon-asparagus:before {
+  content: "\f215";
+}
+
+.food-icon-artichoke:before {
+  content: "\f216";
+}
+
+.food-icon-apple_split:before {
+  content: "\f217";
+}
+
+.food-icon-apple_green_split:before {
+  content: "\f218";
+}
+
+.food-icon-apple_green:before {
+  content: "\f219";
+}
+
+.food-icon-apple:before {
+  content: "\f21a";
+}
+
+.food-icon-almonds:before {
+  content: "\f21b";
+}
+
+.food-icon-almond:before {
+  content: "\f21c";
 }

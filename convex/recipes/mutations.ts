@@ -10,7 +10,7 @@ export const createRecipe = mutationWithRLS({
     instructions: v.array(
       v.object({
         text: v.string(),
-        order: v.optional(v.number()),
+        order: v.number(),
       }),
     ),
     servings: v.number(),
@@ -42,7 +42,7 @@ export const createRecipe = mutationWithRLS({
     // Verify all products belong to the household
     for (const productData of args.products) {
       const product = await ctx.db.get(productData.productId as Id<'products'>);
-      if (!product || product.householdId !== householdId) {
+      if (product?.householdId !== householdId) {
         throw new ConvexError('Product not found in this household');
       }
     }
@@ -50,10 +50,7 @@ export const createRecipe = mutationWithRLS({
     // Create the recipe
     const recipeId = await ctx.db.insert('recipes', {
       name: args.name,
-      instructions: args.instructions.map((s, idx) => ({
-        order: s.order ?? idx,
-        text: s.text,
-      })),
+      instructions: args.instructions,
       servings: args.servings,
       prepTime: args.prepTime,
       cookTime: args.cookTime,
@@ -84,7 +81,7 @@ export const updateRecipe = mutationWithRLS({
       v.array(
         v.object({
           text: v.string(),
-          order: v.optional(v.number()),
+          order: v.number(),
         }),
       ),
     ),
@@ -130,15 +127,7 @@ export const updateRecipe = mutationWithRLS({
 
     const updateData = recipesPatchBuilder(args, ['recipeId', 'products']);
 
-    if (args.instructions) {
-      // Normalize to ordered steps
-      (updateData as any).instructions = args.instructions.map((s, idx) => ({
-        order: s.order ?? idx,
-        text: s.text,
-      }));
-    }
-
-    await ctx.db.patch(recipe._id, updateData as any);
+    await ctx.db.patch(recipe._id, updateData);
 
     // Update products if provided
     if (args.products !== undefined) {

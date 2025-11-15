@@ -61,7 +61,7 @@ export const getRecipeById = queryWithRLS({
 
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
 
-    if (!recipe || recipe.householdId !== householdId) {
+    if (recipe?.householdId !== householdId) {
       return null;
     }
 

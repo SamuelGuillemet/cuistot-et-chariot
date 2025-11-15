@@ -67,12 +67,12 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
     >
       <Dialog open={isDialogOpen} onOpenChange={onDialogOpenChange}>
         <DialogTrigger asChild>
-          <button
+          <Button
             type="button"
             disabled={disabled}
             className={cn(
               'flex justify-center items-center border rounded-lg w-12 h-12 transition-colors',
-              'hover:bg-accent hover:border-primary/20 focus:outline-none focus:ring-2 focus:ring-ring',
+              'hover:bg-primary/10 hover:border-primary/40 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring',
               error && 'border-destructive',
               !value && 'bg-muted',
               className,
@@ -88,7 +88,7 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
                 <SearchIcon className="w-4 h-4" />
               </span>
             )}
-          </button>
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:min-w-2xl lg:min-w-4xl">
           <DialogHeader>

@@ -47,7 +47,7 @@ const IconItem: React.FC<IconItemProps> = ({ icon, isSelected, onClick }) => {
     >
       <div
         className={cn(
-          'flex justify-center items-center rounded-lg w-12 h-12',
+          'flex justify-center items-center rounded-full w-12 h-12',
           'bg-muted border border-accent-foreground/50',
           isSelected ? 'bg-primary/10 border-primary/20' : '',
         )}

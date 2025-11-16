@@ -27,6 +27,7 @@ export const productsSchema = defineTable({
 })
   .index('by_householdId', ['householdId'])
   .index('by_category', ['category'])
-  .index('by_householdId_category', ['householdId', 'category']);
+  .index('by_householdId_category', ['householdId', 'category'])
+  .index('by_householdId_name', ['householdId', 'name']);
 
 export const productsPatchBuilder = createPatchBuilder<Doc<'products'>>();

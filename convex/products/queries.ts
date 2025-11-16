@@ -9,7 +9,8 @@ export const getProducts = queryWithRLS({
 
     const products = await ctx.db
       .query('products')
-      .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
+      .withIndex('by_householdId_name', (q) => q.eq('householdId', householdId))
+      .order('asc')
       .collect();
 
     return products;
@@ -25,7 +26,7 @@ export const getProductById = queryWithRLS({
 
     const product = await ctx.db.get(args.productId);
 
-    if (!product || product.householdId !== householdId) {
+    if (product?.householdId !== householdId) {
       return null;
     }
 

@@ -6,16 +6,9 @@ import { PRODUCT_UNITS } from 'convex/types';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { type AppForm, withFieldGroup } from '@/hooks/use-app-form';
 import { cn } from '@/lib/utils';
-import { getIconClass } from '../food-icons/icon-food-font-config';
 import { BaseField, BaseFieldComposer } from '../forms/base-field';
+import { ProductSelector } from '../products/product-selector';
 import { Button } from '../ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
 import { Separator } from '../ui/separator';
 import type { Recipe } from './recipe-form';
 
@@ -118,32 +111,16 @@ const ProductFormFields = withFieldGroup({
             {(field) => (
               <BaseField label="Produit" required field={field}>
                 {({ isInvalid }) => (
-                  <Select
-                    aria-invalid={isInvalid}
-                    name={field.name}
+                  <ProductSelector
+                    products={products}
                     value={field.state.value}
-                    onValueChange={(value) => {
+                    onChange={(value) => {
                       field.handleChange(value);
                       setDefaultUnit(value);
                     }}
-                    showClearButton
-                  >
-                    <SelectTrigger
-                      id={field.name}
-                      aria-invalid={isInvalid}
-                      onBlur={field.handleBlur}
-                    >
-                      <SelectValue placeholder="Sélectionner un produit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {products.map((p) => (
-                        <SelectItem key={p._id} value={p._id}>
-                          <i className={cn(getIconClass(p.icon), 'mr-2')} />
-                          {p.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onBlur={field.handleBlur}
+                    isInvalid={isInvalid}
+                  />
                 )}
               </BaseField>
             )}

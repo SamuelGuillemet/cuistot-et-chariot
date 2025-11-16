@@ -7,11 +7,12 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type PaginationState,
   type SortingState,
   useReactTable,
   type VisibilityState,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import {
   Table,
@@ -38,6 +39,10 @@ export function DataTable<TData extends { _id: string | number }, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     { id: '_id', desc: true },
   ]);
+  const [paginationState, setPaginationState] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   const table = useReactTable({
     sortDescFirst: true,
@@ -47,17 +52,28 @@ export function DataTable<TData extends { _id: string | number }, TValue>({
       sorting,
       columnVisibility,
       rowSelection,
+      pagination: paginationState,
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
+    onPaginationChange: setPaginationState,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    autoResetPageIndex: false,
   });
+
+  // Ensure pageIndex is valid when data changes
+  useEffect(() => {
+    const pageCount = table.getPageCount();
+    if (paginationState.pageIndex >= pageCount && pageCount > 0) {
+      setPaginationState((prev) => ({ ...prev, pageIndex: pageCount - 1 }));
+    }
+  }, [table, paginationState.pageIndex]);
 
   if (!pagination) {
     table.getState().pagination.pageSize = data.length;

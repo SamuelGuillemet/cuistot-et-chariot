@@ -1,9 +1,11 @@
 import { useStore } from '@tanstack/react-form';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { Fragment } from 'react/jsx-runtime';
 import { type AppForm, withFieldGroup } from '@/hooks/use-app-form';
 import { cn } from '@/lib/utils';
 import { BaseFieldComposer } from '../forms/base-field';
 import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
 import type { Recipe } from './recipe-form';
 
 export function InstructionsFieldArray({
@@ -38,45 +40,51 @@ export function InstructionsFieldArray({
           <BaseFieldComposer.Root
             field={field}
             required
-            className="flex flex-col gap-4"
+            className="flex flex-col gap-2"
           >
-            <div className="flex justify-between items-center">
-              <BaseFieldComposer.Label>
-                Etapes de la recette
-              </BaseFieldComposer.Label>
-              <Button type="button" variant="outline" size="sm" onClick={onAdd}>
-                <PlusIcon className="mr-2 w-4 h-4" /> Ajouter une étape
-              </Button>
-            </div>
+            <BaseFieldComposer.Label>
+              Etapes de la recette
+            </BaseFieldComposer.Label>
             <BaseFieldComposer.Control>
               {({ isInvalid }) => (
-                <div className="flex flex-col gap-4">
+                <div
+                  className={cn(
+                    'flex flex-col gap-4 p-4 border rounded-md',
+                    isInvalid && 'border-destructive',
+                  )}
+                >
                   {field.state.value.length === 0 ? (
-                    <p
-                      className={cn(
-                        'py-4 border rounded-md text-muted-foreground text-sm text-center',
-                        isInvalid && 'border-destructive',
-                      )}
-                    >
+                    <p className="py-4 text-sm text-center">
                       Aucune instruction ajoutée.
                     </p>
                   ) : (
                     field.state.value.map((step, index) => (
-                      <InstructionsFormFields
-                        key={`${step.order}-${index}`}
-                        form={form}
-                        fields={`instructions[${index}]`}
-                        onMoveUp={() => onMove(index, index - 1)}
-                        onMoveDown={() => onMove(index, index + 1)}
-                        onRemove={() => onRemove(index)}
-                        canMoveUp={index > 0}
-                        canMoveDown={index < field.state.value.length - 1}
-                      />
+                      <Fragment key={`${step.order}-${index}`}>
+                        <InstructionsFormFields
+                          form={form}
+                          fields={`instructions[${index}]`}
+                          onMoveUp={() => onMove(index, index - 1)}
+                          onMoveDown={() => onMove(index, index + 1)}
+                          onRemove={() => onRemove(index)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < field.state.value.length - 1}
+                        />
+                        {index < field.state.value.length - 1 && <Separator />}
+                      </Fragment>
                     ))
                   )}
                 </div>
               )}
             </BaseFieldComposer.Control>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onAdd}
+              className="w-full"
+            >
+              <PlusIcon className="mr-2 w-4 h-4" /> Ajouter une étape
+            </Button>
             <BaseFieldComposer.Error />
           </BaseFieldComposer.Root>
         );
@@ -106,7 +114,7 @@ const InstructionsFormFields = withFieldGroup({
       order === 1 ? 'Décrivez les étapes de la recette...' : `Étape ${order}…`;
 
     return (
-      <div className="items-start gap-2 grid grid-cols-[auto,1fr,auto] bg-accent/40 p-2 border rounded-md">
+      <div className="items-start gap-2 grid grid-cols-[auto,1fr,auto]">
         <div className="flex justify-center items-center bg-background border rounded-full size-7 font-semibold text-xs shrink-0">
           {order}
         </div>

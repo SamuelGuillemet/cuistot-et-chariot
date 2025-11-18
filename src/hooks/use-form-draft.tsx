@@ -4,6 +4,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useEffectEvent,
   useMemo,
   useRef,
   useState,
@@ -166,8 +167,7 @@ export function useFormDraft<TData>({
     clearDraftFromStorage();
   }, [clearDraftFromStorage]);
 
-  // Initial load: decide whether to show the banner
-  useEffect(() => {
+  const onInitialLoad = useEffectEvent(() => {
     if (!enabled) {
       setShowBanner(false);
       return;
@@ -190,7 +190,12 @@ export function useFormDraft<TData>({
     } else {
       setShowBanner(false);
     }
-  }, [enabled, loadDraftFromStorage, values, isTouched]);
+  });
+
+  // Initial load: decide whether to show the banner
+  useEffect(() => {
+    onInitialLoad();
+  }, []);
 
   useEffect(() => {
     if (!enabled || !isTouched) {

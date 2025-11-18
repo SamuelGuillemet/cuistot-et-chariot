@@ -48,10 +48,13 @@ export function UnsavedChangesProvider({
     [enabled],
   );
 
-  router.subscribe('onRendered', () => {
-    blocker.reset?.();
-    setEnabled(false);
-  });
+  React.useEffect(() => {
+    const unsub = router.subscribe('onRendered', () => {
+      blocker.reset?.();
+      setEnabled(false);
+    });
+    return () => unsub();
+  }, [router, blocker]);
 
   return (
     <UnsavedChangesContext.Provider value={value}>

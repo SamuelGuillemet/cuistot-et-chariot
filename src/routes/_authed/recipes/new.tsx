@@ -3,10 +3,7 @@ import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import {
-  RecipeForm,
-  type RecipeFormValues,
-} from '@/components/recipes/recipe-form';
+import { type Recipe, RecipeForm } from '@/components/recipes/recipe-form';
 import { useCurrentMember } from '@/hooks/use-current-member';
 
 export const Route = createFileRoute('/_authed/recipes/new')({
@@ -35,7 +32,7 @@ function RouteComponent() {
     },
   });
 
-  const handleSubmit = (values: RecipeFormValues) => {
+  const handleSubmit = (values: Recipe) => {
     createRecipe({
       publicId: householdId,
       ...values,

@@ -4,6 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import type { FunctionReturnType } from 'convex/server';
 import { PRODUCT_UNITS } from 'convex/types';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
+import { Fragment } from 'react/jsx-runtime';
 import { type AppForm, withFieldGroup } from '@/hooks/use-app-form';
 import { cn } from '@/lib/utils';
 import { BaseField, BaseFieldComposer } from '../forms/base-field';
@@ -33,50 +34,48 @@ export function ProductsFieldArray({
         <BaseFieldComposer.Root
           field={field}
           required
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-2"
         >
-          <div className="flex justify-between items-center">
-            <BaseFieldComposer.Label>Ingrédients</BaseFieldComposer.Label>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                field.pushValue({ productId: '', quantity: 1, unit: 'pieces' })
-              }
-            >
-              <PlusIcon className="mr-2 w-4 h-4" /> Ajouter un ingrédient
-            </Button>
-          </div>
+          <BaseFieldComposer.Label>Ingrédients</BaseFieldComposer.Label>
           <BaseFieldComposer.Control>
             {({ isInvalid }) => (
               <div
                 className={cn(
-                  'flex flex-col gap-4 bg-accent/50 p-4 border rounded-md',
+                  'flex flex-col gap-4 p-4 border rounded-md',
                   isInvalid && 'border-destructive',
                 )}
               >
                 {field.state.value.length === 0 ? (
-                  <p className="py-4 text-muted-foreground text-sm text-center">
+                  <p className="py-4 text-sm text-center">
                     Aucun ingrédient ajouté.
                   </p>
                 ) : (
                   field.state.value.map((product, index) => (
-                    <>
+                    <Fragment key={`${product.productId}-${index}`}>
                       <ProductFormFields
-                        key={`${product.productId}-${index}`}
                         form={form}
                         fields={`products[${index}]`}
                         products={availableProducts}
                         onRemove={() => field.removeValue(index)}
                       />
                       {index < field.state.value.length - 1 && <Separator />}
-                    </>
+                    </Fragment>
                   ))
                 )}
               </div>
             )}
           </BaseFieldComposer.Control>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              field.pushValue({ productId: '', quantity: 1, unit: 'pieces' })
+            }
+            className="w-full"
+          >
+            <PlusIcon className="mr-2 w-4 h-4" /> Ajouter un ingrédient
+          </Button>
           <BaseFieldComposer.Error />
         </BaseFieldComposer.Root>
       )}

@@ -2,6 +2,7 @@ import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { Layout } from '@/components/layout';
+import { UnsavedChangesProvider } from '@/hooks/use-unsaved-changes-context';
 import {
   householdIdQueryOptions,
   setHouseholdIdServerFn,
@@ -62,7 +63,9 @@ export const Route = createFileRoute('/_authed')({
   },
   component: () => (
     <Layout>
-      <Outlet />
+      <UnsavedChangesProvider>
+        <Outlet />
+      </UnsavedChangesProvider>
     </Layout>
   ),
 });

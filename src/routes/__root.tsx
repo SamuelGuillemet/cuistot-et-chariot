@@ -2,6 +2,7 @@
 
 import type { ConvexQueryClient } from '@convex-dev/react-query';
 import { TanStackDevtools } from '@tanstack/react-devtools';
+import { FormDevtools } from '@tanstack/react-form-devtools';
 import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import {
@@ -21,6 +22,16 @@ import {
   themeQueryOptions,
 } from '@/lib/server-queries';
 import mainCss from '@/styles/main.css?url';
+
+const ReactScan =
+  process.env.NODE_ENV === 'production'
+    ? () => null
+    : () => (
+        <script
+          crossOrigin="anonymous"
+          src="https://unpkg.com/react-scan/dist/auto.global.js"
+        />
+      );
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -84,11 +95,12 @@ function RootDocument({ children }: PropsWithChildren) {
     <html lang="fr" className={theme} suppressHydrationWarning>
       <head>
         <HeadContent />
+        <ReactScan />
       </head>
       <body className="font-regular antialiased tracking-wide">
         <ThemeProvider theme={theme}>
           {children}
-          <Toaster richColors />
+          <Toaster richColors position="bottom-left" />
         </ThemeProvider>
         <TanStackDevtools
           plugins={[

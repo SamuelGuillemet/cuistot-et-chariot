@@ -2,6 +2,9 @@ import { PRODUCT_UNITS, RECIPE_DIFFICULTY_DISPLAY_NAMES } from 'convex/types';
 import * as v from 'valibot';
 import { FieldGroup } from '@/components/ui/field';
 import { useAppForm } from '@/hooks/use-app-form';
+import { useFormDraft } from '@/hooks/use-form-draft';
+import { useUnsavedChanges } from '@/hooks/use-unsaved-changes-context';
+import type { MaybeAsync } from '@/utils/types';
 import { typedEnum } from '@/utils/valibot';
 import { ProductsFieldArray } from './recipe-ingredients-editor';
 import { InstructionsFieldArray } from './recipe-instructions-editor';
@@ -59,11 +62,12 @@ const Recipe = v.object({
 export type Recipe = v.InferOutput<typeof Recipe>;
 
 interface RecipeFormProps {
-  readonly onSubmit: (values: Recipe) => void;
+  readonly onSubmit: MaybeAsync<(values: Recipe) => void>;
   readonly isLoading?: boolean;
   readonly defaultValues?: Partial<Recipe>;
   readonly submitText?: string;
   readonly householdId: string;
+  readonly recipeId?: string;
 }
 
 export function RecipeForm({
@@ -72,6 +76,7 @@ export function RecipeForm({
   defaultValues,
   submitText = 'Créer la recette',
   householdId,
+  recipeId,
 }: Readonly<RecipeFormProps>) {
   const form = useAppForm<Recipe>({
     defaultValues: {
@@ -88,8 +93,18 @@ export function RecipeForm({
       validateFn: Recipe,
       validateOn: ['onChange'],
     },
-    onSubmit,
+    onSubmit: async (values) => {
+      await onSubmit(values);
+      clearDraft();
+    },
   });
+
+  const { clearDraft, banner } = useFormDraft({
+    form,
+    storageKey: recipeId || 'recipe-new',
+  });
+
+  useUnsavedChanges({ enabled: !form.state.isDefaultValue && !isLoading });
 
   return (
     <form
@@ -99,6 +114,8 @@ export function RecipeForm({
       }}
       className="space-y-6"
     >
+      {banner}
+
       <FieldGroup>
         <form.AppField name="name">
           {(field) => (

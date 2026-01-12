@@ -67,7 +67,7 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
     >
       <Dialog open={isDialogOpen} onOpenChange={onDialogOpenChange}>
         <DialogTrigger asChild>
-          <Button
+          <button
             type="button"
             disabled={disabled}
             className={cn(
@@ -88,7 +88,7 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
                 <SearchIcon className="w-4 h-4" />
               </span>
             )}
-          </Button>
+          </button>
         </DialogTrigger>
         <DialogContent className="sm:min-w-2xl lg:min-w-4xl">
           <DialogHeader>

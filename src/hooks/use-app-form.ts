@@ -91,7 +91,7 @@ export function useAppForm<TValues>(options: {
       if (!('value' in transformedValue)) {
         throw new Error('Validation failed on submit.');
       }
-      await options.onSubmit(transformedValue.value);
+      await maybeAwait(options.onSubmit(transformedValue.value));
     },
     onSubmitInvalid({ formApi }) {
       const errorMap = formApi.state.errorMap.onChange || {};

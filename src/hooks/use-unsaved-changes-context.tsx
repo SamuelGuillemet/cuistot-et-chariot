@@ -54,14 +54,21 @@ export function UnsavedChangesProvider({
       setEnabled(false);
     });
     return () => unsub();
-  }, [router, blocker]);
+  }, [router, blocker.reset]);
 
   return (
     <UnsavedChangesContext.Provider value={value}>
       {children}
 
-      {/* Global dialog for navigation guard */}
-      <AlertDialog open={isBlocked} onOpenChange={() => {}}>
+      <AlertDialog
+        open={isBlocked}
+        onOpenChange={(open) => {
+          if (!open) {
+            // User closed the dialog without choosing → cancel navigation
+            blocker.reset?.();
+          }
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Changements non enregistrés</AlertDialogTitle>

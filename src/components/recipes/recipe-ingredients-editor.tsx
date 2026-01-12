@@ -50,8 +50,8 @@ export function ProductsFieldArray({
                     Aucun ingrédient ajouté.
                   </p>
                 ) : (
-                  field.state.value.map((product, index) => (
-                    <Fragment key={`${product.productId}-${index}`}>
+                  field.state.value.map((_, index) => (
+                    <Fragment key={index}>
                       <ProductFormFields
                         form={form}
                         fields={`products[${index}]`}

@@ -4,6 +4,7 @@ import { FieldGroup } from '@/components/ui/field';
 import { useAppForm } from '@/hooks/use-app-form';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useUnsavedChanges } from '@/hooks/use-unsaved-changes-context';
+import type { MaybeAsync } from '@/utils/types';
 import { typedEnum } from '@/utils/valibot';
 import { ProductsFieldArray } from './recipe-ingredients-editor';
 import { InstructionsFieldArray } from './recipe-instructions-editor';
@@ -61,7 +62,7 @@ const Recipe = v.object({
 export type Recipe = v.InferOutput<typeof Recipe>;
 
 interface RecipeFormProps {
-  readonly onSubmit: (values: Recipe) => void;
+  readonly onSubmit: MaybeAsync<(values: Recipe) => void>;
   readonly isLoading?: boolean;
   readonly defaultValues?: Partial<Recipe>;
   readonly submitText?: string;
@@ -92,8 +93,8 @@ export function RecipeForm({
       validateFn: Recipe,
       validateOn: ['onChange'],
     },
-    onSubmit: (values) => {
-      onSubmit(values);
+    onSubmit: async (values) => {
+      await onSubmit(values);
       clearDraft();
     },
   });

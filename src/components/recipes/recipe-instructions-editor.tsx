@@ -58,8 +58,8 @@ export function InstructionsFieldArray({
                       Aucune instruction ajoutée.
                     </p>
                   ) : (
-                    field.state.value.map((step, index) => (
-                      <Fragment key={`${step.order}-${index}`}>
+                    field.state.value.map((_, index) => (
+                      <Fragment key={index}>
                         <InstructionsFormFields
                           form={form}
                           fields={`instructions[${index}]`}

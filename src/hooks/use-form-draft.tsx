@@ -230,6 +230,7 @@ export function useFormDraft<TData>({
           variant="outline"
           size="sm"
           onClick={handleRestoreDraft}
+          aria-label="Restaurer le brouillon"
         >
           Restaurer
         </Button>

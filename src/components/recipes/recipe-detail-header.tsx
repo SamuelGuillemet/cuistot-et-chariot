@@ -1,4 +1,4 @@
-import type { Doc } from 'convex/_generated/dataModel';
+import type { Doc } from '@api/dataModel';
 import { Separator } from '@/components/ui/separator';
 import { RecipeActionsDropdown } from './recipe-actions-dropdown';
 import { RecipeDifficultyBadge } from './recipe-difficulty-badge';

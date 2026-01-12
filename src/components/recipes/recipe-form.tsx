@@ -1,4 +1,4 @@
-import { PRODUCT_UNITS, RECIPE_DIFFICULTY_DISPLAY_NAMES } from 'convex/types';
+import { PRODUCT_UNITS, RECIPE_DIFFICULTY_DISPLAY_NAMES } from '@backend/types';
 import * as v from 'valibot';
 import { FieldGroup } from '@/components/ui/field';
 import { useAppForm } from '@/hooks/use-app-form';

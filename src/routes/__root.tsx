@@ -1,8 +1,9 @@
 /// <reference types="vite/client" />
 
+import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
 import type { ConvexQueryClient } from '@convex-dev/react-query';
 import { TanStackDevtools } from '@tanstack/react-devtools';
-import { FormDevtools } from '@tanstack/react-form-devtools';
+import { FormDevtoolsPanel } from '@tanstack/react-form-devtools';
 import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import {
@@ -10,6 +11,7 @@ import {
   HeadContent,
   Outlet,
   Scripts,
+  useRouteContext,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import type { PropsWithChildren } from 'react';
@@ -17,6 +19,7 @@ import { Page404 } from '@/components/404';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { authClient } from '@/lib/auth-client';
 import {
   authSessionQueryOptions,
   themeQueryOptions,
@@ -63,14 +66,14 @@ export const Route = createRootRouteWithContext<{
     );
   },
   beforeLoad: async (opts) => {
-    const { token, userId } = await opts.context.queryClient.ensureQueryData(
+    const { token } = await opts.context.queryClient.ensureQueryData(
       authSessionQueryOptions(),
     );
     if (token) {
       opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
     }
 
-    return { userId };
+    return { isAuthenticated: !!token, token };
   },
   loader: async (opts) => {
     await opts.context.queryClient.ensureQueryData(themeQueryOptions());
@@ -81,10 +84,18 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
+  const context = useRouteContext({ from: Route.id });
+
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <ConvexBetterAuthProvider
+      client={context.convexQueryClient.convexClient}
+      authClient={authClient}
+      initialToken={context.token}
+    >
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </ConvexBetterAuthProvider>
   );
 }
 
@@ -114,7 +125,7 @@ function RootDocument({ children }: PropsWithChildren) {
             },
             {
               name: 'TanStack Form',
-              render: <FormDevtools />,
+              render: <FormDevtoolsPanel />,
             },
           ]}
         />

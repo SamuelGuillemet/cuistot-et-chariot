@@ -1,4 +1,4 @@
-import type { RecipeDifficulty } from 'convex/types';
+import type { RecipeDifficulty } from '@backend/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 

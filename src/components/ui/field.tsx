@@ -210,7 +210,6 @@ function FieldError({
       <ul className="flex flex-col gap-1 ml-4 list-disc">
         {uniqueErrors.map(
           (error, index) =>
-            // biome-ignore lint/suspicious/noArrayIndexKey: Shadcn cmpt
             error?.message && <li key={index}>{error.message}</li>,
         )}
       </ul>

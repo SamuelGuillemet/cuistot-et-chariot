@@ -1,6 +1,6 @@
 import type { api } from '@api/api';
+import { CATEGORY_DISPLAY_NAMES } from '@backend/types';
 import type { FunctionReturnType } from 'convex/server';
-import { CATEGORY_DISPLAY_NAMES } from 'convex/types';
 import { ChevronDownIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';

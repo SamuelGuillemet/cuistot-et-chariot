@@ -1,8 +1,8 @@
 import { api } from '@api/api';
+import type { Doc } from '@api/dataModel';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
-import type { Doc } from 'convex/_generated/dataModel';
 import { toast } from 'sonner';
 import {
   AlertDialog,

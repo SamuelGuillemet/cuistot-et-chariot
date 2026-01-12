@@ -22,7 +22,7 @@ export const Route = createFileRoute('/login')({
     return searchParams;
   },
   beforeLoad: ({ context }) => {
-    if (context.userId) {
+    if (context.isAuthenticated) {
       throw redirect({ to: '/dashboard' });
     }
   },

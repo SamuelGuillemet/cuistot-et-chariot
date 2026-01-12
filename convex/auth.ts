@@ -9,6 +9,7 @@ import { ConvexError } from 'convex/values';
 import { components, internal } from './_generated/api';
 import type { DataModel, Id } from './_generated/dataModel';
 import type { MutationCtx, QueryCtx } from './_generated/server';
+import authConfig from './auth.config';
 
 const authFunctions: AuthFunctions = internal.auth;
 
@@ -49,10 +50,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 
 export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
-export const createAuth = (
-  ctx: GenericCtx<DataModel>,
-  { optionsOnly } = { optionsOnly: false },
-) =>
+export const createAuth = (ctx: GenericCtx<DataModel>) =>
   betterAuth({
     baseURL: process.env.SITE_URL,
     database: authComponent.adapter(ctx),
@@ -78,10 +76,12 @@ export const createAuth = (
         enabled: true,
       },
     },
-    plugins: [convex()],
-    logger: {
-      disabled: optionsOnly,
-    },
+    plugins: [
+      convex({
+        authConfig,
+        jwksRotateOnTokenGenerationError: true,
+      }),
+    ],
   });
 
 export async function getAuthUserId(

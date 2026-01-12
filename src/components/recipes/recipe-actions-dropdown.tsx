@@ -1,4 +1,4 @@
-import type { Doc } from 'convex/_generated/dataModel';
+import type { Doc } from '@api/dataModel';
 import { EditIcon, MoreVerticalIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';

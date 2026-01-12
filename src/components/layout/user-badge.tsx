@@ -32,9 +32,9 @@ export default function UserBadge() {
         onSuccess: () => {
           queryClient.setQueryData(authSessionQueryOptions().queryKey, {
             token: undefined,
-            userId: undefined,
           });
           router.navigate({ to: '/login' });
+          location.reload();
         },
       },
     });

@@ -41,10 +41,10 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[tailwindcss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "terminal.integrated.shellIntegration.enabled": true,
   "typescript.preferences.autoImportFileExcludePatterns": ["lucide-react"],
-  "css.customData": [".vscode/tailwind.json"]
+  "css.customData": [".vscode/tailwind.json"],
+  "typescript.experimental.useTsgo": true
 }

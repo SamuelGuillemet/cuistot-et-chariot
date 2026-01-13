@@ -1,4 +1,4 @@
-import type { Doc } from 'convex/_generated/dataModel';
+import type { Doc } from '@api/dataModel';
 import { RecipeCard } from './recipe-card';
 
 interface RecipeListProps {

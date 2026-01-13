@@ -1,7 +1,7 @@
 import { api } from '@api/api';
+import { CATEGORY_DISPLAY_NAMES } from '@backend/types';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { CATEGORY_DISPLAY_NAMES } from 'convex/types';
 import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';

@@ -14,11 +14,12 @@ type PermissionRecords = Record<PermissionKeys, boolean>;
 
 type MapTuple<T extends unknown[]> = { [K in keyof T]: Permission<T[K]> };
 
-type AllValuesArray<T> = TupleOf<T> extends infer R
-  ? R extends unknown[]
-    ? MapTuple<R>
-    : never
-  : never;
+type AllValuesArray<T> =
+  TupleOf<T> extends infer R
+    ? R extends unknown[]
+      ? MapTuple<R>
+      : never
+    : never;
 
 /**
  * Configuration for all available member permissions.

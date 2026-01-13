@@ -1,5 +1,5 @@
+import type { Doc } from '@api/dataModel';
 import { Link } from '@tanstack/react-router';
-import type { Doc } from 'convex/_generated/dataModel';
 import { ChefHatIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RecipeDifficultyBadge } from './recipe-difficulty-badge';

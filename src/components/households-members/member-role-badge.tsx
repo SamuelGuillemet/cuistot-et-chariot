@@ -1,4 +1,4 @@
-import type { Role } from 'convex/types';
+import type { Role } from '@backend/types';
 import { CrownIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';

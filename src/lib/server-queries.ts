@@ -1,19 +1,15 @@
-import {
-  fetchSession,
-  getCookieName,
-} from '@convex-dev/better-auth/react-start';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import {
   deleteCookie,
   getCookie,
-  getRequest,
   setCookie,
 } from '@tanstack/react-start/server';
 import * as v from 'valibot';
 import type { Theme } from '@/components/layout/theme-provider';
 import { SIDEBAR_COOKIE_NAME } from '@/components/ui/sidebar';
+import { getToken } from './auth-server';
 
 // Constants
 const THEME_COOKIE_NAME = 'ui-theme';
@@ -24,13 +20,8 @@ const DEFAULT_COOKIE_OPTIONS = { httpOnly: true, maxAge: 60 * 60 * 24 * 30 };
 // Server Functions
 export const getAuthSessionServerFn = createServerFn({ method: 'GET' }).handler(
   async () => {
-    const { createAuth } = await import('../../convex/auth');
-    const { session } = await fetchSession(getRequest());
-    const sessionCookieName = getCookieName(createAuth);
-    const token = getCookie(sessionCookieName);
     return {
-      userId: session?.user.id,
-      token,
+      token: await getToken(),
     };
   },
 );

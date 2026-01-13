@@ -24,8 +24,15 @@ const config: UserConfig = {
       config: { preset: 'vercel' },
     }),
     tailwindcss(),
-    react(),
+    react({
+      babel: {
+        plugins: ['babel-plugin-react-compiler'],
+      },
+    }),
   ],
+  ssr: {
+    noExternal: ['@convex-dev/better-auth'],
+  },
 };
 
 export default defineConfig(config);

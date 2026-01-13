@@ -1,4 +1,3 @@
-import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 import {
   MutationCache,
@@ -12,12 +11,11 @@ import { ConvexError } from 'convex/values';
 import { toast } from 'sonner';
 import { Page404 } from './components/404';
 import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
-import { authClient } from './lib/auth-client';
 import { routeTree } from './routeTree.gen';
 
 export function getRouter() {
   if (typeof document !== 'undefined') {
-    notifyManager.setScheduler(window.requestAnimationFrame);
+    notifyManager.setScheduler(globalThis.requestAnimationFrame);
   }
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
@@ -61,14 +59,6 @@ export function getRouter() {
     defaultErrorComponent: DefaultCatchBoundary,
     defaultNotFoundComponent: Page404,
     context: { queryClient, convexQueryClient },
-    Wrap: ({ children }) => (
-      <ConvexBetterAuthProvider
-        client={convexQueryClient.convexClient}
-        authClient={authClient}
-      >
-        {children}
-      </ConvexBetterAuthProvider>
-    ),
   });
 
   setupRouterSsrQueryIntegration({

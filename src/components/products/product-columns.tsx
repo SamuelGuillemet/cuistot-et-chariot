@@ -1,11 +1,11 @@
 import type { Doc } from '@api/dataModel';
-import type { ColumnDef } from '@tanstack/react-table';
 import {
   CATEGORY_DISPLAY_NAMES,
   PRODUCT_UNITS,
   type ProductCategory,
   type ProductUnit,
-} from 'convex/types';
+} from '@backend/types';
+import type { ColumnDef } from '@tanstack/react-table';
 import {
   type FoodIcons,
   getIconClass,

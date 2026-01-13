@@ -1,7 +1,7 @@
 import { api } from '@api/api';
+import type { Role, Status } from '@backend/types';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import type { Role, Status } from 'convex/types';
 import {
   CrownIcon,
   MoreVerticalIcon,

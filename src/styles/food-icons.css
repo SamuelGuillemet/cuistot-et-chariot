@@ -9,9 +9,9 @@
 .food-icon {
   display: inline-block;
   aspect-ratio: 1 / 1;
-  padding-top: 0.40rem;
+  padding-top: 0.4rem;
   padding-right: 0.25rem;
-  padding-bottom: 0.10rem;
+  padding-bottom: 0.1rem;
   padding-left: 0.25rem;
   font-family: "food-icons", Arial, sans-serif;
   font-style: normal;

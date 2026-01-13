@@ -1,5 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["scripts/**/*.ts"],
   "compilerOptions": {
     "target": "ES2024",
     "useDefineForClassFields": true,
@@ -22,11 +23,10 @@
     "esModuleInterop": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@api/*": ["./convex/_generated/*"]
+      "@api/*": ["./convex/_generated/*"],
+      "@backend/*": ["./convex/*"]
     }
   }
 }

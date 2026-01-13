@@ -1,4 +1,4 @@
-import type { Status } from 'convex/types';
+import type { Status } from '@backend/types';
 import { BanIcon, HourglassIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';

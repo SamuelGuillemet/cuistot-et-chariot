@@ -1,4 +1,4 @@
-import type { Doc } from 'convex/_generated/dataModel';
+import type { Doc } from '@api/dataModel';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RecipeProductItem } from './recipe-product-item';

@@ -1,5 +1,5 @@
+import { RECIPE_DIFFICULTY_DISPLAY_NAMES } from '@backend/types';
 import { Link } from '@tanstack/react-router';
-import { RECIPE_DIFFICULTY_DISPLAY_NAMES } from 'convex/types';
 import { HeartIcon, PlusIcon, SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

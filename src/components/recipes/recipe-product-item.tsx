@@ -1,5 +1,5 @@
-import type { Doc } from 'convex/_generated/dataModel';
-import { PRODUCT_UNITS } from 'convex/types';
+import type { Doc } from '@api/dataModel';
+import { PRODUCT_UNITS } from '@backend/types';
 import { cn } from '@/lib/utils';
 import { getIconClass } from '../food-icons/icon-food-font-config';
 

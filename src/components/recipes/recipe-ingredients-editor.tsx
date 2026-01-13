@@ -1,8 +1,8 @@
 import { api } from '@api/api';
+import { PRODUCT_UNITS } from '@backend/types';
 import { convexQuery } from '@convex-dev/react-query';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import type { FunctionReturnType } from 'convex/server';
-import { PRODUCT_UNITS } from 'convex/types';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
 import { Fragment } from 'react/jsx-runtime';
 import { type AppForm, withFieldGroup } from '@/hooks/use-app-form';

@@ -1,5 +1,5 @@
-import { nullThrows } from 'convex-helpers';
 import { v } from 'convex/values';
+import { nullThrows } from 'convex-helpers';
 import { queryWithRLS } from './rls';
 
 export const getMealPlansByWeek = queryWithRLS({

@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 import type { Id } from '../_generated/dataModel';
-import { mealTypeEnum } from './schema';
 import { mutationWithRLS } from './rls';
+import { mealTypeEnum } from './schema';
 
 export const upsertMealPlan = mutationWithRLS({
   args: {

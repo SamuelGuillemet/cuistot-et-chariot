@@ -41,7 +41,6 @@ export const Route = createFileRoute('/_authed/meal-planner')({
       initialWeekStart: weekStart,
     };
   },
-
 });
 
 function MealPlannerSkeleton() {
@@ -73,7 +72,9 @@ function RouteComponent() {
   return (
     <div className="space-y-4 mx-auto py-6 container">
       <div className="space-y-2">
-        <h1 className="font-bold text-3xl tracking-tight">Menu de la semaine</h1>
+        <h1 className="font-bold text-3xl tracking-tight">
+          Menu de la semaine
+        </h1>
         <p className="text-muted-foreground">
           Planifiez vos repas en glissant vos recettes sur la grille.
         </p>

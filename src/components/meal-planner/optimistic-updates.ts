@@ -1,8 +1,8 @@
 import { api } from '@api/api';
 import type { OptimisticLocalStore } from 'convex/browser';
+import { getWeekStart } from '@/utils/week';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { MealType } from '../../../convex/types';
-import { getWeekStart } from '@/utils/week';
 
 type UpsertArgs = {
   publicId: string;

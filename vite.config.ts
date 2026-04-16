@@ -4,24 +4,19 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
 import { defineConfig, type UserConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
 
 const config: UserConfig = {
+  resolve: {
+    tsconfigPaths: true,
+  },
   server: {
     port: 3000,
   },
   plugins: [
-    devtools({
-      enhancedLogs: {
-        enabled: true,
-      },
-    }),
-    tsConfigPaths({
-      projects: ['./tsconfig.json'],
-    }),
+    devtools(),
     tanstackStart(),
     nitro({
-      config: { preset: 'vercel' },
+      preset: 'vercel',
     }),
     tailwindcss(),
     react(),

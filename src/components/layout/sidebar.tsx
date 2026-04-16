@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import {
+  CalendarDaysIcon,
   ChefHatIcon,
   ChevronRightIcon,
   HomeIcon,
@@ -50,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const menu: MenuItem[] = [];
     menu.push({
       title: "Page d'accueil",
-      url: '/',
+      url: '/dashboard',
       icon: <HomeIcon className="w-5 h-5" />,
     });
 
@@ -73,6 +74,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: 'Recettes',
         url: '/recipes',
         icon: <ChefHatIcon className="w-5 h-5" />,
+      });
+
+      menu.push({
+        title: 'Menu de la semaine',
+        url: '/meal-planner',
+        icon: <CalendarDaysIcon className="w-5 h-5" />,
       });
     }
 

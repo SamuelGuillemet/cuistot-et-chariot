@@ -5,13 +5,14 @@ export function makeEnum<T extends string>(values: T[]) {
   return v.union(...values.map((value) => v.literal(value)));
 }
 
-type ValidateKeys<T, U, K extends keyof T> = Exclude<keyof T, K> extends keyof U
-  ? Prettify<Partial<BetterOmit<T, K>>>
-  : {
-      __error: 'Contains invalid properties';
-      __invalidKeys: Exclude<Exclude<keyof T, K>, keyof U>;
-      __expectedKeys: keyof U;
-    };
+type ValidateKeys<T, U, K extends keyof T> =
+  Exclude<keyof T, K> extends keyof U
+    ? Prettify<Partial<BetterOmit<T, K>>>
+    : {
+        __error: 'Contains invalid properties';
+        __invalidKeys: Exclude<Exclude<keyof T, K>, keyof U>;
+        __expectedKeys: keyof U;
+      };
 
 export function createPatchBuilder<
   U extends Record<string, unknown> = Record<string, unknown>,

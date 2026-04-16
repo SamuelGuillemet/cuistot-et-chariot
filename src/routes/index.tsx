@@ -75,7 +75,7 @@ function LandingPage() {
 
 function SiteHeader() {
   return (
-    <header className="top-0 z-40 sticky bg-background/80 supports-[backdrop-filter]:bg-background/60 backdrop-blur border-b w-full">
+    <header className="top-0 z-40 sticky bg-background/80 supports-backdrop-filter:bg-background/60 backdrop-blur border-b w-full">
       <PageContainer className="flex justify-between items-center h-16">
         <div className="flex items-center gap-3">
           <div className="flex justify-center items-center bg-primary shadow-sm rounded-md w-9 h-9 text-primary-foreground">
@@ -130,7 +130,7 @@ function SiteHeader() {
 function Hero() {
   return (
     <section className="relative border-b h-screen overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-transparent to-secondary/10" />
+      <div className="absolute inset-0 bg-linear-to-br from-secondary/5 via-transparent to-secondary/10" />
       <div className="top-0 right-0 absolute bg-secondary/10 blur-3xl rounded-full w-1/3 h-1/3" />
       <div className="bottom-0 left-0 absolute bg-secondary/5 blur-3xl rounded-full w-1/4 h-1/4" />
       <PageContainer className="flex justify-center items-center h-full">
@@ -427,7 +427,7 @@ function ValueBlocks() {
 function RealtimeSection() {
   return (
     <section className="relative border-y overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/5 via-background to-secondary/10" />
+      <div className="absolute inset-0 bg-linear-to-br from-secondary/5 via-background to-secondary/10" />
       <div className="top-0 left-0 absolute bg-secondary/5 blur-3xl w-1/2 h-full" />
       <PageContainer className="py-20 md:py-28">
         <div className="mx-auto max-w-3xl text-center">
@@ -506,7 +506,7 @@ function FAQ() {
 function CTA() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-primary/5" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-background to-primary/5" />
       <div className="top-0 right-0 absolute bg-primary/5 blur-3xl w-1/3 h-full" />
       <div className="bottom-0 left-0 absolute bg-primary/10 blur-3xl w-1/3 h-full" />
       <PageContainer className="py-24">

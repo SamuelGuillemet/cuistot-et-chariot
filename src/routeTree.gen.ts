@@ -14,6 +14,7 @@ import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedRecipesRouteImport } from './routes/_authed/recipes'
 import { Route as AuthedProductsRouteImport } from './routes/_authed/products'
+import { Route as AuthedMealPlannerRouteImport } from './routes/_authed/meal-planner'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as AuthedRecipesIndexRouteImport } from './routes/_authed/recipes/index'
 import { Route as AuthedHouseholdIndexRouteImport } from './routes/_authed/household/index'
@@ -46,6 +47,11 @@ const AuthedRecipesRoute = AuthedRecipesRouteImport.update({
 const AuthedProductsRoute = AuthedProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedMealPlannerRoute = AuthedMealPlannerRouteImport.update({
+  id: '/meal-planner',
+  path: '/meal-planner',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthedDashboardRoute
+  '/meal-planner': typeof AuthedMealPlannerRoute
   '/products': typeof AuthedProductsRoute
   '/recipes': typeof AuthedRecipesRouteWithChildren
   '/household/new': typeof AuthedHouseholdNewRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthedDashboardRoute
+  '/meal-planner': typeof AuthedMealPlannerRoute
   '/products': typeof AuthedProductsRoute
   '/household/new': typeof AuthedHouseholdNewRoute
   '/recipes/new': typeof AuthedRecipesNewRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
+  '/_authed/meal-planner': typeof AuthedMealPlannerRoute
   '/_authed/products': typeof AuthedProductsRoute
   '/_authed/recipes': typeof AuthedRecipesRouteWithChildren
   '/_authed/household/new': typeof AuthedHouseholdNewRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/meal-planner'
     | '/products'
     | '/recipes'
     | '/household/new'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/meal-planner'
     | '/products'
     | '/household/new'
     | '/recipes/new'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/_authed'
     | '/login'
     | '/_authed/dashboard'
+    | '/_authed/meal-planner'
     | '/_authed/products'
     | '/_authed/recipes'
     | '/_authed/household/new'
@@ -232,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof AuthedProductsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/meal-planner': {
+      id: '/_authed/meal-planner'
+      path: '/meal-planner'
+      fullPath: '/meal-planner'
+      preLoaderRoute: typeof AuthedMealPlannerRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/dashboard': {
@@ -320,6 +339,7 @@ const AuthedRecipesRouteWithChildren = AuthedRecipesRoute._addFileChildren(
 
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
+  AuthedMealPlannerRoute: typeof AuthedMealPlannerRoute
   AuthedProductsRoute: typeof AuthedProductsRoute
   AuthedRecipesRoute: typeof AuthedRecipesRouteWithChildren
   AuthedHouseholdNewRoute: typeof AuthedHouseholdNewRoute
@@ -329,6 +349,7 @@ interface AuthedRouteChildren {
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
+  AuthedMealPlannerRoute: AuthedMealPlannerRoute,
   AuthedProductsRoute: AuthedProductsRoute,
   AuthedRecipesRoute: AuthedRecipesRouteWithChildren,
   AuthedHouseholdNewRoute: AuthedHouseholdNewRoute,

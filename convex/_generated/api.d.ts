@@ -17,6 +17,9 @@ import type * as households_members_mutations from "../households_members/mutati
 import type * as households_members_queries from "../households_members/queries.js";
 import type * as households_members_rls from "../households_members/rls.js";
 import type * as http from "../http.js";
+import type * as meal_plans_mutations from "../meal_plans/mutations.js";
+import type * as meal_plans_queries from "../meal_plans/queries.js";
+import type * as meal_plans_rls from "../meal_plans/rls.js";
 import type * as migrations from "../migrations.js";
 import type * as products_mutations from "../products/mutations.js";
 import type * as products_queries from "../products/queries.js";
@@ -46,6 +49,9 @@ declare const fullApi: ApiFromModules<{
   "households_members/queries": typeof households_members_queries;
   "households_members/rls": typeof households_members_rls;
   http: typeof http;
+  "meal_plans/mutations": typeof meal_plans_mutations;
+  "meal_plans/queries": typeof meal_plans_queries;
+  "meal_plans/rls": typeof meal_plans_rls;
   migrations: typeof migrations;
   "products/mutations": typeof products_mutations;
   "products/queries": typeof products_queries;

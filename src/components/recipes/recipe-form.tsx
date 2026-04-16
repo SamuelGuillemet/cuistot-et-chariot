@@ -15,17 +15,14 @@ const Recipe = v.object({
     v.minLength(1, 'Le nom est requis'),
     v.maxLength(100, 'Le nom est trop long'),
   ),
-  instructions: v.pipe(
-    v.array(
-      v.object({
-        order: v.number(),
-        text: v.pipe(
-          v.string(),
-          v.minLength(1, 'Chaque étape doit contenir du texte'),
-        ),
-      }),
-    ),
-    v.minLength(1, 'Ajoutez au moins une étape'),
+  instructions: v.array(
+    v.object({
+      order: v.number(),
+      text: v.pipe(
+        v.string(),
+        v.minLength(1, 'Chaque étape doit contenir du texte'),
+      ),
+    }),
   ),
   servings: v.pipe(
     v.number('Le champ est obligatoire'),
@@ -41,21 +38,15 @@ const Recipe = v.object({
     v.minValue(0, 'Le temps de cuisson doit être positif'),
   ),
   difficulty: typedEnum(RECIPE_DIFFICULTY_DISPLAY_NAMES, 'Difficulté requise'),
-  products: v.pipe(
-    v.array(
-      v.object({
-        productId: v.pipe(
-          v.string(),
-          v.minLength(1, 'Sélectionnez un produit'),
-        ),
-        quantity: v.pipe(
-          v.number('Le champ est obligatoire'),
-          v.minValue(0.01, 'La quantité doit être positive'),
-        ),
-        unit: typedEnum(PRODUCT_UNITS, 'Unité requise'),
-      }),
-    ),
-    v.minLength(1, 'Ajoutez au moins un ingrédient'),
+  products: v.array(
+    v.object({
+      productId: v.pipe(v.string(), v.minLength(1, 'Sélectionnez un produit')),
+      quantity: v.pipe(
+        v.number('Le champ est obligatoire'),
+        v.minValue(0.01, 'La quantité doit être positive'),
+      ),
+      unit: typedEnum(PRODUCT_UNITS, 'Unité requise'),
+    }),
   ),
 });
 

@@ -37,11 +37,7 @@ export function InstructionsFieldArray({
         };
 
         return (
-          <BaseFieldComposer.Root
-            field={field}
-            required
-            className="flex flex-col gap-2"
-          >
+          <BaseFieldComposer.Root field={field} className="flex flex-col gap-2">
             <BaseFieldComposer.Label>
               Etapes de la recette
             </BaseFieldComposer.Label>

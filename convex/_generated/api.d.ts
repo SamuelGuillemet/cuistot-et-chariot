@@ -22,6 +22,7 @@ import type * as products_mutations from "../products/mutations.js";
 import type * as products_queries from "../products/queries.js";
 import type * as products_rls from "../products/rls.js";
 import type * as products_seed from "../products/seed.js";
+import type * as recipes_aiMutations from "../recipes/aiMutations.js";
 import type * as recipes_mutations from "../recipes/mutations.js";
 import type * as recipes_queries from "../recipes/queries.js";
 import type * as recipes_rls from "../recipes/rls.js";
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   "products/queries": typeof products_queries;
   "products/rls": typeof products_rls;
   "products/seed": typeof products_seed;
+  "recipes/aiMutations": typeof recipes_aiMutations;
   "recipes/mutations": typeof recipes_mutations;
   "recipes/queries": typeof recipes_queries;
   "recipes/rls": typeof recipes_rls;

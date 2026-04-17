@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthedRecipesRouteImport } from './routes/_authed/recipes'
 import { Route as AuthedProductsRouteImport } from './routes/_authed/products'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
@@ -36,6 +37,11 @@ const AuthedRoute = AuthedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthedRecipesRoute = AuthedRecipesRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthedDashboardRoute
   '/products': typeof AuthedProductsRoute
   '/recipes': typeof AuthedRecipesRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/household/new': typeof AuthedHouseholdNewRoute
   '/recipes/new': typeof AuthedRecipesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/products': typeof AuthedProductsRoute
+  '/api/chat': typeof ApiChatRoute
   '/household/new': typeof AuthedHouseholdNewRoute
   '/recipes/new': typeof AuthedRecipesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/products': typeof AuthedProductsRoute
   '/_authed/recipes': typeof AuthedRecipesRouteWithChildren
+  '/api/chat': typeof ApiChatRoute
   '/_authed/household/new': typeof AuthedHouseholdNewRoute
   '/_authed/recipes/new': typeof AuthedRecipesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/products'
     | '/recipes'
+    | '/api/chat'
     | '/household/new'
     | '/recipes/new'
     | '/api/auth/$'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard'
     | '/products'
+    | '/api/chat'
     | '/household/new'
     | '/recipes/new'
     | '/api/auth/$'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/_authed/dashboard'
     | '/_authed/products'
     | '/_authed/recipes'
+    | '/api/chat'
     | '/_authed/household/new'
     | '/_authed/recipes/new'
     | '/api/auth/$'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ApiChatRoute: typeof ApiChatRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authed/recipes': {
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
   LoginRoute: LoginRoute,
+  ApiChatRoute: ApiChatRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

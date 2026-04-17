@@ -26,7 +26,11 @@ import {
 } from '@/utils/week';
 import type { MealType } from '../../../convex/types';
 import { DayColumn } from './day-column';
-import { DraggableRecipeCard } from './draggable-recipe-card';
+import {
+  DraggableRecipeCard,
+  DraggedRecipeCard,
+  type DraggedRecipeData,
+} from './draggable-recipe-card';
 import type { MealSlotData } from './meal-slot';
 import { optimisticUpsertMealPlan } from './optimistic-updates';
 
@@ -41,11 +45,7 @@ export function MealPlannerGrid({
   householdId,
   onWeekChange,
 }: MealPlannerGridProps) {
-  const [activeDrag, setActiveDrag] = useState<{
-    recipeId: string;
-    recipeName: string;
-    defaultServings: number;
-  } | null>(null);
+  const [activeDrag, setActiveDrag] = useState<DraggedRecipeData | null>(null);
 
   const weekDates = getWeekDates(weekStart);
   const todayStr = new Date().toISOString().slice(0, 10);
@@ -111,6 +111,7 @@ export function MealPlannerGrid({
         recipeId: data.recipeId,
         recipeName: data.recipeName,
         defaultServings: data.defaultServings,
+        totalTime: data.totalTime,
       });
     }
   };
@@ -141,56 +142,61 @@ export function MealPlannerGrid({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-5">
         {/* Week navigation */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <CalendarIcon className="size-5 text-muted-foreground" />
-            <span className="font-semibold text-lg">
-              {formatWeekLabel(weekStart)}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            {!isCurrentWeek(weekStart) && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onWeekChange(getWeekStart(new Date()))}
-              >
-                Aujourd'hui
-              </Button>
-            )}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
+              className="size-8 rounded-full hover:bg-muted"
               onClick={() => onWeekChange(shiftWeek(weekStart, -1))}
+              aria-label="Semaine précédente"
             >
               <ChevronLeftIcon className="size-4" />
             </Button>
+            <div className="flex items-center gap-2">
+              <CalendarIcon className="size-4 text-muted-foreground" />
+              <span className="font-bold text-base text-foreground">
+                {formatWeekLabel(weekStart)}
+              </span>
+            </div>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
+              className="size-8 rounded-full hover:bg-muted"
               onClick={() => onWeekChange(shiftWeek(weekStart, 1))}
+              aria-label="Semaine suivante"
             >
               <ChevronRightIcon className="size-4" />
             </Button>
           </div>
+          {!isCurrentWeek(weekStart) && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full text-xs font-semibold"
+              onClick={() => onWeekChange(getWeekStart(new Date()))}
+            >
+              Cette semaine
+            </Button>
+          )}
         </div>
 
         <div className="flex flex-col gap-4">
           {/* Mobile: day tabs + single column */}
           <div className="lg:hidden flex flex-col gap-3">
-            <div className="flex rounded-lg border bg-muted/30 p-1 gap-1 overflow-x-auto">
+            <div className="flex rounded-xl border bg-muted/20 p-1 gap-0.5 overflow-x-auto">
               {weekDates.map((date, i) => (
                 <button
                   key={date}
                   type="button"
                   onClick={() => setActiveDayIndex(i)}
-                  className={`shrink-0 flex-1 min-w-12 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+                  className={`shrink-0 flex-1 min-w-10 rounded-lg px-2 py-2 text-[11px] font-semibold transition-all ${
                     i === activeDayIndex
                       ? 'bg-background text-foreground shadow-sm'
                       : 'text-muted-foreground hover:text-foreground'
-                  } ${date === todayStr ? 'font-bold' : ''}`}
+                  } ${date === todayStr ? 'text-primary' : ''}`}
                 >
                   {formatDayLabelShort(date)}
                 </button>
@@ -217,42 +223,43 @@ export function MealPlannerGrid({
             ))}
           </div>
 
-          {/* Recipe list */}
-          <div className="rounded-lg border bg-muted/30 p-3">
-            <p className="mb-3 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Recettes
-            </p>
-            {recipes.length === 0 ? (
-              <p className="text-xs text-muted-foreground py-4 text-center">
-                Aucune recette disponible
-              </p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {recipes.map((recipe) => (
-                  <DraggableRecipeCard
-                    key={recipe._id}
-                    recipe={{
-                      id: recipe._id,
-                      name: recipe.name,
-                      servings: recipe.servings,
-                      prepTime: recipe.prepTime,
-                      cookTime: recipe.cookTime,
-                    }}
-                  />
-                ))}
-              </div>
-            )}
+          {/* Recipe tray */}
+          <div className="rounded-xl border bg-card shadow-xs">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border/60">
+              <p className="text-sm font-bold text-foreground">Recettes</p>
+              <span className="text-xs text-muted-foreground font-medium">
+                Glisser vers un créneau
+              </span>
+            </div>
+            <div className="p-3">
+              {recipes.length === 0 ? (
+                <p className="text-xs text-muted-foreground py-4 text-center">
+                  Aucune recette disponible
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {recipes.map((recipe) => (
+                    <DraggableRecipeCard
+                      key={recipe._id}
+                      recipe={{
+                        id: recipe._id,
+                        name: recipe.name,
+                        servings: recipe.servings,
+                        prepTime: recipe.prepTime,
+                        cookTime: recipe.cookTime,
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Drag overlay */}
       <DragOverlay modifiers={[restrictToWindowEdges]}>
-        {activeDrag && (
-          <div className="rounded-md border bg-card px-3 py-2 text-sm font-medium shadow-lg ring-2 ring-primary/30 rotate-1 opacity-90">
-            {activeDrag.recipeName}
-          </div>
-        )}
+        {activeDrag && <DraggedRecipeCard {...activeDrag} />}
       </DragOverlay>
     </DndContext>
   );

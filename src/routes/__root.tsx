@@ -54,7 +54,11 @@ export const Route = createRootRouteWithContext<{
         title: 'Cuistot et Chariot',
       },
     ],
-    links: [{ rel: 'stylesheet', href: mainCss }],
+    links: [
+      { rel: 'stylesheet', href: mainCss },
+      { rel: 'manifest', href: '/manifest.json' },
+      { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
+    ],
   }),
   component: RootComponent,
   notFoundComponent: Page404,

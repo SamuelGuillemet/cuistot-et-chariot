@@ -4,6 +4,7 @@ import { householdsSchema } from './households/schema';
 import { householdMembersSchema } from './households_members/schema';
 import { mealPlansSchema } from './meal_plans/schema';
 import { productsSchema } from './products/schema';
+import { pushSubscriptionsSchema } from './push_notifications/schema';
 import {
   recipeFavoritesSchema,
   recipeProductsSchema,
@@ -26,4 +27,5 @@ export default defineSchema({
   recipeProducts: recipeProductsSchema,
   recipeFavorites: recipeFavoritesSchema,
   mealPlans: mealPlansSchema,
+  pushSubscriptions: pushSubscriptionsSchema,
 });

@@ -53,7 +53,7 @@ export const updateMemberRole = mutationWithRLS({
       )
       .first();
 
-    if (!currentUserMember || currentUserMember.role !== 'admin') {
+    if (currentUserMember?.role !== 'admin') {
       throw new ConvexError('Only admins can change member roles');
     }
 
@@ -102,7 +102,7 @@ export const updateMemberStatus = mutationWithRLS({
       )
       .first();
 
-    if (!currentUserMember || currentUserMember.role !== 'admin') {
+    if (currentUserMember?.role !== 'admin') {
       throw new ConvexError('Only admins can change member status');
     }
 
@@ -134,7 +134,7 @@ export const updateMemberPermissions = mutationWithRLS({
       )
       .first();
 
-    if (!currentUserMember || currentUserMember.role !== 'admin') {
+    if (currentUserMember?.role !== 'admin') {
       throw new ConvexError('Only admins can update member permissions');
     }
 
@@ -165,7 +165,7 @@ export const removeMember = mutationWithRLS({
       )
       .first();
 
-    if (!currentUserMember || currentUserMember.role !== 'admin') {
+    if (currentUserMember?.role !== 'admin') {
       throw new ConvexError('Only admins can remove members');
     }
 

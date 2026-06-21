@@ -89,7 +89,11 @@ function RouteComponent() {
           </div>
         </div>
       ) : (
-        <DataTable columns={columns} data={filtered} />
+        <DataTable
+          columns={columns}
+          data={filtered}
+          defaultSorting={[{ id: 'name', desc: false }]}
+        />
       )}
     </div>
   );

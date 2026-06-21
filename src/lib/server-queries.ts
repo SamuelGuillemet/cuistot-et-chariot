@@ -33,7 +33,7 @@ export const getThemeServerFn = createServerFn().handler(async () => {
 const ThemeValidator = v.picklist(['light', 'dark', 'system']);
 
 export const setThemeServerFn = createServerFn({ method: 'POST' })
-  .inputValidator(ThemeValidator)
+  .validator(ThemeValidator)
   .handler(async ({ data }) => {
     setCookie(THEME_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -46,7 +46,7 @@ export const getSidebarStateServerFn = createServerFn().handler(async () => {
 const SidebarStateValidator = v.boolean();
 
 export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
-  .inputValidator(SidebarStateValidator)
+  .validator(SidebarStateValidator)
   .handler(async ({ data }) => {
     setCookie(SIDEBAR_COOKIE_NAME, String(data), DEFAULT_COOKIE_OPTIONS);
     return data;
@@ -66,7 +66,7 @@ export const getHouseholdIdServerFn = createServerFn().handler(async () => {
 const HouseholdIdValidator = v.union([v.pipe(v.string(), v.uuid()), v.null()]);
 
 export const setHouseholdIdServerFn = createServerFn({ method: 'POST' })
-  .inputValidator(HouseholdIdValidator)
+  .validator(HouseholdIdValidator)
   .handler(async ({ data }) => {
     if (data === null) {
       deleteCookie(HOUSEHOLD_COOKIE_NAME);

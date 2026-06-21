@@ -4,7 +4,6 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
 import { defineConfig, type UserConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
 
 const config: UserConfig = {
   server: {
@@ -16,18 +15,18 @@ const config: UserConfig = {
         enabled: true,
       },
     }),
-    tsConfigPaths({
-      projects: ['./tsconfig.json'],
-    }),
     tanstackStart(),
     nitro({
-      config: { preset: 'vercel' },
+      preset: 'vercel',
     }),
     tailwindcss(),
     react(),
   ],
   ssr: {
     noExternal: ['@convex-dev/better-auth'],
+  },
+  resolve: {
+    tsconfigPaths: true,
   },
 };
 

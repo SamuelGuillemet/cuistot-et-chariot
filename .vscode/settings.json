@@ -47,5 +47,8 @@
   "js/ts.tsdk.path": "node_modules/typescript/lib",
   "js/ts.preferences.autoImportFileExcludePatterns": ["lucide-react"],
   "js/ts.experimental.useTsgo": true,
-  "css.customData": [".vscode/tailwind.json"]
+  "css.customData": [".vscode/tailwind.json"],
+  "chat.tools.terminal.terminalProfile.linux": {
+    "path": "/bin/bash"
+  }
 }

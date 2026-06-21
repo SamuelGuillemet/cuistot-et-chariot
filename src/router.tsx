@@ -5,7 +5,7 @@ import {
   QueryCache,
   QueryClient,
 } from '@tanstack/react-query';
-import { createRouter as createTanStackRouter } from '@tanstack/react-router';
+import { createRouter } from '@tanstack/react-router';
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query';
 import { ConvexError } from 'convex/values';
 import { toast } from 'sonner';
@@ -23,7 +23,6 @@ export function getRouter() {
     throw new Error('Missing required environment variable: VITE_CONVEX_URL');
   }
   const convexQueryClient = new ConvexQueryClient(CONVEX_URL, {
-    verbose: true,
     expectAuth: true,
   });
 
@@ -51,7 +50,7 @@ export function getRouter() {
   });
   convexQueryClient.connect(queryClient);
 
-  const router = createTanStackRouter({
+  const router = createRouter({
     routeTree,
     scrollRestoration: true,
     scrollRestorationBehavior: 'smooth',

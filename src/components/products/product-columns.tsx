@@ -19,7 +19,7 @@ export function createProductColumns(
 ): ColumnDef<Doc<'products'>>[] {
   return [
     {
-      id: 'id',
+      id: '_id',
       accessorKey: '_id',
     },
     {

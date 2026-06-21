@@ -2,6 +2,7 @@ node_modules
 .nitro
 .output
 .tanstack
+tsconfig.tsbuildinfo
 
 # Build outputs
 dist

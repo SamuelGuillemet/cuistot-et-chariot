@@ -105,11 +105,11 @@ export interface FileRoutesByFullPath {
   '/household/new': typeof AuthedHouseholdNewRoute
   '/recipes/new': typeof AuthedRecipesNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/household': typeof AuthedHouseholdIndexRoute
+  '/household/': typeof AuthedHouseholdIndexRoute
   '/recipes/': typeof AuthedRecipesIndexRoute
   '/household/join/$id': typeof AuthedHouseholdJoinIdRoute
   '/recipes/$recipeId/edit': typeof AuthedRecipesRecipeIdEditRoute
-  '/recipes/$recipeId': typeof AuthedRecipesRecipeIdIndexRoute
+  '/recipes/$recipeId/': typeof AuthedRecipesRecipeIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -153,11 +153,11 @@ export interface FileRouteTypes {
     | '/household/new'
     | '/recipes/new'
     | '/api/auth/$'
-    | '/household'
+    | '/household/'
     | '/recipes/'
     | '/household/join/$id'
     | '/recipes/$recipeId/edit'
-    | '/recipes/$recipeId'
+    | '/recipes/$recipeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,7 +209,7 @@ declare module '@tanstack/react-router' {
     '/_authed': {
       id: '/_authed'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthedRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -251,7 +251,7 @@ declare module '@tanstack/react-router' {
     '/_authed/household/': {
       id: '/_authed/household/'
       path: '/household'
-      fullPath: '/household'
+      fullPath: '/household/'
       preLoaderRoute: typeof AuthedHouseholdIndexRouteImport
       parentRoute: typeof AuthedRoute
     }
@@ -279,7 +279,7 @@ declare module '@tanstack/react-router' {
     '/_authed/recipes/$recipeId/': {
       id: '/_authed/recipes/$recipeId/'
       path: '/$recipeId'
-      fullPath: '/recipes/$recipeId'
+      fullPath: '/recipes/$recipeId/'
       preLoaderRoute: typeof AuthedRecipesRecipeIdIndexRouteImport
       parentRoute: typeof AuthedRecipesRoute
     }

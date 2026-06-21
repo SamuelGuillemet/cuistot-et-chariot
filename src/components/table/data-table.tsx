@@ -27,18 +27,18 @@ interface DataTableProps<TData extends { _id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pagination?: boolean;
+  defaultSorting?: SortingState;
 }
 
 export function DataTable<TData extends { _id: string | number }, TValue>({
   columns,
   data,
   pagination = true,
+  defaultSorting = [{ id: '_id', desc: true }],
 }: Readonly<DataTableProps<TData, TValue>>) {
   const [rowSelection, setRowSelection] = useState({});
-  const columnVisibility: VisibilityState = { id: false };
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: '_id', desc: true },
-  ]);
+  const columnVisibility: VisibilityState = { _id: false };
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,

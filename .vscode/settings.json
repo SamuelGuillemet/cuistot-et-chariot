@@ -26,7 +26,8 @@
     ".output": true,
     ".nitro": true,
     ".tanstack": true,
-    ".vercel": true
+    ".vercel": true,
+    "tsconfig.tsbuildinfo": true
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -43,8 +44,11 @@
   "[tailwindcss]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.preferences.autoImportFileExcludePatterns": ["lucide-react"],
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.preferences.autoImportFileExcludePatterns": ["lucide-react"],
+  "js/ts.experimental.useTsgo": true,
   "css.customData": [".vscode/tailwind.json"],
-  "typescript.experimental.useTsgo": true
+  "chat.tools.terminal.terminalProfile.linux": {
+    "path": "/bin/bash"
+  }
 }

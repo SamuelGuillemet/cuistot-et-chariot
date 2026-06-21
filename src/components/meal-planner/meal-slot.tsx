@@ -1,6 +1,6 @@
 import { api } from '@api/api';
 import { useConvexMutation } from '@convex-dev/react-query';
-import { useDroppable } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/react';
 import { useMutation } from '@tanstack/react-query';
 import { MinusIcon, PlusIcon, Users2Icon, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
@@ -37,7 +37,7 @@ export function MealSlot({
 
   const weekStart = getWeekStart(new Date(date));
 
-  const { isOver, setNodeRef } = useDroppable({
+  const { isDropTarget, ref } = useDroppable({
     id: droppableId,
     data: { type: 'slot', date, mealType },
   });
@@ -81,30 +81,31 @@ export function MealSlot({
 
   return (
     <div className="flex flex-col gap-1.5 p-2.5">
-      <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+      <span className="font-semibold text-[10px] text-muted-foreground uppercase tracking-widest">
         {mealLabel}
       </span>
       <div
-        ref={setNodeRef}
+        ref={ref}
         className={cn(
-          'min-h-16 rounded-lg border-2 border-dashed transition-all duration-200',
-          isOver
-            ? 'border-primary bg-primary/8 scale-[1.01]'
-            : meal
-              ? 'border-transparent bg-background shadow-sm'
-              : 'border-border/40 bg-muted/20 hover:border-border/70 hover:bg-muted/30',
+          'border-2 border-dashed rounded-lg min-h-16 transition-all duration-200',
+          {
+            'border-primary bg-primary/8 scale-[1.01]': isDropTarget,
+            'border-transparent bg-background shadow-sm': !isDropTarget && meal,
+            'border-border/40 bg-muted/20 hover:border-border/70 hover:bg-muted/30':
+              !isDropTarget && !meal,
+          },
         )}
       >
         {meal ? (
-          <div className="flex h-full flex-col gap-2 p-2">
-            <div className="flex items-start justify-between gap-1">
-              <span className="text-sm font-semibold leading-tight min-w-0 flex-1 line-clamp-2">
+          <div className="flex flex-col gap-2 p-2 h-full">
+            <div className="flex justify-between items-start gap-1">
+              <span className="flex-1 min-w-0 font-semibold text-sm line-clamp-2 leading-tight">
                 {meal.recipeName}
               </span>
               <button
                 type="button"
                 onClick={handleDelete}
-                className="shrink-0 rounded-md p-0.5 text-muted-foreground/40 hover:bg-destructive/10 hover:text-destructive transition-colors"
+                className="hover:bg-destructive/10 p-0.5 rounded-md text-muted-foreground/40 hover:text-destructive transition-colors shrink-0"
                 aria-label="Supprimer"
               >
                 <XIcon className="size-3" />
@@ -115,18 +116,18 @@ export function MealSlot({
               <button
                 type="button"
                 onClick={() => handleServingsChange(-1)}
-                className="flex items-center justify-center size-5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                className="flex justify-center items-center hover:bg-muted rounded-md size-5 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Réduire les portions"
               >
                 <MinusIcon className="size-3" />
               </button>
-              <span className="text-xs font-medium text-muted-foreground min-w-[2ch] text-center tabular-nums">
+              <span className="min-w-[2ch] font-medium tabular-nums text-muted-foreground text-xs text-center">
                 {meal.servings}
               </span>
               <button
                 type="button"
                 onClick={() => handleServingsChange(1)}
-                className="flex items-center justify-center size-5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                className="flex justify-center items-center hover:bg-muted rounded-md size-5 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Augmenter les portions"
               >
                 <PlusIcon className="size-3" />
@@ -134,9 +135,9 @@ export function MealSlot({
             </div>
           </div>
         ) : (
-          <div className="flex h-full min-h-16 items-center justify-center group">
-            <span className="text-xs text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors select-none">
-              {isOver ? '↓ Déposer' : '+'}
+          <div className="group flex justify-center items-center h-full min-h-16">
+            <span className="text-muted-foreground/30 group-hover:text-muted-foreground/60 text-xs transition-colors select-none">
+              {isDropTarget ? '↓ Déposer' : '+'}
             </span>
           </div>
         )}

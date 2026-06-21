@@ -1,5 +1,4 @@
-import { useDraggable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
+import { useDraggable } from '@dnd-kit/react';
 import { ClockIcon, GripVerticalIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,43 +24,35 @@ interface DraggableRecipeCardProps {
 export function DraggableRecipeCard({ recipe }: DraggableRecipeCardProps) {
   const totalTime = recipe.prepTime + recipe.cookTime;
 
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `recipe-${recipe.id}`,
-      data: {
-        type: 'recipe',
-        recipeId: recipe.id,
-        recipeName: recipe.name,
-        defaultServings: recipe.servings,
-        totalTime,
-      },
-    });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-  };
+  const { ref, isDragging } = useDraggable({
+    id: `recipe-${recipe.id}`,
+    data: {
+      type: 'recipe',
+      recipeId: recipe.id,
+      recipeName: recipe.name,
+      defaultServings: recipe.servings,
+      totalTime,
+    },
+  });
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
+      ref={ref}
       className={cn(
-        'group flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 text-sm shadow-xs transition-shadow select-none',
+        'group flex items-center gap-2 bg-card shadow-xs px-2.5 py-2 border rounded-lg text-sm transition-shadow select-none',
         isDragging
           ? 'opacity-50 shadow-lg ring-2 ring-primary/40 cursor-grabbing'
           : 'cursor-grab hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5',
       )}
-      {...listeners}
-      {...attributes}
     >
-      <span className="text-muted-foreground/30 group-hover:text-muted-foreground/70 shrink-0 transition-colors">
+      <span className="text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors shrink-0">
         <GripVerticalIcon className="size-4" />
       </span>
-      <span className="min-w-0 flex-1 truncate font-semibold text-foreground/90">
+      <span className="flex-1 min-w-0 font-semibold text-foreground/90 truncate">
         {recipe.name}
       </span>
       {totalTime > 0 && (
-        <span className="shrink-0 flex items-center gap-1 text-[11px] text-muted-foreground/70 font-medium">
+        <span className="flex items-center gap-1 font-medium text-[11px] text-muted-foreground/70 shrink-0">
           <ClockIcon className="size-3" />
           {totalTime}min
         </span>
@@ -73,15 +64,15 @@ export function DraggableRecipeCard({ recipe }: DraggableRecipeCardProps) {
 export function DraggedRecipeCard(data: DraggedRecipeData) {
   const totalTime = data.totalTime;
   return (
-    <div className="flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 text-sm opacity-50 shadow-lg ring-2 ring-primary/40 cursor-grabbing rotate-2">
-      <span className="text-muted-foreground/30 group-hover:text-muted-foreground/70 shrink-0 transition-colors">
+    <div className="flex items-center gap-2 bg-card opacity-50 shadow-lg px-2.5 py-2 border rounded-lg ring-2 ring-primary/40 text-sm rotate-2 cursor-grabbing">
+      <span className="text-muted-foreground/30 group-hover:text-muted-foreground/70 transition-colors shrink-0">
         <GripVerticalIcon className="size-4" />
       </span>
-      <span className="min-w-0 flex-1 truncate font-semibold text-foreground/90">
+      <span className="flex-1 min-w-0 font-semibold text-foreground/90 truncate">
         {data.recipeName}
       </span>
       {totalTime > 0 && (
-        <span className="shrink-0 flex items-center gap-1 text-[11px] text-muted-foreground/70 font-medium">
+        <span className="flex items-center gap-1 font-medium text-[11px] text-muted-foreground/70 shrink-0">
           <ClockIcon className="size-3" />
           {totalTime}min
         </span>

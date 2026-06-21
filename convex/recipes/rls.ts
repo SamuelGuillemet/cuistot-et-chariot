@@ -92,6 +92,19 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
         return favorite.userId === userId;
       },
     },
+    mealPlans: {
+      insert: async () => false,
+      read: async (_, mealPlan) => {
+        const member = await ctx.db
+          .query('householdMembers')
+          .withIndex('by_userId_householdId', (q) =>
+            q.eq('userId', userId).eq('householdId', mealPlan.householdId),
+          )
+          .first();
+        return member?.status === 'accepted';
+      },
+      modify: async () => false,
+    },
   } satisfies Rules<QueryCtx, DataModel>;
 }
 

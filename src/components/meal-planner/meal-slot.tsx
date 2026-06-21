@@ -1,0 +1,147 @@
+import { api } from '@api/api';
+import { useConvexMutation } from '@convex-dev/react-query';
+import { useDroppable } from '@dnd-kit/react';
+import { useMutation } from '@tanstack/react-query';
+import { MinusIcon, PlusIcon, Users2Icon, XIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { getWeekStart } from '@/utils/week';
+import type { MealType } from '../../../convex/types';
+import {
+  optimisticDeleteMealPlan,
+  optimisticUpdateServings,
+} from './optimistic-updates';
+
+export interface MealSlotData {
+  id: string;
+  recipeName: string;
+  servings: number;
+}
+
+interface MealSlotProps {
+  date: string;
+  mealType: MealType;
+  mealLabel: string;
+  meal: MealSlotData | null;
+  householdId: string;
+}
+
+export function MealSlot({
+  date,
+  mealType,
+  mealLabel,
+  meal,
+  householdId,
+}: MealSlotProps) {
+  const droppableId = `slot-${date}-${mealType}`;
+
+  const weekStart = getWeekStart(new Date(date));
+
+  const { isDropTarget, ref } = useDroppable({
+    id: droppableId,
+    data: { type: 'slot', date, mealType },
+  });
+
+  const deleteMealPlanFn = useConvexMutation(
+    api.meal_plans.mutations.deleteMealPlan,
+  ).withOptimisticUpdate((localStore, args) =>
+    optimisticDeleteMealPlan(localStore, args, weekStart),
+  );
+
+  const { mutate: deleteMealPlan } = useMutation({
+    mutationFn: deleteMealPlanFn,
+    onError: () => toast.error('Erreur lors de la suppression'),
+  });
+
+  const updateServingsFn = useConvexMutation(
+    api.meal_plans.mutations.updateServings,
+  ).withOptimisticUpdate((localStore, args) =>
+    optimisticUpdateServings(localStore, args, weekStart),
+  );
+
+  const { mutate: updateServings } = useMutation({
+    mutationFn: updateServingsFn,
+    onError: () => toast.error('Erreur lors de la mise à jour'),
+  });
+
+  const handleDelete = () => {
+    if (!meal) return;
+    deleteMealPlan({ publicId: householdId, mealPlanId: meal.id });
+  };
+
+  const handleServingsChange = (delta: number) => {
+    if (!meal) return;
+    const next = Math.max(1, meal.servings + delta);
+    updateServings({
+      publicId: householdId,
+      mealPlanId: meal.id,
+      servings: next,
+    });
+  };
+
+  return (
+    <div className="flex flex-col gap-1.5 p-2.5">
+      <span className="font-semibold text-[10px] text-muted-foreground uppercase tracking-widest">
+        {mealLabel}
+      </span>
+      <div
+        ref={ref}
+        className={cn(
+          'border-2 border-dashed rounded-lg min-h-16 transition-all duration-200',
+          {
+            'border-primary bg-primary/8 scale-[1.01]': isDropTarget,
+            'border-transparent bg-background shadow-sm': !isDropTarget && meal,
+            'border-border/40 bg-muted/20 hover:border-border/70 hover:bg-muted/30':
+              !isDropTarget && !meal,
+          },
+        )}
+      >
+        {meal ? (
+          <div className="flex flex-col gap-2 p-2 h-full">
+            <div className="flex justify-between items-start gap-1">
+              <span className="flex-1 min-w-0 font-semibold text-sm line-clamp-2 leading-tight">
+                {meal.recipeName}
+              </span>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="hover:bg-destructive/10 p-0.5 rounded-md text-muted-foreground/40 hover:text-destructive transition-colors shrink-0"
+                aria-label="Supprimer"
+              >
+                <XIcon className="size-3" />
+              </button>
+            </div>
+            <div className="flex items-center gap-1 mt-auto">
+              <Users2Icon className="size-3 text-muted-foreground/60 shrink-0" />
+              <button
+                type="button"
+                onClick={() => handleServingsChange(-1)}
+                className="flex justify-center items-center hover:bg-muted rounded-md size-5 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Réduire les portions"
+              >
+                <MinusIcon className="size-3" />
+              </button>
+              <span className="min-w-[2ch] font-medium tabular-nums text-muted-foreground text-xs text-center">
+                {meal.servings}
+              </span>
+              <button
+                type="button"
+                onClick={() => handleServingsChange(1)}
+                className="flex justify-center items-center hover:bg-muted rounded-md size-5 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Augmenter les portions"
+              >
+                <PlusIcon className="size-3" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="group flex justify-center items-center h-full min-h-16">
+            <span className="text-muted-foreground/30 group-hover:text-muted-foreground/60 text-xs transition-colors select-none">
+              {isDropTarget ? '↓ Déposer' : '+'}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

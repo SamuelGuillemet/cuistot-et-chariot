@@ -31,11 +31,7 @@ export function ProductsFieldArray({
   return (
     <form.AppField name="products" mode="array">
       {(field) => (
-        <BaseFieldComposer.Root
-          field={field}
-          required
-          className="flex flex-col gap-2"
-        >
+        <BaseFieldComposer.Root field={field} className="flex flex-col gap-2">
           <BaseFieldComposer.Label>Ingrédients</BaseFieldComposer.Label>
           <BaseFieldComposer.Control>
             {({ isInvalid }) => (

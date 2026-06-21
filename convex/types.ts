@@ -78,3 +78,10 @@ export const RECIPE_DIFFICULTY_DISPLAY_NAMES: Record<RecipeDifficulty, string> =
     medium: 'Moyen',
     hard: 'Difficile',
   } as const;
+
+export type MealType = 'lunch' | 'dinner';
+
+export const MEAL_TYPE_DISPLAY_NAMES: Record<MealType, string> = {
+  lunch: 'Déjeuner',
+  dinner: 'Dîner',
+} as const;

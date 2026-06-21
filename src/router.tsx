@@ -13,12 +13,13 @@ import { Page404 } from './components/404';
 import { DefaultCatchBoundary } from './components/DefaultCatchBoundary';
 import { routeTree } from './routeTree.gen';
 
+const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
+
 export function getRouter() {
   if (typeof document !== 'undefined') {
     notifyManager.setScheduler(globalThis.requestAnimationFrame);
   }
 
-  const CONVEX_URL = import.meta.env.VITE_CONVEX_URL;
   if (!CONVEX_URL) {
     throw new Error('Missing required environment variable: VITE_CONVEX_URL');
   }

@@ -175,6 +175,18 @@ export const deleteRecipe = mutationWithRLS({
       throw new ConvexError('Recipe not found');
     }
 
+    // Guard: reject if the recipe is used in any meal plan
+    const mealPlanUsage = await ctx.db
+      .query('mealPlans')
+      .withIndex('by_recipeId', (q) => q.eq('recipeId', recipe._id))
+      .first();
+
+    if (mealPlanUsage) {
+      throw new ConvexError(
+        'Cette recette est utilisée dans un menu de la semaine et ne peut pas être supprimée.',
+      );
+    }
+
     // Delete all associated recipe products
     const recipeProducts = await ctx.db
       .query('recipeProducts')

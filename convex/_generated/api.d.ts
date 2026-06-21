@@ -9,6 +9,7 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as helpers from "../helpers.js";
 import type * as households_mutations from "../households/mutations.js";
 import type * as households_queries from "../households/queries.js";
@@ -17,11 +18,17 @@ import type * as households_members_mutations from "../households_members/mutati
 import type * as households_members_queries from "../households_members/queries.js";
 import type * as households_members_rls from "../households_members/rls.js";
 import type * as http from "../http.js";
+import type * as meal_plans_mutations from "../meal_plans/mutations.js";
+import type * as meal_plans_queries from "../meal_plans/queries.js";
+import type * as meal_plans_rls from "../meal_plans/rls.js";
 import type * as migrations from "../migrations.js";
 import type * as products_mutations from "../products/mutations.js";
 import type * as products_queries from "../products/queries.js";
 import type * as products_rls from "../products/rls.js";
 import type * as products_seed from "../products/seed.js";
+import type * as push_notifications_action from "../push_notifications/action.js";
+import type * as push_notifications_mutations from "../push_notifications/mutations.js";
+import type * as push_notifications_queries from "../push_notifications/queries.js";
 import type * as recipes_mutations from "../recipes/mutations.js";
 import type * as recipes_queries from "../recipes/queries.js";
 import type * as recipes_rls from "../recipes/rls.js";
@@ -38,6 +45,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  crons: typeof crons;
   helpers: typeof helpers;
   "households/mutations": typeof households_mutations;
   "households/queries": typeof households_queries;
@@ -46,11 +54,17 @@ declare const fullApi: ApiFromModules<{
   "households_members/queries": typeof households_members_queries;
   "households_members/rls": typeof households_members_rls;
   http: typeof http;
+  "meal_plans/mutations": typeof meal_plans_mutations;
+  "meal_plans/queries": typeof meal_plans_queries;
+  "meal_plans/rls": typeof meal_plans_rls;
   migrations: typeof migrations;
   "products/mutations": typeof products_mutations;
   "products/queries": typeof products_queries;
   "products/rls": typeof products_rls;
   "products/seed": typeof products_seed;
+  "push_notifications/action": typeof push_notifications_action;
+  "push_notifications/mutations": typeof push_notifications_mutations;
+  "push_notifications/queries": typeof push_notifications_queries;
   "recipes/mutations": typeof recipes_mutations;
   "recipes/queries": typeof recipes_queries;
   "recipes/rls": typeof recipes_rls;

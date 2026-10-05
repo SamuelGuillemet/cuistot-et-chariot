@@ -20,20 +20,14 @@ import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { authClient } from '@/lib/auth-client';
-import {
-  authSessionQueryOptions,
-  themeQueryOptions,
-} from '@/lib/server-queries';
+import { authSessionQueryOptions, themeQueryOptions } from '@/lib/server-queries';
 import mainCss from '@/styles/main.css?url';
 
 const ReactScan =
   process.env.NODE_ENV === 'production'
     ? () => null
     : () => (
-        <script
-          crossOrigin="anonymous"
-          src="https://unpkg.com/react-scan/dist/auto.global.js"
-        />
+        <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
       );
 
 export const Route = createRootRouteWithContext<{
@@ -66,9 +60,7 @@ export const Route = createRootRouteWithContext<{
     );
   },
   beforeLoad: async (opts) => {
-    const { token } = await opts.context.queryClient.ensureQueryData(
-      authSessionQueryOptions(),
-    );
+    const { token } = await opts.context.queryClient.ensureQueryData(authSessionQueryOptions());
     if (token) {
       opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
     }

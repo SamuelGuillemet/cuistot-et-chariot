@@ -20,7 +20,7 @@ export function RecipeCard({ recipe, householdId }: RecipeCardProps) {
     <Link
       to="/recipes/$recipeId"
       params={{ recipeId: recipe._id }}
-      className="block hover:scale-[1.02] transition-transform"
+      className="block hover:scale-105 transition-transform"
     >
       <Card className="h-full">
         <CardHeader>
@@ -29,9 +29,7 @@ export function RecipeCard({ recipe, householdId }: RecipeCardProps) {
               <ChefHatIcon className="w-6 h-6 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <CardTitle className="text-lg line-clamp-2">
-                {recipe.name}
-              </CardTitle>
+              <CardTitle className="text-lg line-clamp-2">{recipe.name}</CardTitle>
             </div>
             <RecipeFavoriteButton
               recipeId={recipe._id}

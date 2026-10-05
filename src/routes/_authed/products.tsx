@@ -41,7 +41,7 @@ function RouteComponent() {
     category: 'all',
   });
 
-  const { data: products = [] } = useSuspenseQuery(
+  const { data: products } = useSuspenseQuery(
     convexQuery(api.products.queries.getProducts, { publicId: householdId }),
   );
 
@@ -49,21 +49,14 @@ function RouteComponent() {
     return products.filter((p) => {
       const matchesSearch = filters.search
         ? p.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-          (p.description
-            ?.toLowerCase()
-            .includes(filters.search.toLowerCase()) ??
-            false)
+          (p.description?.toLowerCase().includes(filters.search.toLowerCase()) ?? false)
         : true;
-      const matchesCategory =
-        filters.category === 'all' ? true : p.category === filters.category;
+      const matchesCategory = filters.category === 'all' ? true : p.category === filters.category;
       return matchesSearch && matchesCategory;
     });
   }, [products, filters]);
 
-  const columns = useMemo(
-    () => createProductColumns(householdId),
-    [householdId],
-  );
+  const columns = useMemo(() => createProductColumns(householdId), [householdId]);
 
   return (
     <div className="space-y-4 mx-auto py-6 container">

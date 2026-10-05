@@ -2,12 +2,7 @@ import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import {
-  CheckIcon,
-  ChevronsUpDownIcon,
-  MapPinHouseIcon,
-  PlusIcon,
-} from 'lucide-react';
+import { CheckIcon, ChevronsUpDownIcon, MapPinHouseIcon, PlusIcon } from 'lucide-react';
 import * as React from 'react';
 import { toast } from 'sonner';
 import {
@@ -25,10 +20,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useDidUpdateEffect } from '@/hooks/use-did-update-effect';
-import {
-  householdIdQueryOptions,
-  useHouseholdMutationOptions,
-} from '@/lib/server-queries';
+import { householdIdQueryOptions, useHouseholdMutationOptions } from '@/lib/server-queries';
 
 function AddHouseholdIcon() {
   return (
@@ -36,9 +28,7 @@ function AddHouseholdIcon() {
       <div className="flex justify-center items-center bg-transparent border rounded-md size-8">
         <PlusIcon className="size-4" />
       </div>
-      <div className="font-medium text-muted-foreground truncate">
-        Ajouter un foyer
-      </div>
+      <div className="font-medium text-muted-foreground truncate">Ajouter un foyer</div>
     </Link>
   );
 }
@@ -71,30 +61,28 @@ export function Households() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              {selectedHousehold ? (
-                <>
-                  <div className="flex justify-center items-center bg-sidebar-primary rounded-lg size-8 aspect-square text-sidebar-primary-foreground">
-                    <MapPinHouseIcon className="size-4" />
-                  </div>
-                  <div className="flex-1 grid text-sm text-left leading-tight">
-                    <span className="font-medium truncate">
-                      {selectedHousehold.household.name}
-                    </span>
-                    <span className="text-xs truncate">
-                      {selectedHousehold.role}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <AddHouseholdIcon />
-              )}
-              <ChevronsUpDownIcon className="ml-auto" />
-            </SidebarMenuButton>
+          <DropdownMenuTrigger
+            render={
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              />
+            }
+          >
+            {selectedHousehold ? (
+              <>
+                <div className="flex justify-center items-center bg-sidebar-primary rounded-lg size-8 aspect-square text-sidebar-primary-foreground">
+                  <MapPinHouseIcon className="size-4" />
+                </div>
+                <div className="flex-1 grid text-sm text-left leading-tight">
+                  <span className="font-medium truncate">{selectedHousehold.household.name}</span>
+                  <span className="text-xs truncate">{selectedHousehold.role}</span>
+                </div>
+              </>
+            ) : (
+              <AddHouseholdIcon />
+            )}
+            <ChevronsUpDownIcon className="ml-auto" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -102,9 +90,7 @@ export function Households() {
             side={isMobile ? 'bottom' : 'right'}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Foyers
-            </DropdownMenuLabel>
+            <DropdownMenuLabel className="text-muted-foreground text-xs">Foyers</DropdownMenuLabel>
             {households.map((value) => (
               <DropdownMenuItem
                 key={value.household.name}
@@ -123,15 +109,14 @@ export function Households() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2" asChild>
-              <Link to="/household/new" onClick={() => setOpenMobile(false)}>
-                <div className="flex justify-center items-center bg-transparent border rounded-md size-6">
-                  <PlusIcon className="size-4" />
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Ajouter un foyer
-                </div>
-              </Link>
+            <DropdownMenuItem
+              className="gap-2 p-2"
+              render={<Link to="/household/new" onClick={() => setOpenMobile(false)} />}
+            >
+              <div className="flex justify-center items-center bg-transparent border rounded-md size-6">
+                <PlusIcon className="size-4" />
+              </div>
+              <div className="font-medium text-muted-foreground">Ajouter un foyer</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

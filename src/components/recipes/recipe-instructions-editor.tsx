@@ -8,11 +8,7 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import type { Recipe } from './recipe-form';
 
-export function InstructionsFieldArray({
-  form,
-}: {
-  readonly form: AppForm<Recipe>;
-}) {
+export function InstructionsFieldArray({ form }: { readonly form: AppForm<Recipe> }) {
   return (
     <form.AppField name="instructions" mode="array">
       {(field) => {
@@ -37,14 +33,8 @@ export function InstructionsFieldArray({
         };
 
         return (
-          <BaseFieldComposer.Root
-            field={field}
-            required
-            className="flex flex-col gap-2"
-          >
-            <BaseFieldComposer.Label>
-              Etapes de la recette
-            </BaseFieldComposer.Label>
+          <BaseFieldComposer.Root field={field} required className="flex flex-col gap-2">
+            <BaseFieldComposer.Label>Etapes de la recette</BaseFieldComposer.Label>
             <BaseFieldComposer.Control>
               {({ isInvalid }) => (
                 <div
@@ -54,9 +44,7 @@ export function InstructionsFieldArray({
                   )}
                 >
                   {field.state.value.length === 0 ? (
-                    <p className="py-4 text-sm text-center">
-                      Aucune instruction ajoutée.
-                    </p>
+                    <p className="py-4 text-sm text-center">Aucune instruction ajoutée.</p>
                   ) : (
                     field.state.value.map((_, index) => (
                       <Fragment key={index}>
@@ -76,13 +64,7 @@ export function InstructionsFieldArray({
                 </div>
               )}
             </BaseFieldComposer.Control>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onAdd}
-              className="w-full"
-            >
+            <Button type="button" variant="outline" size="sm" onClick={onAdd} className="w-full">
               <PlusIcon className="mr-2 w-4 h-4" /> Ajouter une étape
             </Button>
             <BaseFieldComposer.Error />
@@ -110,23 +92,20 @@ const InstructionsFormFields = withFieldGroup({
 
     const order = useStore(group.store, (state) => state.values.order);
 
-    const placeholder =
-      order === 1 ? 'Décrivez les étapes de la recette...' : `Étape ${order}…`;
+    const placeholder = order === 1 ? 'Décrivez les étapes de la recette...' : `Étape ${order}…`;
 
     return (
-      <div className="items-start gap-2 grid grid-cols-[auto,1fr,auto]">
+      <div
+        className="items-start gap-2 grid"
+        style={{ gridTemplateColumns: 'auto minmax(0, 1fr) auto' }}
+      >
         <div className="flex justify-center items-center bg-background border rounded-full size-7 font-semibold text-xs shrink-0">
           {order}
         </div>
 
         <group.AppField name="text">
           {(field) => (
-            <field.TextareaField
-              label=""
-              rows={2}
-              placeholder={placeholder}
-              className="resize-y"
-            />
+            <field.TextareaField label="" rows={2} placeholder={placeholder} className="resize-y" />
           )}
         </group.AppField>
 

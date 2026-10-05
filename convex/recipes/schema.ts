@@ -3,10 +3,7 @@ import { v } from 'convex/values';
 import type { Doc } from '../_generated/dataModel';
 import { createPatchBuilder, makeEnum } from '../helpers';
 import { productUnitEnum } from '../products/schema';
-import {
-  RECIPE_DIFFICULTY_DISPLAY_NAMES,
-  type RecipeDifficulty,
-} from '../types';
+import { RECIPE_DIFFICULTY_DISPLAY_NAMES, type RecipeDifficulty } from '../types';
 
 export const recipeDifficultyEnum = makeEnum<RecipeDifficulty>(
   Object.keys(RECIPE_DIFFICULTY_DISPLAY_NAMES) as RecipeDifficulty[],
@@ -54,5 +51,4 @@ export const recipeFavoritesSchema = defineTable({
   .index('by_householdId', ['householdId']);
 
 export const recipesPatchBuilder = createPatchBuilder<Doc<'recipes'>>();
-export const recipeProductsPatchBuilder =
-  createPatchBuilder<Doc<'recipeProducts'>>();
+export const recipeProductsPatchBuilder = createPatchBuilder<Doc<'recipeProducts'>>();

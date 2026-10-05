@@ -23,15 +23,10 @@ export const Route = createFileRoute('/_authed')({
       ),
     ]);
 
-    const ownHousehold = ownHouseholds.find(
-      (h) => h.household.publicId === householdId,
-    );
+    const ownHousehold = ownHouseholds.find((h) => h.household.publicId === householdId);
 
     if (!ownHousehold && householdId !== null) {
-      context.queryClient.setQueryData(
-        householdIdQueryOptions().queryKey,
-        null,
-      );
+      context.queryClient.setQueryData(householdIdQueryOptions().queryKey, null);
       await setHouseholdIdServerFn({ data: null });
     }
     return {
@@ -45,9 +40,7 @@ export const Route = createFileRoute('/_authed')({
       context.convexQueryClient.queryClient.ensureQueryData(
         convexQuery(api.households.queries.getOwnHouseholds, {}),
       ),
-      context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.users.viewer, {}),
-      ),
+      context.convexQueryClient.queryClient.ensureQueryData(convexQuery(api.users.viewer, {})),
       context.householdId &&
         context.convexQueryClient.queryClient.ensureQueryData(
           convexQuery(api.households_members.queries.getCurrentUserMember, {

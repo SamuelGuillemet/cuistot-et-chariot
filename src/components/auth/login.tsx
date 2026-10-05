@@ -38,9 +38,7 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader className="pb-0">
-        <CardTitle className="font-bold text-xl md:text-2xl">
-          Connectez-vous
-        </CardTitle>
+        <CardTitle className="font-bold text-xl md:text-2xl">Connectez-vous</CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           Connectez-vous pour accéder à votre liste de courses et vos recettes.
         </CardDescription>
@@ -53,8 +51,7 @@ export function LoginForm() {
       <CardFooter>
         {error && (
           <p className="text-red-500 text-sm">
-            Une erreur s'est produite lors de la connexion :{' '}
-            {TraductionMap[error] || error}
+            Une erreur s'est produite lors de la connexion : {TraductionMap[error] || error}
           </p>
         )}
       </CardFooter>

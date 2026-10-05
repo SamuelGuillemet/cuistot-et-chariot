@@ -6,10 +6,7 @@ interface RecipeServingsDisplayProps {
   readonly className?: string;
 }
 
-export function RecipeServingsDisplay({
-  servings,
-  className,
-}: RecipeServingsDisplayProps) {
+export function RecipeServingsDisplay({ servings, className }: RecipeServingsDisplayProps) {
   return (
     <div className={cn('flex items-center gap-1 text-sm', className)}>
       <UsersIcon className="w-4 h-4" />

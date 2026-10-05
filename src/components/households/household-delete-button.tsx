@@ -24,9 +24,7 @@ export function HouseholdDeleteButton({
   hidden?: boolean;
 }) {
   const router = useRouter();
-  const mutationFn = useConvexMutation(
-    api.households.mutations.deleteHousehold,
-  );
+  const mutationFn = useConvexMutation(api.households.mutations.deleteHousehold);
 
   const { mutate } = useMutation({
     mutationFn,
@@ -36,7 +34,7 @@ export function HouseholdDeleteButton({
     },
     onSuccess: () => {
       toast.success('Foyer supprimé avec succès');
-      router.navigate({
+      void router.navigate({
         to: '/dashboard',
       });
     },
@@ -52,9 +50,7 @@ export function HouseholdDeleteButton({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive">Supprimer</Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger render={<Button variant="destructive" />}>Supprimer</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Supprimer le foyer</AlertDialogTitle>
@@ -64,9 +60,7 @@ export function HouseholdDeleteButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Annuler</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>
-            Supprimer
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>Supprimer</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -113,10 +113,7 @@ export const updateRecipe = mutationWithRLS({
         .query('recipes')
         .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
         .filter((q) =>
-          q.and(
-            q.eq(q.field('name'), args.name),
-            q.neq(q.field('_id'), args.recipeId),
-          ),
+          q.and(q.eq(q.field('name'), args.name), q.neq(q.field('_id'), args.recipeId)),
         )
         .first();
 
@@ -133,9 +130,7 @@ export const updateRecipe = mutationWithRLS({
     if (args.products !== undefined) {
       // Verify all products belong to the household
       for (const productData of args.products) {
-        const product = await ctx.db.get(
-          productData.productId as Id<'products'>,
-        );
+        const product = await ctx.db.get(productData.productId as Id<'products'>);
         if (!product) {
           throw new ConvexError('Product not found');
         }
@@ -216,9 +211,7 @@ export const toggleRecipeFavorite = mutationWithRLS({
     // Check if already a favorite
     const existingFavorite = await ctx.db
       .query('recipeFavorites')
-      .withIndex('by_userId_recipeId', (q) =>
-        q.eq('userId', userId).eq('recipeId', recipe._id),
-      )
+      .withIndex('by_userId_recipeId', (q) => q.eq('userId', userId).eq('recipeId', recipe._id))
       .first();
 
     if (existingFavorite) {

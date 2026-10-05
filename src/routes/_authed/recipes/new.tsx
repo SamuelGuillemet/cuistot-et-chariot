@@ -23,9 +23,9 @@ function RouteComponent() {
 
   const { mutate: createRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.createRecipe),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Recette créée avec succès');
-      navigate({ to: '/recipes' });
+      await navigate({ to: '/recipes' });
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Erreur lors de la création de la recette');
@@ -56,12 +56,8 @@ function RouteComponent() {
   return (
     <div className="space-y-4 mx-auto py-6 max-w-4xl container">
       <div className="space-y-2">
-        <h1 className="font-bold text-3xl tracking-tight">
-          Créer une nouvelle recette
-        </h1>
-        <p className="text-muted-foreground">
-          Ajoutez une nouvelle recette à votre collection.
-        </p>
+        <h1 className="font-bold text-3xl tracking-tight">Créer une nouvelle recette</h1>
+        <p className="text-muted-foreground">Ajoutez une nouvelle recette à votre collection.</p>
       </div>
 
       <RecipeForm

@@ -1,21 +1,13 @@
 import { useMemo } from 'react';
 import { useFieldContext } from '@/lib/forms';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { BaseField, type BaseFieldProps } from './base-field';
 
 export function SelectField<TValue extends string>({
   placeholder,
   options,
-  showClearButton = true,
   ...props
 }: BaseFieldProps & {
-  readonly showClearButton?: boolean;
   readonly placeholder?: string;
   readonly options: Record<TValue, string>;
 }) {
@@ -23,10 +15,7 @@ export function SelectField<TValue extends string>({
 
   const optionsList = useMemo(() => {
     const list: { value: TValue; label: string }[] = [];
-    for (const [value, label] of Object.entries(options) as [
-      TValue,
-      string,
-    ][]) {
+    for (const [value, label] of Object.entries(options) as [TValue, string][]) {
       list.push({ value, label });
     }
     return list;
@@ -38,15 +27,12 @@ export function SelectField<TValue extends string>({
         <Select
           name={field.name}
           value={field.state.value}
-          onValueChange={(value) => field.handleChange(value as TValue)}
+          onValueChange={(value) => {
+            if (value !== null) field.handleChange(value as TValue);
+          }}
           aria-invalid={isInvalid}
-          showClearButton={showClearButton}
         >
-          <SelectTrigger
-            id={field.name}
-            aria-invalid={isInvalid}
-            onBlur={field.handleBlur}
-          >
+          <SelectTrigger id={field.name} aria-invalid={isInvalid} onBlur={field.handleBlur}>
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>

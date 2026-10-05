@@ -41,14 +41,12 @@ function RouteComponent() {
 
   const { mutate: updateRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.updateRecipe),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Recette mise à jour avec succès');
-      navigate({ to: '/recipes/$recipeId', params: { recipeId } });
+      await navigate({ to: '/recipes/$recipeId', params: { recipeId } });
     },
     onError: (error: Error) => {
-      toast.error(
-        error.message || 'Erreur lors de la mise à jour de la recette',
-      );
+      toast.error(error.message || 'Erreur lors de la mise à jour de la recette');
     },
   });
 
@@ -77,12 +75,8 @@ function RouteComponent() {
   return (
     <div className="space-y-4 mx-auto py-6 max-w-4xl container">
       <div className="space-y-2">
-        <h1 className="font-bold text-3xl tracking-tight">
-          Modifier la recette
-        </h1>
-        <p className="text-muted-foreground">
-          Modifiez les informations de votre recette.
-        </p>
+        <h1 className="font-bold text-3xl tracking-tight">Modifier la recette</h1>
+        <p className="text-muted-foreground">Modifiez les informations de votre recette.</p>
       </div>
 
       <RecipeForm

@@ -194,6 +194,7 @@ export function useFormDraft<TData>({
 
   // Initial load: decide whether to show the banner
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     onInitialLoad();
   }, []);
 

@@ -1,6 +1,6 @@
 import { useFieldContext } from '@/lib/forms';
-import { IconSelectorControlled } from '../food-icons/IconSelectorField';
 import type { FoodIcons } from '../food-icons/icon-food-font-config';
+import { IconSelectorControlled } from '../food-icons/IconSelectorField';
 import { BaseField, type BaseFieldProps } from './base-field';
 
 export function IconField({ ...props }: Readonly<BaseFieldProps>) {

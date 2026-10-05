@@ -32,20 +32,15 @@ export function RecipeActionsDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <MoreVerticalIcon className="w-4 h-4" />
-          </Button>
+        <DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
+          <MoreVerticalIcon className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={onEdit}>
             <EditIcon className="mr-2 w-4 h-4" />
             Modifier
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setShowDeleteDialog(true)}
-            className="text-destructive"
-          >
+          <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className="text-destructive">
             <TrashIcon className="mr-2 w-4 h-4" />
             Supprimer
           </DropdownMenuItem>

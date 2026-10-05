@@ -13,9 +13,7 @@ export const productCategoryEnum = makeEnum<ProductCategory>(
   Object.keys(CATEGORY_DISPLAY_NAMES) as ProductCategory[],
 );
 
-export const productUnitEnum = makeEnum<ProductUnit>(
-  Object.keys(PRODUCT_UNITS) as ProductUnit[],
-);
+export const productUnitEnum = makeEnum<ProductUnit>(Object.keys(PRODUCT_UNITS) as ProductUnit[]);
 
 export const productsSchema = defineTable({
   icon: v.string(),

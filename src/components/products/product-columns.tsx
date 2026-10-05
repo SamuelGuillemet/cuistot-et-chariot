@@ -6,17 +6,15 @@ import {
   type ProductUnit,
 } from '@backend/types';
 import type { ColumnDef } from '@tanstack/react-table';
-import {
-  type FoodIcons,
-  getIconClass,
-} from '@/components/food-icons/icon-food-font-config';
+import { type FoodIcons, getIconClass } from '@/components/food-icons/icon-food-font-config';
+import type { ProductTableFeatures } from '@/components/table/data-table';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { Badge } from '@/components/ui/badge';
 import { ProductActions } from './product-actions';
 
 export function createProductColumns(
   householdId: string,
-): ColumnDef<Doc<'products'>>[] {
+): ColumnDef<ProductTableFeatures, Doc<'products'>>[] {
   return [
     {
       id: '_id',
@@ -24,9 +22,7 @@ export function createProductColumns(
     },
     {
       accessorKey: 'icon',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Icône" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Icône" />,
       cell: ({ row }) => {
         const icon = row.getValue<FoodIcons>('icon');
         return (
@@ -40,9 +36,7 @@ export function createProductColumns(
     },
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Nom" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Nom" />,
       cell: ({ row }) => {
         const name = row.getValue<string>('name');
         return <div className="font-medium">{name}</div>;
@@ -50,29 +44,19 @@ export function createProductColumns(
     },
     {
       accessorKey: 'description',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Description" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
       cell: ({ row }) => {
         const description = row.getValue<string | undefined>('description');
-        return (
-          <div className="text-muted-foreground">{description || '-'}</div>
-        );
+        return <div className="text-muted-foreground">{description || '-'}</div>;
       },
       enableSorting: false,
     },
     {
       accessorKey: 'category',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Catégorie" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Catégorie" />,
       cell: ({ row }) => {
         const category = row.getValue<ProductCategory>('category');
-        return (
-          <Badge variant="secondary">
-            {CATEGORY_DISPLAY_NAMES[category] || category}
-          </Badge>
-        );
+        return <Badge variant="secondary">{CATEGORY_DISPLAY_NAMES[category] || category}</Badge>;
       },
       filterFn: (row, id, value) => {
         return value.includes(row.getValue(id));
@@ -80,9 +64,7 @@ export function createProductColumns(
     },
     {
       accessorKey: 'defaultUnit',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Unité par défaut" />
-      ),
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Unité par défaut" />,
       cell: ({ row }) => {
         const unit = row.getValue<ProductUnit>('defaultUnit');
         return <Badge variant="outline">{PRODUCT_UNITS[unit] || unit}</Badge>;

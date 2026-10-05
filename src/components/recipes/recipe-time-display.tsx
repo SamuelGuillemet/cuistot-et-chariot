@@ -19,11 +19,7 @@ function formatTime(minutes: number): string {
   return `${hours}h${mins}`;
 }
 
-export function RecipeTimeDisplay({
-  prepTime,
-  cookTime,
-  className,
-}: RecipeTimeDisplayProps) {
+export function RecipeTimeDisplay({ prepTime, cookTime, className }: RecipeTimeDisplayProps) {
   const totalTime = prepTime + cookTime;
 
   return (

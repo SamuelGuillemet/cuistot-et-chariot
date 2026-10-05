@@ -28,10 +28,7 @@ export interface ProductsToolbarProps {
   onFilter: (data: { search: string; category: string }) => void;
 }
 
-export function ProductsToolbar({
-  onFilter,
-  householdId,
-}: ProductsToolbarProps) {
+export function ProductsToolbar({ onFilter, householdId }: ProductsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
@@ -86,7 +83,12 @@ export function ProductsToolbar({
           />
         </div>
         <div className="flex items-center gap-2">
-          <Select value={category} onValueChange={handleCategoryChange}>
+          <Select
+            value={category}
+            onValueChange={(value) => {
+              if (value !== null) handleCategoryChange(value);
+            }}
+          >
             <SelectTrigger className="w-56">
               <SelectValue placeholder="Catégorie" />
             </SelectTrigger>
@@ -100,22 +102,15 @@ export function ProductsToolbar({
             </SelectContent>
           </Select>
           {hasFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={resetFilters}
-              className="gap-1"
-            >
+            <Button variant="ghost" size="sm" onClick={resetFilters} className="gap-1">
               <XIcon className="w-3.5 h-3.5" /> Réinitialiser
             </Button>
           )}
         </div>
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button className="self-start md:self-auto">
-            <PlusIcon className="mr-2 w-4 h-4" /> Nouveau produit
-          </Button>
+        <DialogTrigger render={<Button className="self-start md:self-auto" />}>
+          <PlusIcon className="mr-2 w-4 h-4" /> Nouveau produit
         </DialogTrigger>
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>

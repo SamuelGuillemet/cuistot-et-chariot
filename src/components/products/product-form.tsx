@@ -11,9 +11,7 @@ const Product = v.object({
     v.minLength(1, 'Le nom est requis'),
     v.maxLength(100, 'Le nom est trop long'),
   ),
-  description: v.optional(
-    v.pipe(v.string(), v.maxLength(500, 'La description est trop longue')),
-  ),
+  description: v.optional(v.pipe(v.string(), v.maxLength(500, 'La description est trop longue'))),
   category: typedEnum(CATEGORY_DISPLAY_NAMES, 'Catégorie requise'),
   defaultUnit: typedEnum(PRODUCT_UNITS, 'Unité par défaut requise'),
 });
@@ -53,7 +51,7 @@ export function ProductForm({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
       className="space-y-6"
     >
@@ -64,13 +62,7 @@ export function ProductForm({
       </FieldGroup>
       <FieldGroup>
         <form.AppField name="name">
-          {(field) => (
-            <field.TextField
-              label="Nom"
-              placeholder="Nom du produit"
-              required
-            />
-          )}
+          {(field) => <field.TextField label="Nom" placeholder="Nom du produit" required />}
         </form.AppField>
         <form.AppField name="description">
           {(field) => (

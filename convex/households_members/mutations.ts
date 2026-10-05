@@ -85,11 +85,7 @@ export const updateMemberRole = mutationWithRLS({
 export const updateMemberStatus = mutationWithRLS({
   args: {
     memberId: v.id('householdMembers'),
-    status: v.union(
-      v.literal('pending'),
-      v.literal('accepted'),
-      v.literal('banned'),
-    ),
+    status: v.union(v.literal('pending'), v.literal('accepted'), v.literal('banned')),
   },
   handler: async (ctx, args) => {
     const { household } = ctx;
@@ -179,12 +175,7 @@ export const removeMember = mutationWithRLS({
       const adminCount = await ctx.db
         .query('householdMembers')
         .withIndex('by_householdId', (q) => q.eq('householdId', household._id))
-        .filter((q) =>
-          q.and(
-            q.eq(q.field('role'), 'admin'),
-            q.eq(q.field('status'), 'accepted'),
-          ),
-        )
+        .filter((q) => q.and(q.eq(q.field('role'), 'admin'), q.eq(q.field('status'), 'accepted')))
         .collect();
 
       if (adminCount.length <= 1) {

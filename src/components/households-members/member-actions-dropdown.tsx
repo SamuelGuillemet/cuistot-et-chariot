@@ -27,43 +27,33 @@ import { useCurrentMember } from '@/hooks/use-current-member';
 import { MemberPermissionsDialog } from './member-permissions-dialog';
 import type { MemberActionsProps } from './types';
 
-export function MemberActionsDropdown({
-  member,
-  householdPublicId,
-}: MemberActionsProps) {
+export function MemberActionsDropdown({ member, householdPublicId }: MemberActionsProps) {
   const { currentMember } = useCurrentMember();
 
   const [showPermissionsDialog, setShowPermissionsDialog] = useState(false);
 
-  const updateRoleMutation = useConvexMutation(
-    api.households_members.mutations.updateMemberRole,
-  );
+  const updateRoleMutation = useConvexMutation(api.households_members.mutations.updateMemberRole);
   const updateStatusMutation = useConvexMutation(
     api.households_members.mutations.updateMemberStatus,
   );
-  const removeMemberMutation = useConvexMutation(
-    api.households_members.mutations.removeMember,
-  );
+  const removeMemberMutation = useConvexMutation(api.households_members.mutations.removeMember);
 
   const { mutate: updateRole, isPending: isUpdatingRole } = useMutation({
     mutationFn: updateRoleMutation,
     onSuccess: () => toast.success('Rôle mis à jour'),
-    onError: (error) =>
-      toast.error(error.message || 'Erreur lors de la mise à jour du rôle'),
+    onError: (error) => toast.error(error.message || 'Erreur lors de la mise à jour du rôle'),
   });
 
   const { mutate: updateStatus, isPending: isUpdatingStatus } = useMutation({
     mutationFn: updateStatusMutation,
     onSuccess: () => toast.success('Statut mis à jour'),
-    onError: (error) =>
-      toast.error(error.message || 'Erreur lors de la mise à jour du statut'),
+    onError: (error) => toast.error(error.message || 'Erreur lors de la mise à jour du statut'),
   });
 
   const { mutate: removeMember, isPending: isRemoving } = useMutation({
     mutationFn: removeMemberMutation,
     onSuccess: () => toast.success('Membre retiré du foyer'),
-    onError: (error) =>
-      toast.error(error.message || 'Erreur lors du retrait du membre'),
+    onError: (error) => toast.error(error.message || 'Erreur lors du retrait du membre'),
   });
 
   // Only admins can manage members
@@ -99,15 +89,10 @@ export function MemberActionsDropdown({
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="p-0 w-8 h-8"
-            disabled={isPending}
-          >
-            <MoreVerticalIcon className="size-4" />
-          </Button>
+        <DropdownMenuTrigger
+          render={<Button variant="ghost" size="sm" className="p-0 w-8 h-8" disabled={isPending} />}
+        >
+          <MoreVerticalIcon className="size-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Gestion</DropdownMenuLabel>

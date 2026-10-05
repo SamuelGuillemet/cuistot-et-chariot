@@ -14,19 +14,14 @@ type ValidateKeys<T, U, K extends keyof T> =
         __expectedKeys: keyof U;
       };
 
-export function createPatchBuilder<
-  U extends Record<string, unknown> = Record<string, unknown>,
->() {
-  return function buildPatchData<
-    T extends Record<string, unknown>,
-    K extends keyof T,
-  >(args: T, excludeKeys: K[]): ValidateKeys<T, U, K> {
+export function createPatchBuilder<U extends Record<string, unknown> = Record<string, unknown>>() {
+  return function buildPatchData<T extends Record<string, unknown>, K extends keyof T>(
+    args: T,
+    excludeKeys: K[],
+  ): ValidateKeys<T, U, K> {
     const patchData: Partial<T> = {};
     for (const key in args) {
-      if (
-        args[key] !== undefined &&
-        !excludeKeys.includes(key as string as K)
-      ) {
+      if (args[key] !== undefined && !excludeKeys.includes(key as string as K)) {
         patchData[key] = args[key];
       }
     }

@@ -57,9 +57,7 @@ function RouteComponent() {
     convexQuery(api.households.queries.getJoinHousehold, { publicId: id }),
   );
 
-  const mutationFn = useConvexMutation(
-    api.households_members.mutations.joinHousehold,
-  );
+  const mutationFn = useConvexMutation(api.households_members.mutations.joinHousehold);
 
   const { mutate, isPending } = useMutation({
     mutationFn,
@@ -72,9 +70,9 @@ function RouteComponent() {
         toast.error('Impossible de rejoindre le foyer');
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Vous avez rejoint le foyer avec succès');
-      router.navigate({ to: '/dashboard' });
+      await router.navigate({ to: '/dashboard' });
     },
   });
 
@@ -109,7 +107,7 @@ function RouteComponent() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            form.handleSubmit();
+            void form.handleSubmit();
           }}
         >
           <CardContent className="flex flex-col gap-6 mb-6">

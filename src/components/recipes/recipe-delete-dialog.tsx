@@ -32,10 +32,10 @@ export function RecipeDeleteDialog({
 
   const { mutate: deleteRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.deleteRecipe),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Recette supprimée avec succès');
       onOpenChange(false);
-      navigate({ to: '/recipes' });
+      await navigate({ to: '/recipes' });
     },
     onError: () => {
       toast.error('Erreur lors de la suppression de la recette');
@@ -52,9 +52,8 @@ export function RecipeDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Supprimer la recette ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Êtes-vous sûr de vouloir supprimer la recette "{recipe.name}" ?
-            Cette action est irréversible et supprimera également tous les
-            ingrédients et favoris associés.
+            Êtes-vous sûr de vouloir supprimer la recette "{recipe.name}" ? Cette action est
+            irréversible et supprimera également tous les ingrédients et favoris associés.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

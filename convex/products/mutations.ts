@@ -1,10 +1,6 @@
 import { ConvexError, v } from 'convex/values';
 import { mutationWithRLS } from './rls';
-import {
-  productCategoryEnum,
-  productsPatchBuilder,
-  productUnitEnum,
-} from './schema';
+import { productCategoryEnum, productsPatchBuilder, productUnitEnum } from './schema';
 
 export const createProduct = mutationWithRLS({
   args: {
@@ -60,10 +56,7 @@ export const updateProduct = mutationWithRLS({
         .query('products')
         .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
         .filter((q) =>
-          q.and(
-            q.eq(q.field('name'), args.name),
-            q.neq(q.field('_id'), args.productId),
-          ),
+          q.and(q.eq(q.field('name'), args.name), q.neq(q.field('_id'), args.productId)),
         )
         .first();
 

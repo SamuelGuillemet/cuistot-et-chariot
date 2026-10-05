@@ -31,9 +31,7 @@ export function Layout({ children }: PropsWithChildren) {
             </div>
           </div>
         </header>
-        <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 grow">
-          {children}
-        </div>
+        <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 grow">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

@@ -12,6 +12,4 @@ export const addCanManageProductsField = migrations.define({
   }),
 });
 
-export const runAll = migrations.runner([
-  internal.migrations.addCanManageProductsField,
-]);
+export const runAll = migrations.runner([internal.migrations.addCanManageProductsField]);

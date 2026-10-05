@@ -19,10 +19,7 @@ const Recipe = v.object({
     v.array(
       v.object({
         order: v.number(),
-        text: v.pipe(
-          v.string(),
-          v.minLength(1, 'Chaque étape doit contenir du texte'),
-        ),
+        text: v.pipe(v.string(), v.minLength(1, 'Chaque étape doit contenir du texte')),
       }),
     ),
     v.minLength(1, 'Ajoutez au moins une étape'),
@@ -44,10 +41,7 @@ const Recipe = v.object({
   products: v.pipe(
     v.array(
       v.object({
-        productId: v.pipe(
-          v.string(),
-          v.minLength(1, 'Sélectionnez un produit'),
-        ),
+        productId: v.pipe(v.string(), v.minLength(1, 'Sélectionnez un produit')),
         quantity: v.pipe(
           v.number('Le champ est obligatoire'),
           v.minValue(0.01, 'La quantité doit être positive'),
@@ -110,7 +104,7 @@ export function RecipeForm({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
       className="space-y-6"
     >

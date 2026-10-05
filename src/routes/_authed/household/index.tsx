@@ -4,10 +4,7 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { HouseholdDeleteButton } from '@/components/households/household-delete-button';
-import {
-  HouseholdForm,
-  type HouseholdFormValues,
-} from '@/components/households/household-form';
+import { HouseholdForm, type HouseholdFormValues } from '@/components/households/household-form';
 import { HouseholdMembersCard } from '@/components/households/household-members-card';
 import { useCurrentMember } from '@/hooks/use-current-member';
 
@@ -56,9 +53,7 @@ function RouteComponent() {
 
   const { currentMember } = useCurrentMember();
 
-  const mutationFn = useConvexMutation(
-    api.households.mutations.updateHousehold,
-  );
+  const mutationFn = useConvexMutation(api.households.mutations.updateHousehold);
   const { mutate, isPending } = useMutation({
     mutationFn,
     onError: (error) => {
@@ -81,9 +76,7 @@ function RouteComponent() {
     <div className="flex justify-center w-full grow">
       <div className="flex flex-col gap-6 sm:gap-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full max-w-4xl">
         <div className="flex justify-between items-center gap-4">
-          <h1 className="font-semibold text-2xl tracking-tight">
-            Modifier mon foyer
-          </h1>
+          <h1 className="font-semibold text-2xl tracking-tight">Modifier mon foyer</h1>
           <HouseholdDeleteButton
             householdId={householdId}
             hidden={!currentMember.canEditHousehold}

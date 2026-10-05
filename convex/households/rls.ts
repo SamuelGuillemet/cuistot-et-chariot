@@ -1,13 +1,10 @@
-import { ConvexError } from 'convex/values';
-import {
-  customMutation,
-  customQuery,
-} from 'convex-helpers/server/customFunctions';
+import { customMutation, customQuery } from 'convex-helpers/server/customFunctions';
 import {
   type Rules,
   wrapDatabaseReader,
   wrapDatabaseWriter,
 } from 'convex-helpers/server/rowLevelSecurity';
+import { ConvexError } from 'convex/values';
 import type { DataModel, Id } from '../_generated/dataModel';
 import { mutation, type QueryCtx, query } from '../_generated/server';
 import { getAuthUserId } from '../auth';
@@ -35,8 +32,7 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
           )
           .first();
         return (
-          householdMember?.status === 'accepted' &&
-          (householdMember?.canEditHousehold ?? false)
+          householdMember?.status === 'accepted' && (householdMember?.canEditHousehold ?? false)
         );
       },
     },

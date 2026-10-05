@@ -4,14 +4,7 @@ import { BaseField, type BaseFieldProps } from './base-field';
 
 type InputProps = Omit<
   React.ComponentProps<typeof PasswordInput>,
-  | 'value'
-  | 'onChange'
-  | 'id'
-  | 'name'
-  | 'aria-invalid'
-  | 'onBlur'
-  | 'type'
-  | 'ref'
+  'value' | 'onChange' | 'id' | 'name' | 'aria-invalid' | 'onBlur' | 'type' | 'ref'
 >;
 
 export function PasswordField({
@@ -23,12 +16,7 @@ export function PasswordField({
   const field = useFieldContext<string>();
 
   return (
-    <BaseField
-      label={label}
-      description={description}
-      required={required}
-      field={field}
-    >
+    <BaseField label={label} description={description} required={required} field={field}>
       {({ isInvalid }) => (
         <PasswordInput
           id={field.name}

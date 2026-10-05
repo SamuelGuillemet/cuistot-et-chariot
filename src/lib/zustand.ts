@@ -9,8 +9,7 @@ export const createSelectors = <S extends StoreApi<object>>(_store: S) => {
   store.use = {};
   for (const k of Object.keys(store.getState())) {
     // biome-ignore lint/suspicious/noExplicitAny: Genric function
-    (store.use as any)[k] = () =>
-      useStore(_store, (s) => s[k as keyof typeof s]);
+    (store.use as any)[k] = () => useStore(_store, (s) => s[k as keyof typeof s]);
   }
 
   return store;

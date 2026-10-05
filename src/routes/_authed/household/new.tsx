@@ -20,9 +20,7 @@ function RouteComponent() {
 
   const householdMutation = useMutation(useHouseholdMutationOptions());
 
-  const mutationFn = useConvexMutation(
-    api.households.mutations.createHousehold,
-  );
+  const mutationFn = useConvexMutation(api.households.mutations.createHousehold);
   const { mutate, isPending } = useMutation({
     mutationFn,
     onError: (error) => {
@@ -32,7 +30,7 @@ function RouteComponent() {
     onSuccess: async (data) => {
       toast.success('Foyer créé avec succès');
       await householdMutation.mutateAsync(data.publicId);
-      router.navigate({
+      await router.navigate({
         to: '/household',
       });
     },
@@ -41,14 +39,8 @@ function RouteComponent() {
   return (
     <div className="flex justify-center w-full grow">
       <div className="flex flex-col gap-6 sm:gap-8 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full max-w-4xl">
-        <h1 className="font-semibold text-2xl tracking-tight">
-          Créer un foyer
-        </h1>
-        <HouseholdForm
-          onSubmit={mutate}
-          isPending={isPending}
-          readOnly={false}
-        />
+        <h1 className="font-semibold text-2xl tracking-tight">Créer un foyer</h1>
+        <HouseholdForm onSubmit={mutate} isPending={isPending} readOnly={false} />
       </div>
     </div>
   );

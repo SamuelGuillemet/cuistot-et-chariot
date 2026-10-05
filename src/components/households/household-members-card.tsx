@@ -6,13 +6,7 @@ import { useMemo } from 'react';
 import { toast } from 'sonner';
 import { MemberItem } from '@/components/households-members/member-item';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 type Props = {
   householdPublicId: string;
@@ -73,8 +67,8 @@ export function HouseholdMembersCard({ householdPublicId }: Props) {
               Membres du foyer
             </CardTitle>
             <CardDescription>
-              {memberStats.total} membre{memberStats.total > 1 ? 's' : ''} ·{' '}
-              {memberStats.admins} administrateur
+              {memberStats.total} membre{memberStats.total > 1 ? 's' : ''} · {memberStats.admins}{' '}
+              administrateur
               {memberStats.admins > 1 ? 's' : ''}
             </CardDescription>
           </div>
@@ -92,11 +86,7 @@ export function HouseholdMembersCard({ householdPublicId }: Props) {
       <CardContent>
         <div className="space-y-3">
           {members.map((member) => (
-            <MemberItem
-              key={member._id}
-              member={member}
-              householdPublicId={householdPublicId}
-            />
+            <MemberItem key={member._id} member={member} householdPublicId={householdPublicId} />
           ))}
         </div>
       </CardContent>

@@ -1,8 +1,4 @@
-import {
-  type AuthFunctions,
-  createClient,
-  type GenericCtx,
-} from '@convex-dev/better-auth';
+import { type AuthFunctions, createClient, type GenericCtx } from '@convex-dev/better-auth';
 import { convex } from '@convex-dev/better-auth/plugins';
 import { betterAuth } from 'better-auth';
 import { ConvexError } from 'convex/values';
@@ -108,10 +104,7 @@ export async function getAuthUserId(
   return user._id;
 }
 
-export async function validateUserAndHousehold(
-  ctx: QueryCtx,
-  args: { publicId: string },
-) {
+export async function validateUserAndHousehold(ctx: QueryCtx, args: { publicId: string }) {
   const userId = await getAuthUserId(ctx);
   if (!userId) {
     throw new ConvexError('Unauthorized');

@@ -1,15 +1,9 @@
 import { useForm, useStore } from '@tanstack/react-form';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo } from 'react';
-import { IconSelectorControlled } from '@/components/food-icons/IconSelectorField';
 import { getIconData } from '@/components/food-icons/icon-food-font-config';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { IconSelectorControlled } from '@/components/food-icons/IconSelectorField';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const Route = createFileRoute('/_authed/dashboard')({
   component: RouteComponent,
@@ -33,8 +27,7 @@ function RouteComponent() {
       <CardHeader>
         <CardTitle>Sélecteur d'icônes alimentaires</CardTitle>
         <CardDescription>
-          Composant spécialisé pour les icônes d'aliments avec police
-          personnalisée
+          Composant spécialisé pour les icônes d'aliments avec police personnalisée
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -44,10 +37,7 @@ function RouteComponent() {
               <label htmlFor={field.name} className="font-medium text-sm">
                 Icône
               </label>
-              <IconSelectorControlled
-                value={field.state.value}
-                onChange={field.handleChange}
-              />
+              <IconSelectorControlled value={field.state.value} onChange={field.handleChange} />
               {selectedFoodIcon && (
                 <div className="flex items-center gap-4 text-muted-foreground text-sm">
                   <div>
@@ -55,9 +45,7 @@ function RouteComponent() {
                     <p className="text-muted-foreground text-sm">
                       Catégorie: {selectedFoodIcon.category}
                     </p>
-                    <p className="text-muted-foreground text-sm">
-                      ID: {selectedFoodIcon.id}
-                    </p>
+                    <p className="text-muted-foreground text-sm">ID: {selectedFoodIcon.id}</p>
                   </div>
                 </div>
               )}

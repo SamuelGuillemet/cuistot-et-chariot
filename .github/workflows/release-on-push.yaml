@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Release a new version
         id: release
-        uses: rymndhng/release-on-push-action@v0.28.0
+        uses: rymndhng/release-on-push-action@aebba2bbce07a9474bf95e8710e5ee8a9e922fe2 # v0.28.0
         with:
           bump_version_scheme: norelease
           tag_prefix: v
@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -p ./version
           echo "${{ needs.release-on-push.outputs.version }}" > ./version/version_number
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: version_number
           path: ./version/version_number

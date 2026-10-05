@@ -7,21 +7,11 @@ type InputProps = Omit<
   'value' | 'onChange' | 'id' | 'name' | 'aria-invalid' | 'onBlur' | 'type'
 >;
 
-export function TextField({
-  label,
-  description,
-  required,
-  ...props
-}: BaseFieldProps & InputProps) {
+export function TextField({ label, description, required, ...props }: BaseFieldProps & InputProps) {
   const field = useFieldContext<string>();
 
   return (
-    <BaseField
-      label={label}
-      description={description}
-      required={required}
-      field={field}
-    >
+    <BaseField label={label} description={description} required={required} field={field}>
       {({ isInvalid }) => (
         <Input
           id={field.name}

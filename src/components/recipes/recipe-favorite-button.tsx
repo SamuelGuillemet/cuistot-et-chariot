@@ -21,17 +21,13 @@ export function RecipeFavoriteButton({
   className,
   size = 'icon',
 }: RecipeFavoriteButtonProps) {
-  const mutationFn = useConvexMutation(
-    api.recipes.mutations.toggleRecipeFavorite,
-  );
+  const mutationFn = useConvexMutation(api.recipes.mutations.toggleRecipeFavorite);
 
   const { mutate: toggleFavorite, isPending } = useMutation({
     mutationFn,
     onSuccess: (data) => {
       toast.success(
-        data.isFavorite
-          ? 'Recette ajoutée aux favoris'
-          : 'Recette retirée des favoris',
+        data.isFavorite ? 'Recette ajoutée aux favoris' : 'Recette retirée des favoris',
       );
     },
     onError: () => {

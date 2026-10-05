@@ -1,5 +1,5 @@
-import { v } from 'convex/values';
 import { nullThrows } from 'convex-helpers';
+import { v } from 'convex/values';
 import type { Id } from '../_generated/dataModel';
 import { queryWithRLS } from './rls';
 
@@ -68,9 +68,7 @@ export const getRecipeById = queryWithRLS({
     // Get favorite status for the current user
     const favorite = await ctx.db
       .query('recipeFavorites')
-      .withIndex('by_userId_recipeId', (q) =>
-        q.eq('userId', userId).eq('recipeId', recipe._id),
-      )
+      .withIndex('by_userId_recipeId', (q) => q.eq('userId', userId).eq('recipeId', recipe._id))
       .first();
 
     // Get all products for this recipe

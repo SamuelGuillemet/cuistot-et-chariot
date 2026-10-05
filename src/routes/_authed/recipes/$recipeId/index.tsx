@@ -57,7 +57,7 @@ function RouteComponent() {
   const canEdit = currentMember?.status === 'accepted';
 
   const handleEdit = () => {
-    navigate({ to: '/recipes/$recipeId/edit', params: { recipeId } });
+    void navigate({ to: '/recipes/$recipeId/edit', params: { recipeId } });
   };
 
   return (
@@ -77,9 +77,7 @@ function RouteComponent() {
               <CardTitle>Instructions</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecipeInstructionsDisplay
-                instructions={recipeData.instructions}
-              />
+              <RecipeInstructionsDisplay instructions={recipeData.instructions} />
             </CardContent>
           </Card>
         </div>

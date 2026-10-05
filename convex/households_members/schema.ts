@@ -24,5 +24,4 @@ export const householdMembersSchema = defineTable({
   .index('by_householdId', ['householdId'])
   .index('by_userId_householdId', ['userId', 'householdId']);
 
-export const householdMembersPatchBuilder =
-  createPatchBuilder<Doc<'householdMembers'>>();
+export const householdMembersPatchBuilder = createPatchBuilder<Doc<'householdMembers'>>();

@@ -1,11 +1,7 @@
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
-import {
-  deleteCookie,
-  getCookie,
-  setCookie,
-} from '@tanstack/react-start/server';
+import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server';
 import * as v from 'valibot';
 import type { Theme } from '@/components/layout/theme-provider';
 import { SIDEBAR_COOKIE_NAME } from '@/components/ui/sidebar';
@@ -18,15 +14,13 @@ const HOUSEHOLD_COOKIE_NAME = 'household-id';
 const DEFAULT_COOKIE_OPTIONS = { httpOnly: true, maxAge: 60 * 60 * 24 * 30 };
 
 // Server Functions
-export const getAuthSessionServerFn = createServerFn({ method: 'GET' }).handler(
-  async () => {
-    return {
-      token: await getToken(),
-    };
-  },
-);
+export const getAuthSessionServerFn = createServerFn({ method: 'GET' }).handler(async () => {
+  return {
+    token: await getToken(),
+  };
+});
 
-export const getThemeServerFn = createServerFn().handler(async () => {
+export const getThemeServerFn = createServerFn().handler(() => {
   return (getCookie(THEME_COOKIE_NAME) || 'system') as Theme;
 });
 
@@ -34,12 +28,12 @@ const ThemeValidator = v.picklist(['light', 'dark', 'system']);
 
 export const setThemeServerFn = createServerFn({ method: 'POST' })
   .validator(ThemeValidator)
-  .handler(async ({ data }) => {
+  .handler(({ data }) => {
     setCookie(THEME_COOKIE_NAME, data, DEFAULT_COOKIE_OPTIONS);
     return data;
   });
 
-export const getSidebarStateServerFn = createServerFn().handler(async () => {
+export const getSidebarStateServerFn = createServerFn().handler(() => {
   return (getCookie(SIDEBAR_COOKIE_NAME) || 'false') === 'true';
 });
 
@@ -47,12 +41,12 @@ const SidebarStateValidator = v.boolean();
 
 export const setSidebarStateServerFn = createServerFn({ method: 'POST' })
   .validator(SidebarStateValidator)
-  .handler(async ({ data }) => {
+  .handler(({ data }) => {
     setCookie(SIDEBAR_COOKIE_NAME, String(data), DEFAULT_COOKIE_OPTIONS);
     return data;
   });
 
-export const getHouseholdIdServerFn = createServerFn().handler(async () => {
+export const getHouseholdIdServerFn = createServerFn().handler(() => {
   const householdId = getCookie(HOUSEHOLD_COOKIE_NAME);
   if (householdId && !v.safeParse(HouseholdIdValidator, householdId).success) {
     // Invalid household ID, clear the cookie
@@ -67,7 +61,7 @@ const HouseholdIdValidator = v.union([v.pipe(v.string(), v.uuid()), v.null()]);
 
 export const setHouseholdIdServerFn = createServerFn({ method: 'POST' })
   .validator(HouseholdIdValidator)
-  .handler(async ({ data }) => {
+  .handler(({ data }) => {
     if (data === null) {
       deleteCookie(HOUSEHOLD_COOKIE_NAME);
     } else {
@@ -138,11 +132,10 @@ export const useHouseholdMutationOptions = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   return {
-    mutationFn: (householdId: string | null) =>
-      setHouseholdIdServerFn({ data: householdId }),
+    mutationFn: (householdId: string | null) => setHouseholdIdServerFn({ data: householdId }),
     onSuccess: (data: string | null) => {
       queryClient.setQueryData(householdIdQueryOptions().queryKey, data);
-      router.invalidate(); // To force reload of routes that depend on householdId
+      void router.invalidate();
       return data;
     },
   };

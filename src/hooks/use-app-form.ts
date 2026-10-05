@@ -33,11 +33,8 @@ const {
 type ValidateOnKeys<TValues> = Exclude<keyof Validators<TValues>, 'onSubmit'>[];
 
 function focusFirstError(errorMap: Record<string, unknown>) {
-  const inputsOrButtons: (
-    | HTMLInputElement
-    | HTMLTextAreaElement
-    | HTMLButtonElement
-  )[] = Array.from(document.querySelectorAll('input, textarea, button'));
+  const inputsOrButtons: (HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement)[] =
+    Array.from(document.querySelectorAll('input, textarea, button'));
 
   for (const input of inputsOrButtons) {
     const deniedNames = [input.name, input.id];

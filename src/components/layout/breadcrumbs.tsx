@@ -14,11 +14,7 @@ export default function BreadcrumbComponent() {
     select: (state) => {
       return state.matches.map((match) => {
         let path = match.pathname;
-        if (
-          match.loaderData &&
-          'pathname' in match.loaderData &&
-          match.loaderData.pathname
-        ) {
+        if (match.loaderData && 'pathname' in match.loaderData && match.loaderData.pathname) {
           path = match.loaderData.pathname;
         }
         return {
@@ -38,12 +34,10 @@ export default function BreadcrumbComponent() {
           <slot key={breadcrumb.path}>
             <BreadcrumbItem>
               {index === breadcrumbs.length - 1 ? (
-                <BreadcrumbPage className="font-semibold">
-                  {breadcrumb.title}
-                </BreadcrumbPage>
+                <BreadcrumbPage className="font-semibold">{breadcrumb.title}</BreadcrumbPage>
               ) : (
-                <BreadcrumbLink asChild>
-                  <Link to={breadcrumb.path}>{breadcrumb.title}</Link>
+                <BreadcrumbLink render={<Link to={breadcrumb.path} />}>
+                  {breadcrumb.title}
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

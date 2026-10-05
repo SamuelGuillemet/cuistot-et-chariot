@@ -9,38 +9,38 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthedRecipesRouteImport } from './routes/_authed/recipes'
-import { Route as AuthedProductsRouteImport } from './routes/_authed/products'
+import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
-import { Route as AuthedRecipesIndexRouteImport } from './routes/_authed/recipes/index'
+import { Route as AuthedProductsRouteImport } from './routes/_authed/products'
+import { Route as AuthedRecipesRouteImport } from './routes/_authed/recipes'
 import { Route as AuthedHouseholdIndexRouteImport } from './routes/_authed/household/index'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AuthedRecipesNewRouteImport } from './routes/_authed/recipes/new'
 import { Route as AuthedHouseholdNewRouteImport } from './routes/_authed/household/new'
+import { Route as AuthedRecipesIndexRouteImport } from './routes/_authed/recipes/index'
+import { Route as AuthedRecipesNewRouteImport } from './routes/_authed/recipes/new'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthedHouseholdJoinIdRouteImport } from './routes/_authed/household/join.$id'
 import { Route as AuthedRecipesRecipeIdIndexRouteImport } from './routes/_authed/recipes/$recipeId/index'
 import { Route as AuthedRecipesRecipeIdEditRouteImport } from './routes/_authed/recipes/$recipeId/edit'
-import { Route as AuthedHouseholdJoinIdRouteImport } from './routes/_authed/household/join.$id'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedRecipesRoute = AuthedRecipesRouteImport.update({
-  id: '/recipes',
-  path: '/recipes',
+const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedProductsRoute = AuthedProductsRouteImport.update({
@@ -48,9 +48,19 @@ const AuthedProductsRoute = AuthedProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AuthedRoute,
 } as any)
-const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthedRecipesRoute = AuthedRecipesRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedHouseholdIndexRoute = AuthedHouseholdIndexRouteImport.update({
+  id: '/household/',
+  path: '/household/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedHouseholdNewRoute = AuthedHouseholdNewRouteImport.update({
+  id: '/household/new',
+  path: '/household/new',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedRecipesIndexRoute = AuthedRecipesIndexRouteImport.update({
@@ -58,24 +68,19 @@ const AuthedRecipesIndexRoute = AuthedRecipesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthedRecipesRoute,
 } as any)
-const AuthedHouseholdIndexRoute = AuthedHouseholdIndexRouteImport.update({
-  id: '/household/',
-  path: '/household/',
-  getParentRoute: () => AuthedRoute,
+const AuthedRecipesNewRoute = AuthedRecipesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AuthedRecipesRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedRecipesNewRoute = AuthedRecipesNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AuthedRecipesRoute,
-} as any)
-const AuthedHouseholdNewRoute = AuthedHouseholdNewRouteImport.update({
-  id: '/household/new',
-  path: '/household/new',
+const AuthedHouseholdJoinIdRoute = AuthedHouseholdJoinIdRouteImport.update({
+  id: '/household/join/$id',
+  path: '/household/join/$id',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedRecipesRecipeIdIndexRoute =
@@ -90,11 +95,6 @@ const AuthedRecipesRecipeIdEditRoute =
     path: '/$recipeId/edit',
     getParentRoute: () => AuthedRecipesRoute,
   } as any)
-const AuthedHouseholdJoinIdRoute = AuthedHouseholdJoinIdRouteImport.update({
-  id: '/household/join/$id',
-  path: '/household/join/$id',
-  getParentRoute: () => AuthedRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -199,11 +199,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authed': {
@@ -213,18 +213,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/recipes': {
-      id: '/_authed/recipes'
-      path: '/recipes'
-      fullPath: '/recipes'
-      preLoaderRoute: typeof AuthedRecipesRouteImport
+    '/_authed/dashboard': {
+      id: '/_authed/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthedDashboardRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/products': {
@@ -234,11 +234,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedProductsRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/_authed/dashboard': {
-      id: '/_authed/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthedDashboardRouteImport
+    '/_authed/recipes': {
+      id: '/_authed/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof AuthedRecipesRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/household/': {
+      id: '/_authed/household/'
+      path: '/household'
+      fullPath: '/household/'
+      preLoaderRoute: typeof AuthedHouseholdIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/household/new': {
+      id: '/_authed/household/new'
+      path: '/household/new'
+      fullPath: '/household/new'
+      preLoaderRoute: typeof AuthedHouseholdNewRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/recipes/': {
@@ -248,12 +262,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedRecipesIndexRouteImport
       parentRoute: typeof AuthedRecipesRoute
     }
-    '/_authed/household/': {
-      id: '/_authed/household/'
-      path: '/household'
-      fullPath: '/household/'
-      preLoaderRoute: typeof AuthedHouseholdIndexRouteImport
-      parentRoute: typeof AuthedRoute
+    '/_authed/recipes/new': {
+      id: '/_authed/recipes/new'
+      path: '/new'
+      fullPath: '/recipes/new'
+      preLoaderRoute: typeof AuthedRecipesNewRouteImport
+      parentRoute: typeof AuthedRecipesRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -262,18 +276,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/recipes/new': {
-      id: '/_authed/recipes/new'
-      path: '/new'
-      fullPath: '/recipes/new'
-      preLoaderRoute: typeof AuthedRecipesNewRouteImport
-      parentRoute: typeof AuthedRecipesRoute
-    }
-    '/_authed/household/new': {
-      id: '/_authed/household/new'
-      path: '/household/new'
-      fullPath: '/household/new'
-      preLoaderRoute: typeof AuthedHouseholdNewRouteImport
+    '/_authed/household/join/$id': {
+      id: '/_authed/household/join/$id'
+      path: '/household/join/$id'
+      fullPath: '/household/join/$id'
+      preLoaderRoute: typeof AuthedHouseholdJoinIdRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/recipes/$recipeId/': {
@@ -289,13 +296,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/recipes/$recipeId/edit'
       preLoaderRoute: typeof AuthedRecipesRecipeIdEditRouteImport
       parentRoute: typeof AuthedRecipesRoute
-    }
-    '/_authed/household/join/$id': {
-      id: '/_authed/household/join/$id'
-      path: '/household/join/$id'
-      fullPath: '/household/join/$id'
-      preLoaderRoute: typeof AuthedHouseholdJoinIdRouteImport
-      parentRoute: typeof AuthedRoute
     }
   }
 }

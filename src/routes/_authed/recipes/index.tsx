@@ -58,9 +58,7 @@ function useFilters(recipes: Recipes) {
 
   const filterOnDifficulty = useCallback(
     (recipe: Recipes[number]) => {
-      return (
-        filters.difficulty === 'all' || recipe.difficulty === filters.difficulty
-      );
+      return filters.difficulty === 'all' || recipe.difficulty === filters.difficulty;
     },
     [filters.difficulty],
   );
@@ -75,9 +73,7 @@ function useFilters(recipes: Recipes) {
   const filteredRecipes = useMemo(() => {
     return recipes.filter(
       (recipe) =>
-        filterOnSearchTerm(recipe) &&
-        filterOnDifficulty(recipe) &&
-        filterOnFavorites(recipe),
+        filterOnSearchTerm(recipe) && filterOnDifficulty(recipe) && filterOnFavorites(recipe),
     );
   }, [recipes, filterOnSearchTerm, filterOnDifficulty, filterOnFavorites]);
 
@@ -88,7 +84,7 @@ function RouteComponent() {
   const { householdId } = Route.useLoaderData();
   const { currentMember } = useCurrentMember();
 
-  const { data: recipes = [] } = useSuspenseQuery(
+  const { data: recipes } = useSuspenseQuery(
     convexQuery(api.recipes.queries.getRecipes, { publicId: householdId }),
   );
 

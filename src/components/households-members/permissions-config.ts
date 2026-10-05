@@ -15,11 +15,7 @@ type PermissionRecords = Record<PermissionKeys, boolean>;
 type MapTuple<T extends unknown[]> = { [K in keyof T]: Permission<T[K]> };
 
 type AllValuesArray<T> =
-  TupleOf<T> extends infer R
-    ? R extends unknown[]
-      ? MapTuple<R>
-      : never
-    : never;
+  TupleOf<T> extends infer R ? (R extends unknown[] ? MapTuple<R> : never) : never;
 
 /**
  * Configuration for all available member permissions.
@@ -48,9 +44,7 @@ export const PERMISSIONS_CONFIG: AllValuesArray<PermissionKeys> = [
 /**
  * Helper function to initialize permissions from a member object
  */
-export function initializePermissionsFromMember(
-  member: HouseholdMember,
-): PermissionRecords {
+export function initializePermissionsFromMember(member: HouseholdMember): PermissionRecords {
   return PERMISSIONS_CONFIG.reduce((acc, permission) => {
     const value = member[permission.key];
     acc[permission.key] = value ?? permission.defaultValue ?? false;
@@ -68,8 +62,7 @@ export function getChangedPermissions(
   const changes: Partial<PermissionRecords> = {};
 
   PERMISSIONS_CONFIG.forEach((permission) => {
-    const currentValue =
-      member[permission.key] ?? permission.defaultValue ?? false;
+    const currentValue = member[permission.key] ?? permission.defaultValue ?? false;
     const newValue = newPermissions[permission.key];
 
     if (currentValue !== newValue) {
@@ -88,8 +81,7 @@ export function hasPermissionChanges(
   newPermissions: PermissionRecords,
 ): boolean {
   return PERMISSIONS_CONFIG.some((permission) => {
-    const currentValue =
-      member[permission.key] ?? permission.defaultValue ?? false;
+    const currentValue = member[permission.key] ?? permission.defaultValue ?? false;
     const newValue = newPermissions[permission.key];
     return currentValue !== newValue;
   });

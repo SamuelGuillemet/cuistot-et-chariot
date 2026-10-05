@@ -72,9 +72,8 @@ export const PRODUCT_UNITS: Record<ProductUnit, string> = {
 
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
 
-export const RECIPE_DIFFICULTY_DISPLAY_NAMES: Record<RecipeDifficulty, string> =
-  {
-    easy: 'Facile',
-    medium: 'Moyen',
-    hard: 'Difficile',
-  } as const;
+export const RECIPE_DIFFICULTY_DISPLAY_NAMES: Record<RecipeDifficulty, string> = {
+  easy: 'Facile',
+  medium: 'Moyen',
+  hard: 'Difficile',
+} as const;

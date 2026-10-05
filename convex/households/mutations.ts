@@ -1,5 +1,5 @@
-import { v } from 'convex/values';
 import { nullThrows } from 'convex-helpers';
+import { v } from 'convex/values';
 import { v4 as uuid } from 'uuid';
 import { withoutSystemFields } from '../utils';
 import { mutationWithRLS } from './rls';
@@ -66,8 +66,6 @@ export const deleteHousehold = mutationWithRLS({
       .collect();
 
     await ctx.db.delete(household._id);
-    await Promise.all(
-      householdMembers.map((member) => ctx.db.delete(member._id)),
-    );
+    await Promise.all(householdMembers.map((member) => ctx.db.delete(member._id)));
   },
 });

@@ -48,10 +48,7 @@ export function RecipeDetailHeader({
         </div>
       </div>
 
-      <RecipeTimeDisplay
-        prepTime={recipe.prepTime}
-        cookTime={recipe.cookTime}
-      />
+      <RecipeTimeDisplay prepTime={recipe.prepTime} cookTime={recipe.cookTime} />
 
       <Separator />
     </div>

@@ -1,7 +1,7 @@
 import { api } from '@api/api';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -56,17 +56,13 @@ export function MemberPermissionsDialog({
       onOpenChange(false);
     },
     onError: (error) =>
-      toast.error(
-        error.message || 'Erreur lors de la mise à jour des permissions',
-      ),
+      toast.error(error.message || 'Erreur lors de la mise à jour des permissions'),
   });
 
-  // Reset permissions when dialog opens
-  useEffect(() => {
-    if (isOpen) {
-      setPermissions(initializePermissions());
-    }
-  }, [isOpen, initializePermissions]);
+  const handleOpenChange = (open: boolean) => {
+    if (open) setPermissions(initializePermissions());
+    onOpenChange(open);
+  };
 
   // Only admins can manage permissions
   if (currentMember.role !== 'admin') return null;
@@ -98,35 +94,26 @@ export function MemberPermissionsDialog({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-150">
         <DialogHeader>
           <DialogTitle>Gérer les permissions</DialogTitle>
-          <DialogDescription>
-            Configurez les permissions pour {member.user.name}
-          </DialogDescription>
+          <DialogDescription>Configurez les permissions pour {member.user.name}</DialogDescription>
         </DialogHeader>
 
         <div className="gap-4 grid py-4">
           {PERMISSIONS_CONFIG.map((permission) => (
-            <div
-              key={permission.key}
-              className="flex justify-between items-center"
-            >
+            <div key={permission.key} className="flex justify-between items-center">
               <div className="space-y-0.5">
                 <Label htmlFor={permission.key} className="text-base">
                   {permission.label}
                 </Label>
-                <p className="text-muted-foreground text-sm">
-                  {permission.description}
-                </p>
+                <p className="text-muted-foreground text-sm">{permission.description}</p>
               </div>
               <Switch
                 id={permission.key}
                 checked={permissions[permission.key] ?? false}
-                onCheckedChange={(checked) =>
-                  handlePermissionChange(permission.key, checked)
-                }
+                onCheckedChange={(checked) => handlePermissionChange(permission.key, checked)}
                 disabled={isPending}
               />
             </div>

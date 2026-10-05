@@ -1,5 +1,5 @@
-import { ConvexError } from 'convex/values';
 import { nullThrows } from 'convex-helpers';
+import { ConvexError } from 'convex/values';
 import { query } from './_generated/server';
 import { getAuthUserId } from './auth';
 

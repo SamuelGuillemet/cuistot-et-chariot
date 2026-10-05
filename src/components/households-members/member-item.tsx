@@ -23,19 +23,14 @@ export function MemberItem({ member, householdPublicId }: MemberActionsProps) {
         </Avatar>
         <div className="flex-1 min-w-0">
           <p className="font-medium text-sm truncate">{member.user.name}</p>
-          <p className="text-muted-foreground text-xs truncate">
-            {member.user.email}
-          </p>
+          <p className="text-muted-foreground text-xs truncate">{member.user.email}</p>
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
         <MemberRoleBadge role={member.role} />
         <MemberStatusBadge status={member.status} />
         <div className="ml-auto sm:ml-0">
-          <MemberActionsDropdown
-            member={member}
-            householdPublicId={householdPublicId}
-          />
+          <MemberActionsDropdown member={member} householdPublicId={householdPublicId} />
         </div>
       </div>
     </div>

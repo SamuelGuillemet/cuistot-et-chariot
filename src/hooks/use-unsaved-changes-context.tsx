@@ -16,14 +16,9 @@ type UnsavedChangesContextValue = {
   setEnabled: (value: boolean) => void;
 };
 
-const UnsavedChangesContext =
-  React.createContext<UnsavedChangesContextValue | null>(null);
+const UnsavedChangesContext = React.createContext<UnsavedChangesContextValue | null>(null);
 
-export function UnsavedChangesProvider({
-  children,
-}: {
-  readonly children: React.ReactNode;
-}) {
+export function UnsavedChangesProvider({ children }: { readonly children: React.ReactNode }) {
   const router = useRouter();
   const [enabled, setEnabled] = React.useState(false);
 
@@ -38,6 +33,11 @@ export function UnsavedChangesProvider({
     },
   });
 
+  const resetAfterRender = React.useEffectEvent(() => {
+    blocker.reset?.();
+    setEnabled(false);
+  });
+
   const isBlocked = blocker.status === 'blocked';
 
   const value = React.useMemo(
@@ -49,12 +49,8 @@ export function UnsavedChangesProvider({
   );
 
   React.useEffect(() => {
-    const unsub = router.subscribe('onRendered', () => {
-      blocker.reset?.();
-      setEnabled(false);
-    });
-    return () => unsub();
-  }, [router, blocker.reset]);
+    return router.subscribe('onRendered', resetAfterRender);
+  }, [router]);
 
   return (
     <UnsavedChangesContext.Provider value={value}>
@@ -73,8 +69,8 @@ export function UnsavedChangesProvider({
           <AlertDialogHeader>
             <AlertDialogTitle>Changements non enregistrés</AlertDialogTitle>
             <AlertDialogDescription>
-              Vous avez des changements non enregistrés. Êtes-vous sûr de
-              vouloir quitter cette page ?
+              Vous avez des changements non enregistrés. Êtes-vous sûr de vouloir quitter cette page
+              ?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -106,9 +102,7 @@ export function UnsavedChangesProvider({
 export function useUnsavedChanges({ enabled }: { readonly enabled: boolean }) {
   const ctx = React.useContext(UnsavedChangesContext);
   if (!ctx) {
-    throw new Error(
-      'useUnsavedChanges must be used within an UnsavedChangesProvider',
-    );
+    throw new Error('useUnsavedChanges must be used within an UnsavedChangesProvider');
   }
 
   React.useEffect(() => {

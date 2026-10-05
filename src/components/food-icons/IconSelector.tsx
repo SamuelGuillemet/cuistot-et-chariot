@@ -97,9 +97,7 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
     if (selectedIcon) {
       const selectedIconData = icons.find((icon) => icon.id === selectedIcon);
       // Remove selected icon from current position
-      const filteredWithoutSelected = icons.filter(
-        (icon) => icon.id !== selectedIcon,
-      );
+      const filteredWithoutSelected = icons.filter((icon) => icon.id !== selectedIcon);
 
       if (selectedIconData) {
         // Add selected icon at the beginning if it matches filters
@@ -129,10 +127,7 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
 
   return (
     <Card
-      className={cn(
-        'bg-background py-0 md:py-6 rounded-xl max-w-full overflow-hidden',
-        className,
-      )}
+      className={cn('bg-background py-0 md:py-6 rounded-xl max-w-full overflow-hidden', className)}
     >
       <CardHeader className="p-0 md:p-4">
         {/* Search Bar */}
@@ -151,7 +146,12 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
           <div className="flex items-center gap-3">
             {/* Category Filter */}
             {showCategories && (
-              <Select value={filters.category} onValueChange={updateCategory}>
+              <Select
+                value={filters.category}
+                onValueChange={(value) => {
+                  if (value !== null) updateCategory(value);
+                }}
+              >
                 <SelectTrigger className="">
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
@@ -160,9 +160,8 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
                     <SelectItem key={category} value={category}>
                       {category === 'all'
                         ? 'Toutes les catégories'
-                        : CATEGORY_TRANSLATIONS[
-                            category as keyof typeof CATEGORY_TRANSLATIONS
-                          ] || category}
+                        : CATEGORY_TRANSLATIONS[category as keyof typeof CATEGORY_TRANSLATIONS] ||
+                          category}
                     </SelectItem>
                   ))}
                 </SelectContent>

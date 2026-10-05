@@ -3,14 +3,7 @@ import { convexQuery } from '@convex-dev/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import * as v from 'valibot';
 import { useAppForm } from '@/hooks/use-app-form';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 
 const Household = v.pipe(
   v.object({
@@ -92,14 +85,14 @@ export function HouseholdForm({
       <CardHeader className="border-b">
         <CardTitle>Informations du foyer</CardTitle>
         <CardDescription>
-          Renseignez un nom clair ainsi qu'une question/réponse secrète pour
-          permettre aux membres de rejoindre le foyer.
+          Renseignez un nom clair ainsi qu'une question/réponse secrète pour permettre aux membres
+          de rejoindre le foyer.
         </CardDescription>
       </CardHeader>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          form.handleSubmit();
+          void form.handleSubmit();
         }}
       >
         <CardContent className="items-start gap-6 grid sm:grid-cols-2 mb-6">

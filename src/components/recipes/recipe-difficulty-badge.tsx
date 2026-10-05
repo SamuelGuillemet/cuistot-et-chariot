@@ -16,10 +16,7 @@ const difficultyConfig: Record<
   hard: { label: 'Difficile', variant: 'destructive' },
 };
 
-export function RecipeDifficultyBadge({
-  difficulty,
-  className,
-}: RecipeDifficultyBadgeProps) {
+export function RecipeDifficultyBadge({ difficulty, className }: RecipeDifficultyBadgeProps) {
   const config = difficultyConfig[difficulty];
 
   return (

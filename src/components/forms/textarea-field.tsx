@@ -17,12 +17,7 @@ export function TextareaField({
   const field = useFieldContext<string>();
 
   return (
-    <BaseField
-      label={label}
-      description={description}
-      required={required}
-      field={field}
-    >
+    <BaseField label={label} description={description} required={required} field={field}>
       {({ isInvalid }) => (
         <Textarea
           id={field.name}

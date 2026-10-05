@@ -1,13 +1,10 @@
-import { v } from 'convex/values';
-import {
-  customMutation,
-  customQuery,
-} from 'convex-helpers/server/customFunctions';
+import { customMutation, customQuery } from 'convex-helpers/server/customFunctions';
 import {
   type Rules,
   wrapDatabaseReader,
   wrapDatabaseWriter,
 } from 'convex-helpers/server/rowLevelSecurity';
+import { v } from 'convex/values';
 import type { DataModel, Id } from '../_generated/dataModel';
 import { mutation, type QueryCtx, query } from '../_generated/server';
 import { validateUserAndHousehold } from '../auth';
@@ -23,9 +20,7 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
         const member = await ctx.db
           .query('householdMembers')
           .withIndex('by_userId_householdId', (q) =>
-            q
-              .eq('userId', userId)
-              .eq('householdId', household_member.householdId),
+            q.eq('userId', userId).eq('householdId', household_member.householdId),
           )
           .first();
         return member !== null;
@@ -34,9 +29,7 @@ async function rlsRules(ctx: QueryCtx, userId: Id<'users'>) {
         const member = await ctx.db
           .query('householdMembers')
           .withIndex('by_userId_householdId', (q) =>
-            q
-              .eq('userId', userId)
-              .eq('householdId', household_member.householdId),
+            q.eq('userId', userId).eq('householdId', household_member.householdId),
           )
           .first();
         return member !== null;

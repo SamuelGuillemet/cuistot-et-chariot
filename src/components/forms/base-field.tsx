@@ -31,9 +31,7 @@ const BaseFieldContext = createContext<BaseFieldContextValue | null>(null);
 function useBaseField() {
   const context = useContext(BaseFieldContext);
   if (!context) {
-    throw new Error(
-      'BaseField compound components must be used within BaseField.Root',
-    );
+    throw new Error('BaseField compound components must be used within BaseField.Root');
   }
   return context;
 }
@@ -89,11 +87,7 @@ function BaseFieldLabel({
 }
 
 // Description component
-function BaseFieldDescription({
-  children,
-}: {
-  readonly children: React.ReactNode;
-}) {
+function BaseFieldDescription({ children }: { readonly children: React.ReactNode }) {
   return <FieldDescription>{children}</FieldDescription>;
 }
 
@@ -133,11 +127,7 @@ export function BaseField({
         {({ isInvalid }) => children({ isInvalid })}
       </BaseFieldComposer.Control>
       <BaseFieldComposer.Error />
-      {description && (
-        <BaseFieldComposer.Description>
-          {description}
-        </BaseFieldComposer.Description>
-      )}
+      {description && <BaseFieldComposer.Description>{description}</BaseFieldComposer.Description>}
     </BaseFieldComposer.Root>
   );
 }

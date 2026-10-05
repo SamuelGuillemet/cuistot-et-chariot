@@ -21,12 +21,7 @@ export function NumberField({
   };
 
   return (
-    <BaseField
-      label={label}
-      description={description}
-      required={required}
-      field={field}
-    >
+    <BaseField label={label} description={description} required={required} field={field}>
       {({ isInvalid }) => (
         <Input
           type="number"

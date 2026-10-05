@@ -2,7 +2,6 @@ import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { Layout } from '@/components/layout';
-import { UnsavedChangesProvider } from '@/hooks/use-unsaved-changes-context';
 
 export const Route = createFileRoute('/_authed')({
   beforeLoad: async ({ context, location }) => {
@@ -18,9 +17,7 @@ export const Route = createFileRoute('/_authed')({
   },
   component: () => (
     <Layout>
-      <UnsavedChangesProvider>
-        <Outlet />
-      </UnsavedChangesProvider>
+      <Outlet />
     </Layout>
   ),
 });

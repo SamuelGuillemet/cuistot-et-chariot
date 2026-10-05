@@ -28,7 +28,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="space-y-4 mx-auto py-6 max-w-4xl container">
+    <div className="flex flex-col gap-4 lg:flex-1 lg:min-h-0 mt-5">
       <div className="space-y-2">
         <h1 className="font-bold text-3xl tracking-tight">Créer une nouvelle recette</h1>
         <p className="text-muted-foreground">Ajoutez une nouvelle recette à votre collection.</p>

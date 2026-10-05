@@ -103,9 +103,7 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
           <ProductForm
             onSubmit={handleEditProduct}
             isLoading={updateProductMutation.isPending}
-            defaultValues={{
-              ...product,
-            }}
+            product={product}
             submitText="Modifier le produit"
           />
         </DialogContent>

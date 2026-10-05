@@ -20,8 +20,9 @@ export function createPatchBuilder<U extends Record<string, unknown> = Record<st
     excludeKeys: K[],
   ): ValidateKeys<T, U, K> {
     const patchData: Partial<T> = {};
+    const excludedKeys = new Set(excludeKeys.map(String));
     for (const key in args) {
-      if (args[key] !== undefined && !excludeKeys.includes(key as string as K)) {
+      if (args[key] !== undefined && !excludedKeys.has(key)) {
         patchData[key] = args[key];
       }
     }

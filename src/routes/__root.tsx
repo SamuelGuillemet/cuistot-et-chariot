@@ -34,6 +34,20 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
 }>()({
+  beforeLoad: async (opts) => {
+    const { token } = await opts.context.queryClient.query({
+      ...authSessionQueryOptions(),
+      staleTime: 'static',
+    });
+    if (token) {
+      opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+
+    return { isAuthenticated: !!token, token };
+  },
+  loader: async (opts) => {
+    await opts.context.queryClient.query({ ...themeQueryOptions(), staleTime: 'static' });
+  },
   head: () => ({
     meta: [
       {
@@ -57,20 +71,6 @@ export const Route = createRootRouteWithContext<{
         <DefaultCatchBoundary {...props} />
       </RootDocument>
     );
-  },
-  beforeLoad: async (opts) => {
-    const { token } = await opts.context.queryClient.query({
-      ...authSessionQueryOptions(),
-      staleTime: 'static',
-    });
-    if (token) {
-      opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    }
-
-    return { isAuthenticated: !!token, token };
-  },
-  loader: async (opts) => {
-    await opts.context.queryClient.query({ ...themeQueryOptions(), staleTime: 'static' });
   },
 });
 

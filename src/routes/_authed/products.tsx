@@ -39,7 +39,7 @@ function RouteComponent() {
   const columns = useMemo(() => createProductColumns(), []);
 
   return (
-    <div className="space-y-4 mx-auto py-6 container">
+    <div className="space-y-4 mt-5">
       <div className="space-y-2">
         <h1 className="font-bold text-3xl tracking-tight">Produits</h1>
         <p className="text-muted-foreground">

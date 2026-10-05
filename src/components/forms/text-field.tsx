@@ -1,6 +1,6 @@
 import { useFieldContext } from '@/lib/forms';
 import { Input } from '../ui/input';
-import { BaseField, type BaseFieldProps } from './base-field';
+import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 type InputProps = Omit<
   React.ComponentProps<typeof Input>,
@@ -12,17 +12,15 @@ export function TextField({ label, description, required, ...props }: BaseFieldP
 
   return (
     <BaseField label={label} description={description} required={required} field={field}>
-      {({ isInvalid }) => (
-        <Input
-          id={field.name}
-          name={field.name}
-          value={field.state.value}
-          onBlur={field.handleBlur}
-          onChange={(e) => field.handleChange(e.target.value)}
-          aria-invalid={isInvalid}
-          {...props}
-        />
-      )}
+      <Input
+        id={field.name}
+        name={field.name}
+        value={field.state.value}
+        onBlur={field.handleBlur}
+        onChange={(e) => field.handleChange(e.target.value)}
+        aria-invalid={isFieldInvalid(field)}
+        {...props}
+      />
     </BaseField>
   );
 }

@@ -11,7 +11,7 @@ export function Layout({ children }: PropsWithChildren) {
   const productsActive = pathname.startsWith('/products');
 
   return (
-    <div className="flex min-h-svh flex-col">
+    <div className="flex h-svh flex-col">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
         <div className="flex h-14 w-full items-center gap-4 px-4 sm:px-12">
           <Link
@@ -57,7 +57,9 @@ export function Layout({ children }: PropsWithChildren) {
           </div>
         </div>
       </header>
-      <main className="w-full flex-1 px-4 py-5 sm:px-12">{children}</main>
+      <main className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto px-4 sm:px-12">
+        {children}
+      </main>
     </div>
   );
 }

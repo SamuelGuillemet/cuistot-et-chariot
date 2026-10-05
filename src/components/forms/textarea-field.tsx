@@ -1,6 +1,6 @@
 import { useFieldContext } from '@/lib/forms';
 import { Textarea } from '../ui/textarea';
-import { BaseField, type BaseFieldProps } from './base-field';
+import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 type TextareaProps = Omit<
   React.ComponentProps<typeof Textarea>,
@@ -18,18 +18,16 @@ export function TextareaField({
 
   return (
     <BaseField label={label} description={description} required={required} field={field}>
-      {({ isInvalid }) => (
-        <Textarea
-          id={field.name}
-          name={field.name}
-          value={field.state.value ?? ''}
-          onBlur={field.handleBlur}
-          onChange={(e) => field.handleChange(e.target.value)}
-          aria-invalid={isInvalid}
-          rows={rows}
-          {...props}
-        />
-      )}
+      <Textarea
+        id={field.name}
+        name={field.name}
+        value={field.state.value ?? ''}
+        onBlur={field.handleBlur}
+        onChange={(e) => field.handleChange(e.target.value)}
+        aria-invalid={isFieldInvalid(field)}
+        rows={rows}
+        {...props}
+      />
     </BaseField>
   );
 }

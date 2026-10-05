@@ -1,7 +1,7 @@
 import { CATEGORY_DISPLAY_NAMES, PRODUCT_UNITS } from '@backend/types';
 import * as v from 'valibot';
 import { FieldGroup } from '@/components/ui/field';
-import { useAppForm } from '@/hooks/use-app-form';
+import { handleSubmitInvalid, useAppForm } from '@/hooks/use-app-form';
 import { typedEnum } from '@/utils/valibot';
 
 const Product = v.object({
@@ -21,30 +21,30 @@ export type Product = v.InferOutput<typeof Product>;
 interface ProductFormProps {
   readonly onSubmit: (values: Product) => void;
   readonly isLoading?: boolean;
-  readonly defaultValues?: Partial<Product>;
+  readonly product?: Product;
   readonly submitText?: string;
 }
 
 export function ProductForm({
   onSubmit,
   isLoading = false,
-  defaultValues,
+  product,
   submitText = 'Créer le produit',
-}: Readonly<ProductFormProps>) {
-  const form = useAppForm<Product>({
-    defaultValues: {
-      icon: '',
-      name: '',
-      description: '',
-      category: 'other',
-      defaultUnit: 'pieces',
-    },
-    initialValues: defaultValues,
-    validator: {
-      validateFn: Product,
-      validateOn: ['onChange'],
-    },
-    onSubmit,
+}: ProductFormProps) {
+  // Pick fields explicitly: `product` may come from the API with extra properties.
+  const defaultValues: Product = {
+    icon: product?.icon ?? '',
+    name: product?.name ?? '',
+    description: product?.description ?? '',
+    category: product?.category ?? 'other',
+    defaultUnit: product?.defaultUnit ?? 'pieces',
+  };
+
+  const form = useAppForm({
+    defaultValues,
+    validators: { onChange: Product },
+    onSubmit: ({ value }) => onSubmit(value),
+    onSubmitInvalid: handleSubmitInvalid,
   });
 
   return (

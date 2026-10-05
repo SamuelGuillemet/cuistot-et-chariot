@@ -27,7 +27,7 @@ function RouteComponent() {
 
   if (!recipeData) {
     return (
-      <div className="space-y-4 mx-auto py-6 container">
+      <div className="space-y-4 mt-5">
         <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
           <p className="font-medium text-lg">Recette non trouvée</p>
           <p className="max-w-md text-muted-foreground text-sm">
@@ -43,7 +43,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="space-y-6 mx-auto py-6 container">
+    <div className="space-y-6 mt-5">
       <RecipeDetailHeader
         recipe={recipeData}
         isFavorite={recipeData.isFavorite}

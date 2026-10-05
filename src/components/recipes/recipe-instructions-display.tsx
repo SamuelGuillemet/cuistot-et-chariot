@@ -13,7 +13,7 @@ export function RecipeInstructionsDisplay({
   className,
 }: RecipeInstructionsDisplayProps) {
   const steps = useMemo(() => {
-    return instructions.toSorted((a, b) => a.order - b.order).map((s) => s.text);
+    return instructions.toSorted((a, b) => a.order - b.order);
   }, [instructions]);
 
   // Local ephemeral progress per view
@@ -40,10 +40,10 @@ export function RecipeInstructionsDisplay({
 
   return (
     <ol className={cn('space-y-3', className)}>
-      {steps.map((text, idx) => {
+      {steps.map((step, idx) => {
         const isDone = completed[idx];
         return (
-          <li key={`${idx}-${text.slice(0, 24)}`} className="group">
+          <li key={step.order} className="group">
             <button
               type="button"
               onClick={() => toggle(idx)}
@@ -70,7 +70,7 @@ export function RecipeInstructionsDisplay({
               <div
                 className={cn('leading-relaxed', isDone && 'text-muted-foreground line-through')}
               >
-                {text}
+                {step.text}
               </div>
             </button>
           </li>

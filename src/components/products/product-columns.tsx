@@ -12,9 +12,7 @@ import { DataTableColumnHeader } from '@/components/table/data-table-column-head
 import { Badge } from '@/components/ui/badge';
 import { ProductActions } from './product-actions';
 
-export function createProductColumns(
-  householdId: string,
-): ColumnDef<ProductTableFeatures, Doc<'products'>>[] {
+export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'products'>>[] {
   return [
     {
       id: '_id',
@@ -37,18 +35,16 @@ export function createProductColumns(
     {
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Nom" />,
-      cell: ({ row }) => {
-        const name = row.getValue<string>('name');
-        return <div className="font-medium">{name}</div>;
-      },
+      cell: ({ row }) => <div className="font-medium">{row.getValue<string>('name')}</div>,
     },
     {
       accessorKey: 'description',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
-      cell: ({ row }) => {
-        const description = row.getValue<string | undefined>('description');
-        return <div className="text-muted-foreground">{description || '-'}</div>;
-      },
+      cell: ({ row }) => (
+        <div className="text-muted-foreground">
+          {row.getValue<string | undefined>('description') || '-'}
+        </div>
+      ),
       enableSorting: false,
     },
     {
@@ -58,9 +54,7 @@ export function createProductColumns(
         const category = row.getValue<ProductCategory>('category');
         return <Badge variant="secondary">{CATEGORY_DISPLAY_NAMES[category] || category}</Badge>;
       },
-      filterFn: (row, id, value) => {
-        return value.includes(row.getValue(id));
-      },
+      filterFn: (row, id, value) => value.includes(row.getValue(id)),
     },
     {
       accessorKey: 'defaultUnit',
@@ -74,11 +68,7 @@ export function createProductColumns(
     {
       id: 'actions',
       header: 'Actions',
-      cell: ({ row }) => {
-        const product = row.original;
-
-        return <ProductActions product={product} householdId={householdId} />;
-      },
+      cell: ({ row }) => <ProductActions product={row.original} />,
       enableSorting: false,
       size: 120,
     },

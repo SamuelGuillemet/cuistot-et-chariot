@@ -12,10 +12,9 @@ interface RecipeCardProps {
     readonly isFavorite: boolean;
     readonly favoriteCount?: number;
   };
-  readonly householdId: string;
 }
 
-export function RecipeCard({ recipe, householdId }: RecipeCardProps) {
+export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link
       to="/recipes/$recipeId"
@@ -24,18 +23,14 @@ export function RecipeCard({ recipe, householdId }: RecipeCardProps) {
     >
       <Card className="h-full">
         <CardHeader>
-          <div className="flex items-center gap-3">
+          <div className="flex items-start gap-3">
             <div className="flex justify-center items-center bg-primary/10 p-3 rounded-lg">
               <ChefHatIcon className="w-6 h-6 text-primary" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 self-center">
               <CardTitle className="text-lg line-clamp-2">{recipe.name}</CardTitle>
             </div>
-            <RecipeFavoriteButton
-              recipeId={recipe._id}
-              isFavorite={recipe.isFavorite}
-              householdId={householdId}
-            />
+            <RecipeFavoriteButton recipeId={recipe._id} isFavorite={recipe.isFavorite} />
           </div>
         </CardHeader>
 

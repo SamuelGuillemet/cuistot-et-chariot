@@ -17,17 +17,11 @@ import {
 
 interface RecipeDeleteDialogProps {
   readonly recipe: Doc<'recipes'>;
-  readonly householdId: string;
   readonly isOpen: boolean;
   readonly onOpenChange: (open: boolean) => void;
 }
 
-export function RecipeDeleteDialog({
-  recipe,
-  householdId,
-  isOpen,
-  onOpenChange,
-}: RecipeDeleteDialogProps) {
+export function RecipeDeleteDialog({ recipe, isOpen, onOpenChange }: RecipeDeleteDialogProps) {
   const navigate = useNavigate();
 
   const { mutate: deleteRecipe, isPending } = useMutation({
@@ -43,7 +37,7 @@ export function RecipeDeleteDialog({
   });
 
   const handleDelete = () => {
-    deleteRecipe({ publicId: householdId, recipeId: recipe._id });
+    deleteRecipe({ recipeId: recipe._id });
   };
 
   return (

@@ -60,7 +60,6 @@ interface RecipeFormProps {
   readonly isLoading?: boolean;
   readonly defaultValues?: Partial<Recipe>;
   readonly submitText?: string;
-  readonly householdId: string;
   readonly recipeId?: string;
 }
 
@@ -69,7 +68,6 @@ export function RecipeForm({
   isLoading = false,
   defaultValues,
   submitText = 'Créer la recette',
-  householdId,
   recipeId,
 }: Readonly<RecipeFormProps>) {
   const form = useAppForm<Recipe>({
@@ -102,8 +100,8 @@ export function RecipeForm({
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
+      onSubmit={(event) => {
+        event.preventDefault();
         void form.handleSubmit();
       }}
       className="space-y-6"
@@ -173,8 +171,7 @@ export function RecipeForm({
       </FieldGroup>
 
       <InstructionsFieldArray form={form} />
-
-      <ProductsFieldArray form={form} householdId={householdId} />
+      <ProductsFieldArray form={form} />
 
       <div className="flex justify-end gap-2 pt-2">
         <form.AppForm>

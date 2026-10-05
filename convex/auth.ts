@@ -104,17 +104,10 @@ export async function getAuthUserId(
   return user._id;
 }
 
-export async function validateUserAndHousehold(ctx: QueryCtx, args: { publicId: string }) {
+export async function requireAuthUserId(ctx: QueryCtx | MutationCtx): Promise<Id<'users'>> {
   const userId = await getAuthUserId(ctx);
   if (!userId) {
     throw new ConvexError('Unauthorized');
   }
-  const household = await ctx.db
-    .query('households')
-    .withIndex('by_publicId', (q) => q.eq('publicId', args.publicId))
-    .first();
-  if (!household) {
-    throw new ConvexError('Household not found');
-  }
-  return { userId, householdId: household._id, household };
+  return userId;
 }

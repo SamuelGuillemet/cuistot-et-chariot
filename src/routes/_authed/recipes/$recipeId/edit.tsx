@@ -4,39 +4,23 @@ import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { type Recipe, RecipeForm } from '@/components/recipes/recipe-form';
-import { useCurrentMember } from '@/hooks/use-current-member';
 
 export const Route = createFileRoute('/_authed/recipes/$recipeId/edit')({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const householdId = context.householdId;
-    if (householdId) {
-      await context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.recipes.queries.getRecipeById, {
-          publicId: householdId,
-          recipeId: params.recipeId,
-        }),
-      );
-    }
-
-    return {
-      householdId: householdId,
-      breadcrumbs: 'Modifier',
-    };
+    await context.convexQueryClient.queryClient.query({
+      ...convexQuery(api.recipes.queries.getRecipeById, { recipeId: params.recipeId }),
+      staleTime: 'static',
+    });
   },
 });
 
 function RouteComponent() {
-  const { householdId } = Route.useLoaderData();
   const { recipeId } = Route.useParams();
-  const { currentMember } = useCurrentMember();
   const navigate = useNavigate();
 
   const { data: recipeData } = useSuspenseQuery(
-    convexQuery(api.recipes.queries.getRecipeById, {
-      publicId: householdId,
-      recipeId: recipeId,
-    }),
+    convexQuery(api.recipes.queries.getRecipeById, { recipeId }),
   );
 
   const { mutate: updateRecipe, isPending } = useMutation({
@@ -52,14 +36,12 @@ function RouteComponent() {
 
   const handleSubmit = (values: Recipe) => {
     updateRecipe({
-      publicId: householdId,
       recipeId: recipeId,
       ...values,
     });
   };
 
-  // Check permission
-  if (currentMember?.status !== 'accepted' || !recipeData) {
+  if (!recipeData) {
     return (
       <div className="space-y-4 mx-auto py-6 container">
         <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
@@ -84,7 +66,6 @@ function RouteComponent() {
         isLoading={isPending}
         defaultValues={recipeData}
         submitText="Mettre à jour la recette"
-        householdId={householdId}
         recipeId={recipeId}
       />
     </div>

@@ -25,7 +25,7 @@ export function LoginForm() {
     authClient.signIn.social({
       provider: 'google',
       errorCallbackURL: '/login',
-      callbackURL: redirect || '/',
+      callbackURL: redirect || '/recipes',
     });
   };
 
@@ -40,7 +40,7 @@ export function LoginForm() {
       <CardHeader className="pb-0">
         <CardTitle className="font-bold text-xl md:text-2xl">Connectez-vous</CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
-          Connectez-vous pour accéder à votre liste de courses et vos recettes.
+          Connectez-vous pour retrouver et gérer vos recettes.
         </CardDescription>
       </CardHeader>
       <CardContent>

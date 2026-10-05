@@ -23,7 +23,9 @@ export function Page404() {
         indisponible.
       </p>
 
-      <Button render={<Link to="/" />}>Retourner à l&apos;accueil</Button>
+      <Button nativeButton={false} render={<Link to="/recipes" />}>
+        Retourner à l&apos;accueil
+      </Button>
     </div>
   );
 }

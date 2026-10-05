@@ -1,8 +1,9 @@
 import { ConvexError, v } from 'convex/values';
-import { mutationWithRLS } from './rls';
+import { mutation } from '../_generated/server';
+import { requireAuthUserId } from '../auth';
 import { productCategoryEnum, productsPatchBuilder, productUnitEnum } from './schema';
 
-export const createProduct = mutationWithRLS({
+export const createProduct = mutation({
   args: {
     icon: v.string(),
     name: v.string(),
@@ -11,29 +12,23 @@ export const createProduct = mutationWithRLS({
     defaultUnit: productUnitEnum,
   },
   handler: async (ctx, args) => {
-    const { householdId } = ctx;
+    await requireAuthUserId(ctx);
 
-    // Check if a product with the same name already exists in this household
+    // Product names are unique in the shared catalog.
     const existingProduct = await ctx.db
       .query('products')
-      .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-      .filter((q) => q.eq(q.field('name'), args.name))
+      .withIndex('by_name', (q) => q.eq('name', args.name))
       .first();
 
     if (existingProduct) {
       throw new ConvexError('A product with this name already exists');
     }
 
-    const productId = await ctx.db.insert('products', {
-      ...args,
-      householdId,
-    });
-
-    return productId;
+    return await ctx.db.insert('products', args);
   },
 });
 
-export const updateProduct = mutationWithRLS({
+export const updateProduct = mutation({
   args: {
     productId: v.id('products'),
     icon: v.optional(v.string()),
@@ -43,24 +38,21 @@ export const updateProduct = mutationWithRLS({
     defaultUnit: v.optional(productUnitEnum),
   },
   handler: async (ctx, args) => {
-    const { householdId } = ctx;
+    await requireAuthUserId(ctx);
 
     const product = await ctx.db.get(args.productId);
-    if (!product || product.householdId !== householdId) {
-      throw new ConvexError('Product not found in this household');
+    if (!product) {
+      throw new ConvexError('Product not found');
     }
 
     // Check if a product with the new name already exists (if name is being changed)
     if (args.name && args.name !== product.name) {
       const existingProduct = await ctx.db
         .query('products')
-        .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-        .filter((q) =>
-          q.and(q.eq(q.field('name'), args.name), q.neq(q.field('_id'), args.productId)),
-        )
+        .withIndex('by_name', (q) => q.eq('name', args.name!))
         .first();
 
-      if (existingProduct) {
+      if (existingProduct && existingProduct._id !== product._id) {
         throw new ConvexError('A product with this name already exists');
       }
     }
@@ -71,16 +63,16 @@ export const updateProduct = mutationWithRLS({
   },
 });
 
-export const deleteProduct = mutationWithRLS({
+export const deleteProduct = mutation({
   args: {
     productId: v.id('products'),
   },
   handler: async (ctx, args) => {
-    const { householdId } = ctx;
+    await requireAuthUserId(ctx);
 
     const product = await ctx.db.get(args.productId);
-    if (!product || product.householdId !== householdId) {
-      throw new ConvexError('Product not found in this household');
+    if (!product) {
+      throw new ConvexError('Product not found');
     }
 
     await ctx.db.delete(args.productId);

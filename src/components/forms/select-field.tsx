@@ -25,6 +25,7 @@ export function SelectField<TValue extends string>({
     <BaseField {...props} field={field}>
       {({ isInvalid }) => (
         <Select
+          items={optionsList}
           name={field.name}
           value={field.state.value}
           onValueChange={(value) => {

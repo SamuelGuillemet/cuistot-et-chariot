@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 interface RecipeFavoriteButtonProps {
   readonly recipeId: string;
   readonly isFavorite: boolean;
-  readonly householdId: string;
   readonly className?: string;
   readonly size?: 'default' | 'sm' | 'lg' | 'icon';
 }
@@ -17,7 +16,6 @@ interface RecipeFavoriteButtonProps {
 export function RecipeFavoriteButton({
   recipeId,
   isFavorite,
-  householdId,
   className,
   size = 'icon',
 }: RecipeFavoriteButtonProps) {
@@ -35,10 +33,10 @@ export function RecipeFavoriteButton({
     },
   });
 
-  const handleToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavorite({ publicId: householdId, recipeId });
+  const handleToggle = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFavorite({ recipeId });
   };
 
   return (

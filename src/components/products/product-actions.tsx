@@ -22,10 +22,9 @@ import { type Product, ProductForm } from './product-form';
 
 interface ProductActionsProps {
   product: Doc<'products'>;
-  householdId: string;
 }
 
-export function ProductActions({ product, householdId }: Readonly<ProductActionsProps>) {
+export function ProductActions({ product }: Readonly<ProductActionsProps>) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -48,14 +47,12 @@ export function ProductActions({ product, householdId }: Readonly<ProductActions
   const handleEditProduct = (values: Product) => {
     updateProductMutation.mutate({
       ...values,
-      publicId: householdId,
       productId: product._id,
     });
   };
 
   const handleDeleteProduct = () => {
     deleteProductMutation.mutate({
-      publicId: householdId,
       productId: product._id,
     });
   };

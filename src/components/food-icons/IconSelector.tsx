@@ -89,6 +89,13 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
     clearFilters,
     totalResults,
   } = useIconSearch(ICON_DATA);
+  const categoryItems = categories.map((category) => ({
+    value: category,
+    label:
+      category === 'all'
+        ? 'Toutes les catégories'
+        : CATEGORY_TRANSLATIONS[category as keyof typeof CATEGORY_TRANSLATIONS] || category,
+  }));
 
   // Sort icons to show selected icon first, then limit results for performance
   const displayedIcons = useMemo(() => {
@@ -147,6 +154,7 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
             {/* Category Filter */}
             {showCategories && (
               <Select
+                items={categoryItems}
                 value={filters.category}
                 onValueChange={(value) => {
                   if (value !== null) updateCategory(value);
@@ -156,12 +164,9 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category === 'all'
-                        ? 'Toutes les catégories'
-                        : CATEGORY_TRANSLATIONS[category as keyof typeof CATEGORY_TRANSLATIONS] ||
-                          category}
+                  {categoryItems.map(({ value, label }) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
                     </SelectItem>
                   ))}
                 </SelectContent>

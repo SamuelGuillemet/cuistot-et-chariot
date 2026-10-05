@@ -9,6 +9,7 @@ import {
   type ColumnVisibilityState,
   flexRender,
   type PaginationState,
+  sortFn_text,
   type SortingState,
   rowPaginationFeature,
   rowSortingFeature,
@@ -35,6 +36,7 @@ export const productTableFeatures = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
+  sortFns: { text: sortFn_text },
 });
 
 export type ProductTableFeatures = typeof productTableFeatures;

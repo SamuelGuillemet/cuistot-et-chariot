@@ -101,6 +101,13 @@ export function ProductSelector({
               <div className="space-y-2">
                 <Label htmlFor="category">Catégorie</Label>
                 <Select
+                  items={[
+                    { value: 'all', label: 'Toutes les catégories' },
+                    ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
+                      value,
+                      label,
+                    })),
+                  ]}
                   value={categoryFilter}
                   onValueChange={(value) => {
                     if (value !== null) setCategoryFilter(value);

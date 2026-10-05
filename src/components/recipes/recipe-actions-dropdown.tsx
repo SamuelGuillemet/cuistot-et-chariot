@@ -12,22 +12,11 @@ import { RecipeDeleteDialog } from './recipe-delete-dialog';
 
 interface RecipeActionsDropdownProps {
   readonly recipe: Doc<'recipes'>;
-  readonly householdId: string;
-  readonly canEdit: boolean;
   readonly onEdit: () => void;
 }
 
-export function RecipeActionsDropdown({
-  recipe,
-  householdId,
-  canEdit,
-  onEdit,
-}: RecipeActionsDropdownProps) {
+export function RecipeActionsDropdown({ recipe, onEdit }: RecipeActionsDropdownProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-
-  if (!canEdit) {
-    return null;
-  }
 
   return (
     <>
@@ -49,7 +38,6 @@ export function RecipeActionsDropdown({
 
       <RecipeDeleteDialog
         recipe={recipe}
-        householdId={householdId}
         isOpen={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />

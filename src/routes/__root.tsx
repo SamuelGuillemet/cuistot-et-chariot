@@ -33,7 +33,6 @@ const ReactScan =
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
-  breadcrumbs?: string;
 }>()({
   head: () => ({
     meta: [
@@ -60,7 +59,10 @@ export const Route = createRootRouteWithContext<{
     );
   },
   beforeLoad: async (opts) => {
-    const { token } = await opts.context.queryClient.ensureQueryData(authSessionQueryOptions());
+    const { token } = await opts.context.queryClient.query({
+      ...authSessionQueryOptions(),
+      staleTime: 'static',
+    });
     if (token) {
       opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
     }
@@ -68,10 +70,7 @@ export const Route = createRootRouteWithContext<{
     return { isAuthenticated: !!token, token };
   },
   loader: async (opts) => {
-    await opts.context.queryClient.ensureQueryData(themeQueryOptions());
-    return {
-      breadcrumbs: null,
-    };
+    await opts.context.queryClient.query({ ...themeQueryOptions(), staleTime: 'static' });
   },
 });
 

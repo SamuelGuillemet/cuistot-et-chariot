@@ -1,38 +1,63 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { Link, useRouterState } from '@tanstack/react-router';
+import { ChefHatIcon, PackageIcon } from 'lucide-react';
 import type { PropsWithChildren } from 'react';
-import { Separator } from '@/components/ui/separator';
-import { sidebarStateQueryOptions } from '@/lib/server-queries';
-import Breadcrumbs from './layout/breadcrumbs';
-import { AppSidebar } from './layout/sidebar';
+import { cn } from '@/lib/utils';
 import { ThemeToggle } from './layout/theme-toggle';
 import UserBadge from './layout/user-badge';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from './ui/sidebar';
 
 export function Layout({ children }: PropsWithChildren) {
-  const { data: sidebar } = useSuspenseQuery(sidebarStateQueryOptions());
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const recipesActive = pathname.startsWith('/recipes');
+  const productsActive = pathname.startsWith('/products');
 
   return (
-    <SidebarProvider defaultOpen={sidebar}>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="flex items-center gap-2 p-4 pb-0 shrink-0">
-          <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="hidden md:flex mr-2 data-[orientation=vertical]:h-4"
-            />
-            <Breadcrumbs />
+    <div className="flex min-h-svh flex-col">
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
+        <div className="flex h-14 w-full items-center gap-4 px-4 sm:px-12">
+          <Link
+            to="/recipes"
+            className="flex shrink-0 items-center gap-2 font-semibold text-foreground"
+          >
+            <ChefHatIcon className="size-5 text-primary" />
+            <span className="hidden sm:inline">Cuistot et Chariot</span>
+          </Link>
+
+          <nav aria-label="Pages principales" className="flex h-full flex-1 items-center gap-1">
+            <Link
+              to="/recipes"
+              aria-current={recipesActive ? 'page' : undefined}
+              className={cn(
+                'relative flex h-full items-center gap-2 px-3 text-sm font-medium transition-colors after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-transparent',
+                recipesActive
+                  ? 'text-foreground after:bg-primary'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <ChefHatIcon className="size-4" />
+              Recettes
+            </Link>
+            <Link
+              to="/products"
+              aria-current={productsActive ? 'page' : undefined}
+              className={cn(
+                'relative flex h-full items-center gap-2 px-3 text-sm font-medium transition-colors after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:bg-transparent',
+                productsActive
+                  ? 'text-foreground after:bg-primary'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              <PackageIcon className="size-4" />
+              Produits
+            </Link>
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-1">
+            <ThemeToggle />
+            <UserBadge />
           </div>
-          <div className="ml-auto">
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <UserBadge />
-            </div>
-          </div>
-        </header>
-        <div className="flex flex-col items-start gap-4 md:gap-8 p-4 sm:px-6 grow">{children}</div>
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
+      </header>
+      <main className="w-full flex-1 px-4 py-5 sm:px-12">{children}</main>
+    </div>
   );
 }

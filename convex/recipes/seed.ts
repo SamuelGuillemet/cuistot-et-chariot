@@ -1,21 +1,12 @@
-import { v } from 'convex/values';
 import type { Id } from '../_generated/dataModel';
 import { internalMutation } from '../_generated/server';
 
 export const seedRecipes = internalMutation({
-  args: {
-    householdId: v.id('households'),
-  },
-  handler: async (ctx, args) => {
-    const { householdId } = args;
-
+  handler: async (ctx, _) => {
     const productIds: Record<string, string> = {};
 
     // Fetch existing products in the household to map names to IDs
-    const existingProducts = await ctx.db
-      .query('products')
-      .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-      .collect();
+    const existingProducts = await ctx.db.query('products').collect();
 
     for (const product of existingProducts) {
       productIds[product.name] = product._id;
@@ -207,7 +198,6 @@ export const seedRecipes = internalMutation({
     for (const recipe of recipes) {
       const existingRecipe = await ctx.db
         .query('recipes')
-        .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
         .filter((q) => q.eq(q.field('name'), recipe.name))
         .first();
 
@@ -223,7 +213,6 @@ export const seedRecipes = internalMutation({
         prepTime: recipe.prepTime,
         cookTime: recipe.cookTime,
         difficulty: recipe.difficulty,
-        householdId,
       });
 
       recipeIds[recipe.name] = recipeId;
@@ -237,7 +226,6 @@ export const seedRecipes = internalMutation({
             productId: productId as Id<'products'>,
             quantity: productData.quantity,
             unit: productData.unit,
-            householdId,
           });
         }
       }

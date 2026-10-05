@@ -6,15 +6,10 @@ interface RecipeListProps {
     readonly isFavorite: boolean;
     readonly favoriteCount?: number;
   })[];
-  readonly householdId: string;
   readonly emptyMessage?: string;
 }
 
-export function RecipeList({
-  recipes,
-  householdId,
-  emptyMessage = 'Aucune recette trouvée',
-}: RecipeListProps) {
+export function RecipeList({ recipes, emptyMessage = 'Aucune recette trouvée' }: RecipeListProps) {
   if (recipes.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
@@ -31,7 +26,7 @@ export function RecipeList({
   return (
     <div className="gap-4 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {recipes.map((recipe) => (
-        <RecipeCard key={recipe._id} recipe={recipe} householdId={householdId} />
+        <RecipeCard key={recipe._id} recipe={recipe} />
       ))}
     </div>
   );

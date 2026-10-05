@@ -1,10 +1,11 @@
 import { ConvexError, v } from 'convex/values';
 import type { Id } from '../_generated/dataModel';
+import { mutation } from '../_generated/server';
+import { requireAuthUserId } from '../auth';
 import { productUnitEnum } from '../products/schema';
-import { mutationWithRLS } from './rls';
 import { recipeDifficultyEnum, recipesPatchBuilder } from './schema';
 
-export const createRecipe = mutationWithRLS({
+export const createRecipe = mutation({
   args: {
     name: v.string(),
     instructions: v.array(
@@ -26,24 +27,23 @@ export const createRecipe = mutationWithRLS({
     ),
   },
   handler: async (ctx, args) => {
-    const { householdId } = ctx;
+    await requireAuthUserId(ctx);
 
-    // Check if a recipe with the same name already exists in this household
+    // Recipe names are unique in the shared collection.
     const existingRecipe = await ctx.db
       .query('recipes')
-      .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-      .filter((q) => q.eq(q.field('name'), args.name))
+      .withIndex('by_name', (q) => q.eq('name', args.name))
       .first();
 
     if (existingRecipe) {
       throw new ConvexError('A recipe with this name already exists');
     }
 
-    // Verify all products belong to the household
+    // Verify all ingredient products exist in the shared catalog.
     for (const productData of args.products) {
       const product = await ctx.db.get(productData.productId as Id<'products'>);
-      if (product?.householdId !== householdId) {
-        throw new ConvexError('Product not found in this household');
+      if (!product) {
+        throw new ConvexError('Product not found');
       }
     }
 
@@ -55,7 +55,6 @@ export const createRecipe = mutationWithRLS({
       prepTime: args.prepTime,
       cookTime: args.cookTime,
       difficulty: args.difficulty,
-      householdId,
     });
 
     // Add products to the recipe
@@ -65,7 +64,6 @@ export const createRecipe = mutationWithRLS({
         productId: productData.productId as Id<'products'>,
         quantity: productData.quantity,
         unit: productData.unit,
-        householdId,
       });
     }
 
@@ -73,7 +71,7 @@ export const createRecipe = mutationWithRLS({
   },
 });
 
-export const updateRecipe = mutationWithRLS({
+export const updateRecipe = mutation({
   args: {
     recipeId: v.string(),
     name: v.optional(v.string()),
@@ -100,7 +98,7 @@ export const updateRecipe = mutationWithRLS({
     ),
   },
   handler: async (ctx, args) => {
-    const { householdId } = ctx;
+    await requireAuthUserId(ctx);
 
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
@@ -111,13 +109,10 @@ export const updateRecipe = mutationWithRLS({
     if (args.name && args.name !== recipe.name) {
       const existingRecipe = await ctx.db
         .query('recipes')
-        .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-        .filter((q) =>
-          q.and(q.eq(q.field('name'), args.name), q.neq(q.field('_id'), args.recipeId)),
-        )
+        .withIndex('by_name', (q) => q.eq('name', args.name!))
         .first();
 
-      if (existingRecipe) {
+      if (existingRecipe && existingRecipe._id !== recipe._id) {
         throw new ConvexError('A recipe with this name already exists');
       }
     }
@@ -128,7 +123,7 @@ export const updateRecipe = mutationWithRLS({
 
     // Update products if provided
     if (args.products !== undefined) {
-      // Verify all products belong to the household
+      // Verify all ingredient products exist in the shared catalog.
       for (const productData of args.products) {
         const product = await ctx.db.get(productData.productId as Id<'products'>);
         if (!product) {
@@ -153,18 +148,18 @@ export const updateRecipe = mutationWithRLS({
           productId: productData.productId as Id<'products'>,
           quantity: productData.quantity,
           unit: productData.unit,
-          householdId,
         });
       }
     }
   },
 });
 
-export const deleteRecipe = mutationWithRLS({
+export const deleteRecipe = mutation({
   args: {
     recipeId: v.string(),
   },
   handler: async (ctx, args) => {
+    await requireAuthUserId(ctx);
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
       throw new ConvexError('Recipe not found');
@@ -195,14 +190,14 @@ export const deleteRecipe = mutationWithRLS({
   },
 });
 
-export const toggleRecipeFavorite = mutationWithRLS({
+export const toggleRecipeFavorite = mutation({
   args: {
     recipeId: v.string(),
   },
   handler: async (ctx, args) => {
-    const { householdId, userId } = ctx;
+    const userId = await requireAuthUserId(ctx);
 
-    // Verify the recipe belongs to the household
+    // The recipe collection is shared by authenticated users.
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
       throw new ConvexError('Recipe not found');
@@ -223,7 +218,6 @@ export const toggleRecipeFavorite = mutationWithRLS({
     await ctx.db.insert('recipeFavorites', {
       recipeId: recipe._id,
       userId,
-      householdId,
     });
     return { isFavorite: true };
   },

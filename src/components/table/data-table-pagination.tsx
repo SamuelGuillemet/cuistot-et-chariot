@@ -28,6 +28,10 @@ export function DataTablePagination<TData extends Record<string, unknown>>({
         <div className="hidden md:flex items-center gap-2">
           <p className="font-medium text-sm">Lignes par page</p>
           <Select
+            items={[1, 2, 10, 20, 30, 40, 50].map((pageSize) => ({
+              value: `${pageSize}`,
+              label: `${pageSize}`,
+            }))}
             value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
               if (value !== null) table.setPageSize(Number(value));

@@ -24,11 +24,10 @@ import {
 import { type Product, ProductForm } from './product-form';
 
 export interface ProductsToolbarProps {
-  householdId: string;
   onFilter: (data: { search: string; category: string }) => void;
 }
 
-export function ProductsToolbar({ onFilter, householdId }: ProductsToolbarProps) {
+export function ProductsToolbar({ onFilter }: ProductsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
@@ -44,7 +43,6 @@ export function ProductsToolbar({ onFilter, householdId }: ProductsToolbarProps)
   const handleCreateProduct = (values: Product) => {
     mutate({
       ...values,
-      publicId: householdId,
     });
   };
 
@@ -84,6 +82,13 @@ export function ProductsToolbar({ onFilter, householdId }: ProductsToolbarProps)
         </div>
         <div className="flex items-center gap-2">
           <Select
+            items={[
+              ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
+                value,
+                label,
+              })),
+              { value: 'all', label: 'Toutes catégories' },
+            ]}
             value={category}
             onValueChange={(value) => {
               if (value !== null) handleCategoryChange(value);

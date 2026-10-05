@@ -15,15 +15,9 @@ import type { Recipe } from './recipe-form';
 
 type Product = FunctionReturnType<typeof api.products.queries.getProducts>[number];
 
-export function ProductsFieldArray({
-  form,
-  householdId,
-}: {
-  readonly form: AppForm<Recipe>;
-  readonly householdId: string;
-}) {
+export function ProductsFieldArray({ form }: { readonly form: AppForm<Recipe> }) {
   const { data: availableProducts } = useSuspenseQuery(
-    convexQuery(api.products.queries.getProducts, { publicId: householdId }),
+    convexQuery(api.products.queries.getProducts, {}),
   );
 
   return (

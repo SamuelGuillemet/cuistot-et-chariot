@@ -40,6 +40,13 @@ export function RecipesToolbar({ onFilter, canCreate, filters }: RecipesToolbarP
         </div>
 
         <Select
+          items={[
+            { value: 'all', label: 'Toutes les difficultés' },
+            ...Object.entries(RECIPE_DIFFICULTY_DISPLAY_NAMES).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
           value={filters.difficulty}
           onValueChange={(value) => {
             if (value !== null) onFilter({ ...filters, difficulty: value });
@@ -76,7 +83,7 @@ export function RecipesToolbar({ onFilter, canCreate, filters }: RecipesToolbarP
       </div>
 
       {canCreate && (
-        <Button render={<Link to="/recipes/new" />}>
+        <Button nativeButton={false} render={<Link to="/recipes/new" />}>
           <PlusIcon className="mr-2 w-4 h-4" />
           Nouvelle recette
         </Button>

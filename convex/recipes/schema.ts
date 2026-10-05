@@ -22,33 +22,23 @@ export const recipesSchema = defineTable({
   prepTime: v.number(),
   cookTime: v.number(),
   difficulty: recipeDifficultyEnum,
-  householdId: v.id('households'),
-})
-  .index('by_householdId', ['householdId'])
-  .index('by_difficulty', ['difficulty'])
-  .index('by_householdId_difficulty', ['householdId', 'difficulty']);
+  householdId: v.optional(v.string()),
+}).index('by_name', ['name']);
 
 export const recipeProductsSchema = defineTable({
   recipeId: v.id('recipes'),
   productId: v.id('products'),
   quantity: v.number(),
   unit: productUnitEnum,
-  householdId: v.id('households'),
-})
-  .index('by_recipeId', ['recipeId'])
-  .index('by_productId', ['productId'])
-  .index('by_householdId', ['householdId'])
-  .index('by_recipeId_productId', ['recipeId', 'productId']);
+  householdId: v.optional(v.string()),
+}).index('by_recipeId', ['recipeId']);
 
 export const recipeFavoritesSchema = defineTable({
   recipeId: v.id('recipes'),
   userId: v.id('users'),
-  householdId: v.id('households'),
+  householdId: v.optional(v.string()),
 })
-  .index('by_userId', ['userId'])
   .index('by_recipeId', ['recipeId'])
-  .index('by_userId_recipeId', ['userId', 'recipeId'])
-  .index('by_householdId', ['householdId']);
+  .index('by_userId_recipeId', ['userId', 'recipeId']);
 
 export const recipesPatchBuilder = createPatchBuilder<Doc<'recipes'>>();
-export const recipeProductsPatchBuilder = createPatchBuilder<Doc<'recipeProducts'>>();

@@ -5,7 +5,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "dev": "pnpm --parallel --stream '/^dev:.*/'",
+    "dev": "pnpm --parallel '/^dev:.*/'",
     "dev:frontend": "vite",
     "dev:backend": "convex dev",
     "predev": "convex dev --until-success",

@@ -13,7 +13,7 @@ export const searchMarmiton = action({
     try {
       recipe = await searchMarmitonRecipe(query);
     } catch (error) {
-      throw new ConvexError(error instanceof Error ? error.message : 'Marmiton import failed d');
+      throw new ConvexError(error instanceof Error ? error.message : 'Marmiton import failed');
     }
     if (!recipe) return null;
 

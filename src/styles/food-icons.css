@@ -25,6 +25,11 @@
   border-radius: 100%;
 }
 
+.food-icon-default:before {
+  content: '\f100';
+  visibility: hidden;
+}
+
 .food-icon-wine_2:before {
   content: '\f101';
 }

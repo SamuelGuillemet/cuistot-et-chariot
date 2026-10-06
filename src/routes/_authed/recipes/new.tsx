@@ -34,7 +34,12 @@ function RouteComponent() {
         <p className="text-muted-foreground">Ajoutez une nouvelle recette à votre collection.</p>
       </div>
 
-      <RecipeForm onSubmit={handleSubmit} isLoading={isPending} submitText="Créer la recette" />
+      <RecipeForm
+        onSubmit={handleSubmit}
+        allowImport
+        isLoading={isPending}
+        submitText="Créer la recette"
+      />
     </div>
   );
 }

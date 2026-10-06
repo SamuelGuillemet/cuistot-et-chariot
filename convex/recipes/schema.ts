@@ -31,7 +31,9 @@ export const recipeProductsSchema = defineTable({
   quantity: v.number(),
   unit: productUnitEnum,
   householdId: v.optional(v.string()),
-}).index('by_recipeId', ['recipeId']);
+})
+  .index('by_recipeId', ['recipeId'])
+  .index('by_productId', ['productId']);
 
 export const recipeFavoritesSchema = defineTable({
   recipeId: v.id('recipes'),

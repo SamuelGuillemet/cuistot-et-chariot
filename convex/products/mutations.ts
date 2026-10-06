@@ -75,6 +75,15 @@ export const deleteProduct = mutation({
       throw new ConvexError('Product not found');
     }
 
+    const recipeProduct = await ctx.db
+      .query('recipeProducts')
+      .withIndex('by_productId', (q) => q.eq('productId', args.productId))
+      .first();
+
+    if (recipeProduct) {
+      throw new ConvexError('Cannot delete a product that is used in a recipe');
+    }
+
     await ctx.db.delete(args.productId);
   },
 });

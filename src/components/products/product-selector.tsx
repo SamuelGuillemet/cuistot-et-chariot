@@ -1,9 +1,13 @@
-import type { api } from '@api/api';
-import { CATEGORY_DISPLAY_NAMES } from '@backend/types';
+import { api } from '@api/api';
+import { CATEGORY_DISPLAY_NAMES, type ProductUnit } from '@backend/types';
+import { useConvexMutation } from '@convex-dev/react-query';
+import { useMutation } from '@tanstack/react-query';
 import type { FunctionReturnType } from 'convex/server';
-import { ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon, PlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { capitalize } from '@/utils/string-utils';
 import { getIconClass } from '../food-icons/icon-food-font-config';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
@@ -11,13 +15,15 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { type Product as ProductFormValues, ProductForm } from './product-form';
 
 type Product = FunctionReturnType<typeof api.products.queries.getProducts>[number];
 
 interface ProductSelectorProps {
   products: Product[];
   value?: string;
-  onChange: (productId: string) => void;
+  hint?: { name: string; unit: ProductUnit | null; productIds: readonly string[] };
+  onChange: (productId: string, defaultUnit: ProductUnit) => void;
   onBlur?: () => void;
   disabled?: boolean;
   isInvalid?: boolean;
@@ -26,14 +32,42 @@ interface ProductSelectorProps {
 export function ProductSelector({
   products,
   value,
+  hint,
   onChange,
   onBlur,
   disabled = false,
   isInvalid = false,
 }: Readonly<ProductSelectorProps>) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setIsCreating(false);
+      setSearchText('');
+      setCategoryFilter('all');
+    }
+  };
+
+  const handleSelect = (productId: string, defaultUnit: ProductUnit) => {
+    onChange(productId, defaultUnit);
+    handleOpenChange(false);
+  };
+
+  const createProduct = useMutation<
+    FunctionReturnType<typeof api.products.mutations.createProduct>,
+    Error,
+    ProductFormValues
+  >({
+    mutationFn: useConvexMutation(api.products.mutations.createProduct),
+    onSuccess: (productId, product) => {
+      handleSelect(productId, product.defaultUnit);
+      toast.success('Produit créé et sélectionné');
+    },
+  });
 
   const selectedProduct = products.find((p) => p._id === value);
 
@@ -48,12 +82,39 @@ export function ProductSelector({
     });
   }, [products, searchText, categoryFilter]);
 
-  const handleSelect = (product: Product) => {
-    onChange(product._id);
-    setIsOpen(false);
-    setSearchText('');
-    setCategoryFilter('all');
-  };
+  const suggestedIds = hint?.productIds ?? [];
+  const suggestedProducts = suggestedIds.flatMap(
+    (id) => filteredProducts.find((p) => p._id === id) ?? [],
+  );
+  const otherProducts = filteredProducts.filter((p) => !suggestedIds.includes(p._id));
+
+  // Prefill from the best suggestion: a close product likely shares icon and category.
+  const bestSuggestion = products.find((p) => p._id === suggestedIds[0]);
+  const newProductName = searchText.trim() || hint?.name || '';
+
+  const renderOption = (product: Product) => (
+    <button
+      key={product._id}
+      type="button"
+      onClick={() => handleSelect(product._id, product.defaultUnit)}
+      className={cn(
+        'flex items-start gap-3 px-3 py-2.5 rounded-md w-full text-left transition-colors',
+        'hover:bg-accent hover:text-accent-foreground',
+        product._id === value && 'bg-accent',
+      )}
+    >
+      <i className={cn(getIconClass(product.icon), 'shrink-0 mt-0.5 text-xl')} />
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-sm">{product.name}</p>
+        {product.description && (
+          <p className="text-muted-foreground text-xs truncate">{product.description}</p>
+        )}
+        <p className="mt-1 text-muted-foreground text-xs">
+          {CATEGORY_DISPLAY_NAMES[product.category]}
+        </p>
+      </div>
+    </button>
+  );
 
   return (
     <>
@@ -75,98 +136,116 @@ export function ProductSelector({
             {selectedProduct.name}
           </span>
         ) : (
-          <span>Sélectionner un produit</span>
+          <span className="truncate">
+            {hint ? `Associer : ${hint.name}` : 'Sélectionner un produit'}
+          </span>
         )}
         <ChevronDownIcon className="opacity-50 ml-auto w-4 h-4" />
       </Button>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-2xl">
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className={isCreating ? 'sm:max-w-4xl' : 'sm:max-w-2xl'}>
           <DialogHeader>
-            <DialogTitle>Sélectionner un produit</DialogTitle>
+            <DialogTitle>{isCreating ? 'Nouveau produit' : 'Sélectionner un produit'}</DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="gap-4 grid grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="search">Rechercher</Label>
-                <Input
-                  id="search"
-                  placeholder="Nom ou description..."
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="category">Catégorie</Label>
-                <Select
-                  items={[
-                    { value: 'all', label: 'Toutes les catégories' },
-                    ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
-                      value,
-                      label,
-                    })),
-                  ]}
-                  value={categoryFilter}
-                  onValueChange={(value) => {
-                    if (value !== null) setCategoryFilter(value);
-                  }}
-                >
-                  <SelectTrigger id="category">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Toutes les catégories</SelectItem>
-                    {Object.entries(CATEGORY_DISPLAY_NAMES).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          {isCreating ? (
+            <div className="space-y-4">
+              <Button type="button" variant="ghost" onClick={() => setIsCreating(false)}>
+                Retour aux produits
+              </Button>
+              <ProductForm
+                product={{
+                  icon: bestSuggestion?.icon ?? '',
+                  name: capitalize(newProductName),
+                  description: '',
+                  category: bestSuggestion?.category ?? 'other',
+                  defaultUnit: hint?.unit ?? bestSuggestion?.defaultUnit ?? 'pieces',
+                }}
+                onSubmit={(product) => createProduct.mutate(product)}
+                isLoading={createProduct.isPending}
+              />
             </div>
+          ) : (
+            <div className="space-y-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => setIsCreating(true)}
+              >
+                <PlusIcon />
+                {newProductName ? `Créer « ${newProductName} »` : 'Créer un nouveau produit'}
+              </Button>
 
-            <ScrollArea className="border rounded-md h-100">
-              {filteredProducts.length === 0 ? (
-                <div className="flex flex-col justify-center items-center py-12 text-center">
-                  <p className="font-medium text-muted-foreground">Aucun produit trouvé</p>
-                  <p className="text-muted-foreground text-sm">
-                    Modifiez vos filtres pour voir plus de résultats
-                  </p>
+              <div className="gap-4 grid grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="search">Rechercher</Label>
+                  <Input
+                    id="search"
+                    placeholder="Nom ou description..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                  />
                 </div>
-              ) : (
-                <div className="p-2">
-                  {filteredProducts.map((product) => (
-                    <button
-                      key={product._id}
-                      type="button"
-                      onClick={() => handleSelect(product)}
-                      className={cn(
-                        'flex items-start gap-3 px-3 py-2.5 rounded-md w-full text-left transition-colors',
-                        'hover:bg-accent hover:text-accent-foreground',
-                        product._id === value && 'bg-accent',
-                      )}
-                    >
-                      <i className={cn(getIconClass(product.icon), 'shrink-0 mt-0.5 text-xl')} />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm">{product.name}</p>
-                        {product.description && (
-                          <p className="text-muted-foreground text-xs truncate">
-                            {product.description}
+
+                <div className="space-y-2">
+                  <Label htmlFor="category">Catégorie</Label>
+                  <Select
+                    items={[
+                      { value: 'all', label: 'Toutes les catégories' },
+                      ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
+                        value,
+                        label,
+                      })),
+                    ]}
+                    value={categoryFilter}
+                    onValueChange={(value) => {
+                      if (value !== null) setCategoryFilter(value);
+                    }}
+                  >
+                    <SelectTrigger id="category">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Toutes les catégories</SelectItem>
+                      {Object.entries(CATEGORY_DISPLAY_NAMES).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <ScrollArea className="border rounded-md h-100">
+                {filteredProducts.length === 0 ? (
+                  <div className="flex flex-col justify-center items-center py-12 text-center">
+                    <p className="font-medium text-muted-foreground">Aucun produit trouvé</p>
+                    <p className="text-muted-foreground text-sm">
+                      Modifiez vos filtres pour voir plus de résultats
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-2">
+                    {suggestedProducts.length > 0 && (
+                      <>
+                        <p className="px-3 pt-2 pb-1 text-muted-foreground text-xs">Suggestions</p>
+                        {suggestedProducts.map(renderOption)}
+                        {otherProducts.length > 0 && (
+                          <p className="px-3 pt-3 pb-1 text-muted-foreground text-xs">
+                            Tous les produits
                           </p>
                         )}
-                        <p className="mt-1 text-muted-foreground text-xs">
-                          {CATEGORY_DISPLAY_NAMES[product.category]}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </div>
+                      </>
+                    )}
+                    {otherProducts.map(renderOption)}
+                  </div>
+                )}
+              </ScrollArea>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </>

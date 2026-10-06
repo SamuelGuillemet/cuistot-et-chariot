@@ -1,4 +1,4 @@
-import { PRODUCT_UNITS, RECIPE_DIFFICULTY_DISPLAY_NAMES } from '@backend/types';
+import { PRODUCT_UNITS, type ProductUnit, RECIPE_DIFFICULTY_DISPLAY_NAMES } from '@backend/types';
 import { useSelector } from '@tanstack/react-form';
 import * as v from 'valibot';
 import { DraftBanner } from '@/components/forms/draft-banner';
@@ -8,6 +8,7 @@ import { FieldGroup } from '@/components/ui/field';
 import { handleSubmitInvalid, useAppForm } from '@/hooks/use-app-form';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { typedEnum } from '@/utils/valibot';
+import { RecipeImport } from './recipe-import';
 import { ProductsFieldArray } from './recipe-ingredients-editor';
 import { InstructionsFieldArray } from './recipe-instructions-editor';
 
@@ -57,8 +58,20 @@ const Recipe = v.object({
 
 export type Recipe = v.InferOutput<typeof Recipe>;
 
+/** Imported ingredient line, kept on the row until the user picks the matching product. */
+interface IngredientHint {
+  name: string;
+  unit: ProductUnit | null;
+  productIds: string[];
+}
+
+type RecipeFormValues = Omit<Recipe, 'products'> & {
+  products: (Recipe['products'][number] & { hint?: IngredientHint })[];
+};
+
 interface RecipeFormProps {
   readonly onSubmit: (values: Recipe) => void | Promise<void>;
+  readonly allowImport?: boolean;
   readonly isLoading?: boolean;
   readonly recipe?: Recipe;
   readonly submitText?: string;
@@ -70,10 +83,10 @@ function useRecipeForm({
   recipeId,
   onSubmit,
 }: Pick<RecipeFormProps, 'recipe' | 'recipeId' | 'onSubmit'>) {
-  const draft = useFormDraft<Recipe>(recipeId ?? 'recipe-new');
+  const draft = useFormDraft<RecipeFormValues>(recipeId ?? 'recipe-new');
 
   // Pick fields explicitly: `recipe` may come from the API with extra properties.
-  const defaultValues: Recipe = {
+  const defaultValues: RecipeFormValues = {
     name: recipe?.name ?? '',
     instructions: recipe?.instructions ?? [],
     servings: recipe?.servings ?? 4,
@@ -95,7 +108,14 @@ function useRecipeForm({
       },
     },
     onSubmit: async ({ value }) => {
-      await onSubmit(value);
+      await onSubmit({
+        ...value,
+        products: value.products.map(({ productId, quantity, unit }) => ({
+          productId,
+          quantity,
+          unit,
+        })),
+      });
       draft.clear();
     },
     onSubmitInvalid: handleSubmitInvalid,
@@ -109,6 +129,7 @@ export type RecipeFormApi = ReturnType<typeof useRecipeForm>['form'];
 export function RecipeForm({
   isLoading = false,
   submitText = 'Créer la recette',
+  allowImport = false,
   ...props
 }: RecipeFormProps) {
   const { form, draft } = useRecipeForm(props);
@@ -129,6 +150,32 @@ export function RecipeForm({
         <DraftBanner
           onRestore={() => form.reset(draftValues, { keepDefaultValues: true })}
           onDiscard={draft.clear}
+        />
+      )}
+
+      {allowImport && (
+        <RecipeImport
+          disabled={isLoading}
+          confirmOverwrite={!isDefaultValue}
+          onImport={(imported) =>
+            form.reset(
+              {
+                name: imported.name,
+                instructions: imported.steps.map((text, index) => ({ order: index + 1, text })),
+                servings: Math.min(50, Math.max(1, imported.people || 4)),
+                prepTime: imported.prepTime,
+                cookTime: imported.cookTime,
+                difficulty: imported.difficulty,
+                products: imported.ingredients.map(({ name, quantity, unit, productIds }) => ({
+                  productId: '',
+                  quantity: quantity || 1,
+                  unit: unit ?? 'pieces',
+                  hint: { name, unit, productIds },
+                })),
+              },
+              { keepDefaultValues: true },
+            )
+          }
         />
       )}
 

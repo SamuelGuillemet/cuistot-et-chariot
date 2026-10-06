@@ -76,7 +76,7 @@ export function DataTable<TData extends { _id: string | number }>({
     },
     onSortingChange: setSorting,
     onPaginationChange: setPaginationState,
-    autoResetPageIndex: true,
+    autoResetPageIndex: false,
   });
 
   return (

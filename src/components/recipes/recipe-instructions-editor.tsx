@@ -1,3 +1,4 @@
+import { useSelector } from '@tanstack/react-form';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BaseField, isFieldInvalid } from '../forms/base-field';
@@ -6,6 +7,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import type { RecipeFormApi } from './recipe-form';
 
 export function InstructionsFieldArray({ form }: { readonly form: RecipeFormApi }) {
+  const count = useSelector(form.store, (state) => state.values.instructions.length);
+
   return (
     <form.AppField name="instructions" mode="array">
       {(field) => {
@@ -25,8 +28,14 @@ export function InstructionsFieldArray({ form }: { readonly form: RecipeFormApi 
           field.removeValue(index);
           renumber();
         };
-        const onAdd = () => field.pushValue({ order: field.state.value.length + 1, text: '' });
-        const count = field.state.value.length;
+        const onAdd = () => {
+          field.pushValue({ order: field.state.value.length + 1, text: '' });
+          // Scroll to the newly added instruction row (optional)
+          setTimeout(() => {
+            const element = document.querySelector(`#instructions-${field.state.value.length - 1}`);
+            if (element) (element as HTMLElement).scrollIntoView({ behavior: 'smooth' });
+          }, 0);
+        };
 
         return (
           <Card className={cn('lg:flex-1 lg:min-h-0', isFieldInvalid(field) && 'ring-destructive')}>
@@ -44,7 +53,7 @@ export function InstructionsFieldArray({ form }: { readonly form: RecipeFormApi 
                   </p>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    {field.state.value.map((_, index) => (
+                    {Array.from({ length: count }, (_, index) => (
                       <InstructionRow
                         key={index}
                         form={form}
@@ -91,7 +100,7 @@ function InstructionRow({
         {step}
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0" id={`instructions-${index}`}>
         <form.AppField name={`instructions[${index}].text`}>
           {(field) => (
             <field.TextareaField

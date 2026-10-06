@@ -22,31 +22,21 @@ export function RecipeProductItem({
 
   const displayQuantity = adjustedQuantity ?? recipeProduct.quantity;
   const hasAdjustment =
-    adjustedQuantity !== undefined &&
-    adjustedQuantity !== recipeProduct.quantity;
+    adjustedQuantity !== undefined && adjustedQuantity !== recipeProduct.quantity;
 
   return (
     <div className="group relative flex items-center gap-3 hover:bg-accent/50 p-3 rounded-lg transition-colors">
-      <i
-        className={cn(getIconClass(recipeProduct.product?.icon), 'text-3xl')}
-      />
+      <i className={cn(getIconClass(recipeProduct.product?.icon), 'text-3xl')} />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
-          <span className="font-semibold text-primary text-base">
-            {displayQuantity}
-          </span>
-          <span className="text-muted-foreground text-sm">
-            {PRODUCT_UNITS[recipeProduct.unit]}
-          </span>
+          <span className="font-semibold text-primary text-base">{displayQuantity}</span>
+          <span className="text-muted-foreground text-sm">{PRODUCT_UNITS[recipeProduct.unit]}</span>
         </div>
-        <p className="font-medium text-sm truncate">
-          {recipeProduct.product.name}
-        </p>
+        <p className="font-medium text-sm truncate">{recipeProduct.product.name}</p>
         {hasAdjustment && showOriginal && (
           <p className="text-muted-foreground text-xs italic">
-            (original: {recipeProduct.quantity}{' '}
-            {PRODUCT_UNITS[recipeProduct.unit]})
+            (original: {recipeProduct.quantity} {PRODUCT_UNITS[recipeProduct.unit]})
           </p>
         )}
       </div>

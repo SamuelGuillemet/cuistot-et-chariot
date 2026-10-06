@@ -9,18 +9,10 @@ import { RecipeTimeDisplay } from './recipe-time-display';
 interface RecipeDetailHeaderProps {
   readonly recipe: Doc<'recipes'>;
   readonly isFavorite: boolean;
-  readonly householdId: string;
-  readonly canEdit: boolean;
   readonly onEdit: () => void;
 }
 
-export function RecipeDetailHeader({
-  recipe,
-  isFavorite,
-  householdId,
-  canEdit,
-  onEdit,
-}: RecipeDetailHeaderProps) {
+export function RecipeDetailHeader({ recipe, isFavorite, onEdit }: RecipeDetailHeaderProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-start gap-4">
@@ -33,25 +25,12 @@ export function RecipeDetailHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <RecipeFavoriteButton
-            recipeId={recipe._id}
-            isFavorite={isFavorite}
-            householdId={householdId}
-            size="default"
-          />
-          <RecipeActionsDropdown
-            recipe={recipe}
-            householdId={householdId}
-            canEdit={canEdit}
-            onEdit={onEdit}
-          />
+          <RecipeFavoriteButton recipeId={recipe._id} isFavorite={isFavorite} size="default" />
+          <RecipeActionsDropdown recipe={recipe} onEdit={onEdit} />
         </div>
       </div>
 
-      <RecipeTimeDisplay
-        prepTime={recipe.prepTime}
-        cookTime={recipe.cookTime}
-      />
+      <RecipeTimeDisplay prepTime={recipe.prepTime} cookTime={recipe.cookTime} />
 
       <Separator />
     </div>

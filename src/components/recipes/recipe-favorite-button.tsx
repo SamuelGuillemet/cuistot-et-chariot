@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 interface RecipeFavoriteButtonProps {
   readonly recipeId: string;
   readonly isFavorite: boolean;
-  readonly householdId: string;
   readonly className?: string;
   readonly size?: 'default' | 'sm' | 'lg' | 'icon';
 }
@@ -17,21 +16,16 @@ interface RecipeFavoriteButtonProps {
 export function RecipeFavoriteButton({
   recipeId,
   isFavorite,
-  householdId,
   className,
   size = 'icon',
 }: RecipeFavoriteButtonProps) {
-  const mutationFn = useConvexMutation(
-    api.recipes.mutations.toggleRecipeFavorite,
-  );
+  const mutationFn = useConvexMutation(api.recipes.mutations.toggleRecipeFavorite);
 
   const { mutate: toggleFavorite, isPending } = useMutation({
     mutationFn,
     onSuccess: (data) => {
       toast.success(
-        data.isFavorite
-          ? 'Recette ajoutée aux favoris'
-          : 'Recette retirée des favoris',
+        data.isFavorite ? 'Recette ajoutée aux favoris' : 'Recette retirée des favoris',
       );
     },
     onError: () => {
@@ -39,10 +33,10 @@ export function RecipeFavoriteButton({
     },
   });
 
-  const handleToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toggleFavorite({ publicId: householdId, recipeId });
+  const handleToggle = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFavorite({ recipeId });
   };
 
   return (

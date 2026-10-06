@@ -16,24 +16,15 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { type Product, ProductForm } from './product-form';
 
 interface ProductActionsProps {
   product: Doc<'products'>;
-  householdId: string;
 }
 
-export function ProductActions({
-  product,
-  householdId,
-}: Readonly<ProductActionsProps>) {
+export function ProductActions({ product }: Readonly<ProductActionsProps>) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -56,14 +47,12 @@ export function ProductActions({
   const handleEditProduct = (values: Product) => {
     updateProductMutation.mutate({
       ...values,
-      publicId: householdId,
       productId: product._id,
     });
   };
 
   const handleDeleteProduct = () => {
     deleteProductMutation.mutate({
-      publicId: householdId,
       productId: product._id,
     });
   };
@@ -72,30 +61,34 @@ export function ProductActions({
     <>
       <div className="flex items-center gap-1">
         <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-8 h-8"
-              onClick={() => setIsEditDialogOpen(true)}
-            >
-              <PenIcon className="w-4 h-4" />
-              <span className="sr-only">Modifier</span>
-            </Button>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="w-8 h-8"
+                onClick={() => setIsEditDialogOpen(true)}
+              />
+            }
+          >
+            <PenIcon className="w-4 h-4" />
+            <span className="sr-only">Modifier</span>
           </TooltipTrigger>
           <TooltipContent>Modifier</TooltipContent>
         </Tooltip>
         <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="w-8 h-8 text-destructive hover:text-destructive"
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              <TrashIcon className="w-4 h-4" />
-              <span className="sr-only">Supprimer</span>
-            </Button>
+          <TooltipTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="w-8 h-8 text-destructive hover:text-destructive"
+                onClick={() => setIsDeleteDialogOpen(true)}
+              />
+            }
+          >
+            <TrashIcon className="w-4 h-4" />
+            <span className="sr-only">Supprimer</span>
           </TooltipTrigger>
           <TooltipContent>Supprimer</TooltipContent>
         </Tooltip>
@@ -110,25 +103,20 @@ export function ProductActions({
           <ProductForm
             onSubmit={handleEditProduct}
             isLoading={updateProductMutation.isPending}
-            defaultValues={{
-              ...product,
-            }}
+            product={product}
             submitText="Modifier le produit"
           />
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action ne peut pas être annulée. Cela supprimera
-              définitivement le produit "{product.name}" de votre foyer.
+              Cette action ne peut pas être annulée. Cela supprimera définitivement le produit "
+              {product.name}" de votre foyer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

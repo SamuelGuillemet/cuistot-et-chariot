@@ -1,22 +1,16 @@
-import { useStore } from '@tanstack/react-form';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
-import { Fragment } from 'react/jsx-runtime';
-import { type AppForm, withFieldGroup } from '@/hooks/use-app-form';
 import { cn } from '@/lib/utils';
-import { BaseFieldComposer } from '../forms/base-field';
+import { BaseField, isFieldInvalid } from '../forms/base-field';
 import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
-import type { Recipe } from './recipe-form';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import type { RecipeFormApi } from './recipe-form';
 
-export function InstructionsFieldArray({
-  form,
-}: {
-  readonly form: AppForm<Recipe>;
-}) {
+export function InstructionsFieldArray({ form }: { readonly form: RecipeFormApi }) {
   return (
     <form.AppField name="instructions" mode="array">
       {(field) => {
-        const updateOrders = () => {
+        // `order` is persisted by the backend and must always match the position in the list.
+        const renumber = () => {
           field.state.value.forEach((step, index) => {
             if (step.order !== index + 1) {
               field.replaceValue(index, { ...step, order: index + 1 });
@@ -25,141 +19,123 @@ export function InstructionsFieldArray({
         };
         const onMove = (index: number, newIndex: number) => {
           field.swapValues(index, newIndex);
-          updateOrders();
+          renumber();
         };
         const onRemove = (index: number) => {
           field.removeValue(index);
-          updateOrders();
+          renumber();
         };
-        const onAdd = () => {
-          field.pushValue({ order: field.state.value.length + 1, text: '' });
-          updateOrders();
-        };
+        const onAdd = () => field.pushValue({ order: field.state.value.length + 1, text: '' });
+        const count = field.state.value.length;
 
         return (
-          <BaseFieldComposer.Root
-            field={field}
-            required
-            className="flex flex-col gap-2"
-          >
-            <BaseFieldComposer.Label>
-              Etapes de la recette
-            </BaseFieldComposer.Label>
-            <BaseFieldComposer.Control>
-              {({ isInvalid }) => (
-                <div
-                  className={cn(
-                    'flex flex-col gap-4 p-4 border rounded-md',
-                    isInvalid && 'border-destructive',
-                  )}
-                >
-                  {field.state.value.length === 0 ? (
-                    <p className="py-4 text-sm text-center">
-                      Aucune instruction ajoutée.
-                    </p>
-                  ) : (
-                    field.state.value.map((_, index) => (
-                      <Fragment key={index}>
-                        <InstructionsFormFields
-                          form={form}
-                          fields={`instructions[${index}]`}
-                          onMoveUp={() => onMove(index, index - 1)}
-                          onMoveDown={() => onMove(index, index + 1)}
-                          onRemove={() => onRemove(index)}
-                          canMoveUp={index > 0}
-                          canMoveDown={index < field.state.value.length - 1}
-                        />
-                        {index < field.state.value.length - 1 && <Separator />}
-                      </Fragment>
-                    ))
-                  )}
-                </div>
-              )}
-            </BaseFieldComposer.Control>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onAdd}
-              className="w-full"
-            >
-              <PlusIcon className="mr-2 w-4 h-4" /> Ajouter une étape
-            </Button>
-            <BaseFieldComposer.Error />
-          </BaseFieldComposer.Root>
+          <Card className={cn('lg:flex-1 lg:min-h-0', isFieldInvalid(field) && 'ring-destructive')}>
+            <CardHeader>
+              <CardTitle>Étapes</CardTitle>
+              <CardDescription>
+                {count === 0 ? 'Décrivez la préparation pas à pas.' : `${count} étape(s)`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="lg:flex-1 lg:min-h-0 lg:overflow-y-auto py-1">
+              <BaseField field={field}>
+                {count === 0 ? (
+                  <p className="py-6 border border-dashed rounded-md text-muted-foreground text-sm text-center">
+                    Aucune étape ajoutée.
+                  </p>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    {field.state.value.map((_, index) => (
+                      <InstructionRow
+                        key={index}
+                        form={form}
+                        index={index}
+                        onMoveUp={index > 0 ? () => onMove(index, index - 1) : undefined}
+                        onMoveDown={index < count - 1 ? () => onMove(index, index + 1) : undefined}
+                        onRemove={() => onRemove(index)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </BaseField>
+            </CardContent>
+            <CardFooter className="p-2">
+              <Button type="button" variant="ghost" onClick={onAdd} className="w-full">
+                <PlusIcon /> Ajouter une étape
+              </Button>
+            </CardFooter>
+          </Card>
         );
       }}
     </form.AppField>
   );
 }
 
-const InstructionsFormFields = withFieldGroup({
-  defaultValues: {
-    order: 0,
-    text: '',
-  } as Recipe['instructions'][number],
-  props: {
-    onRemove: (() => {}) as () => void,
-    onMoveUp: (() => {}) as () => void,
-    onMoveDown: (() => {}) as () => void,
-    canMoveUp: true,
-    canMoveDown: true,
-  },
-  render: ({ group, ...props }) => {
-    const { onRemove, onMoveUp, onMoveDown, canMoveUp, canMoveDown } = props;
+function InstructionRow({
+  form,
+  index,
+  onMoveUp,
+  onMoveDown,
+  onRemove,
+}: {
+  readonly form: RecipeFormApi;
+  readonly index: number;
+  readonly onMoveUp?: () => void;
+  readonly onMoveDown?: () => void;
+  readonly onRemove: () => void;
+}) {
+  const step = index + 1;
 
-    const order = useStore(group.store, (state) => state.values.order);
+  return (
+    <div className="flex items-start gap-3">
+      <div className="flex justify-center items-center bg-primary/10 mt-1 rounded-full size-7 font-semibold text-primary text-xs shrink-0">
+        {step}
+      </div>
 
-    const placeholder =
-      order === 1 ? 'Décrivez les étapes de la recette...' : `Étape ${order}…`;
-
-    return (
-      <div className="items-start gap-2 grid grid-cols-[auto,1fr,auto]">
-        <div className="flex justify-center items-center bg-background border rounded-full size-7 font-semibold text-xs shrink-0">
-          {order}
-        </div>
-
-        <group.AppField name="text">
+      <div className="flex-1 min-w-0">
+        <form.AppField name={`instructions[${index}].text`}>
           {(field) => (
             <field.TextareaField
-              label=""
+              aria-label={`Étape ${step}`}
               rows={2}
-              placeholder={placeholder}
+              placeholder={step === 1 ? 'Décrivez les étapes de la recette...' : `Étape ${step}…`}
               className="resize-y"
             />
           )}
-        </group.AppField>
-
-        <div className="flex self-stretch gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onMoveUp}
-            disabled={!canMoveUp}
-          >
-            <ArrowUpIcon className="size-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onMoveDown}
-            disabled={!canMoveDown}
-          >
-            <ArrowDownIcon className="size-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={onRemove}
-            className="text-destructive hover:text-destructive"
-          >
-            <Trash2Icon className="size-4" />
-          </Button>
-        </div>
+        </form.AppField>
       </div>
-    );
-  },
-});
+
+      <div className="flex gap-0.5 shrink-0">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Monter"
+          onClick={onMoveUp}
+          disabled={!onMoveUp}
+        >
+          <ArrowUpIcon />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Descendre"
+          onClick={onMoveDown}
+          disabled={!onMoveDown}
+        >
+          <ArrowDownIcon />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Supprimer l'étape"
+          onClick={onRemove}
+          className="text-destructive hover:text-destructive"
+        >
+          <Trash2Icon />
+        </Button>
+      </div>
+    </div>
+  );
+}

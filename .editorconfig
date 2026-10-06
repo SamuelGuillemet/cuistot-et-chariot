@@ -16,9 +16,6 @@ end_of_line = lf
 # 2 space indentation
 indent_style = space
 indent_size = 2
-
-# JavaScript-specific settings
-[*.{js,ts}]
 quote_type = single
 continuation_indent_size = 2
 curly_bracket_next_line = false

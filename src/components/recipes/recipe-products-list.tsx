@@ -11,10 +11,7 @@ interface RecipeProductsListProps {
   readonly originalServings?: number;
 }
 
-export function RecipeProductsList({
-  recipeProducts,
-  originalServings,
-}: RecipeProductsListProps) {
+export function RecipeProductsList({ recipeProducts, originalServings }: RecipeProductsListProps) {
   const [currentServings, setCurrentServings] = useState(originalServings ?? 1);
 
   const ratio = originalServings ? currentServings / originalServings : 1;
@@ -55,9 +52,7 @@ export function RecipeProductsList({
               key={rp._id}
               recipeProduct={rp}
               adjustedQuantity={
-                showAdjustment
-                  ? Number((rp.quantity * ratio).toFixed(2))
-                  : undefined
+                showAdjustment ? Number((rp.quantity * ratio).toFixed(2)) : undefined
               }
               showOriginal={showAdjustment}
             />

@@ -11,9 +11,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { FoodIconSelector } from './IconSelector';
 import type { FoodIcons } from './icon-food-font-config';
 import { getIconClass } from './icon-food-font-config';
+import { FoodIconSelector } from './IconSelector';
 
 // Icon Selector Field Component with Dialog
 interface IconSelectorControlledProps {
@@ -34,9 +34,7 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
   className,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState<FoodIcons | undefined>(
-    undefined,
-  );
+  const [selectedIcon, setSelectedIcon] = useState<FoodIcons | undefined>(undefined);
 
   const handleIconSelect = (icon: FoodIcons | undefined) => {
     setSelectedIcon(icon);
@@ -62,33 +60,31 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
   };
 
   return (
-    <div
-      className={cn('relative', disabled && 'opacity-50 pointer-events-none')}
-    >
+    <div className={cn('relative', disabled && 'opacity-50 pointer-events-none')}>
       <Dialog open={isDialogOpen} onOpenChange={onDialogOpenChange}>
-        <DialogTrigger asChild>
-          <button
-            type="button"
-            disabled={disabled}
-            className={cn(
-              'flex justify-center items-center border rounded-lg w-12 h-12 transition-colors',
-              'hover:bg-primary/10 hover:border-primary/40 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring',
-              error && 'border-destructive',
-              !value && 'bg-muted',
-              className,
-            )}
-          >
-            {value ? (
-              <i
-                className={`${getIconClass(value)} text-2xl text-primary`}
-                aria-hidden="true"
-              />
-            ) : (
-              <span className="text-muted-foreground text-xs">
-                <SearchIcon className="w-4 h-4" />
-              </span>
-            )}
-          </button>
+        <DialogTrigger
+          render={
+            <button
+              type="button"
+              aria-label="Sélectionner une icône"
+              disabled={disabled}
+              className={cn(
+                'flex justify-center items-center border rounded-lg w-12 h-12 transition-colors',
+                'hover:bg-primary/10 hover:border-primary/40 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring',
+                error && 'border-destructive',
+                !value && 'bg-muted',
+                className,
+              )}
+            />
+          }
+        >
+          {value ? (
+            <i className={`${getIconClass(value)} text-2xl text-primary`} aria-hidden="true" />
+          ) : (
+            <span className="text-muted-foreground text-xs">
+              <SearchIcon className="w-4 h-4" />
+            </span>
+          )}
         </DialogTrigger>
         <DialogContent className="sm:min-w-2xl lg:min-w-4xl">
           <DialogHeader>

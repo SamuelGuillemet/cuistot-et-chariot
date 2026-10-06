@@ -10,21 +10,13 @@
 
 import type * as auth from "../auth.js";
 import type * as helpers from "../helpers.js";
-import type * as households_mutations from "../households/mutations.js";
-import type * as households_queries from "../households/queries.js";
-import type * as households_rls from "../households/rls.js";
-import type * as households_members_mutations from "../households_members/mutations.js";
-import type * as households_members_queries from "../households_members/queries.js";
-import type * as households_members_rls from "../households_members/rls.js";
 import type * as http from "../http.js";
 import type * as migrations from "../migrations.js";
 import type * as products_mutations from "../products/mutations.js";
 import type * as products_queries from "../products/queries.js";
-import type * as products_rls from "../products/rls.js";
 import type * as products_seed from "../products/seed.js";
 import type * as recipes_mutations from "../recipes/mutations.js";
 import type * as recipes_queries from "../recipes/queries.js";
-import type * as recipes_rls from "../recipes/rls.js";
 import type * as recipes_seed from "../recipes/seed.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
@@ -39,21 +31,13 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   helpers: typeof helpers;
-  "households/mutations": typeof households_mutations;
-  "households/queries": typeof households_queries;
-  "households/rls": typeof households_rls;
-  "households_members/mutations": typeof households_members_mutations;
-  "households_members/queries": typeof households_members_queries;
-  "households_members/rls": typeof households_members_rls;
   http: typeof http;
   migrations: typeof migrations;
   "products/mutations": typeof products_mutations;
   "products/queries": typeof products_queries;
-  "products/rls": typeof products_rls;
   "products/seed": typeof products_seed;
   "recipes/mutations": typeof recipes_mutations;
   "recipes/queries": typeof recipes_queries;
-  "recipes/rls": typeof recipes_rls;
   "recipes/seed": typeof recipes_seed;
   types: typeof types;
   users: typeof users;

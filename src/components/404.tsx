@@ -4,14 +4,14 @@ import { Button } from '@/components/ui/button';
 export function Page404() {
   return (
     <div className="flex flex-col justify-around items-center gap-8 w-full h-full grow">
-      <div className="flex items-center my-4 text-[11.5rem]">
-        <div className="opacity-0 animate-slide-in [animation-delay:_0.2s]">
+      <div className="flex items-center my-4 text-9xl">
+        <div className="opacity-0 animate-slide-in" style={{ animationDelay: '200ms' }}>
           4
         </div>
-        <div className="opacity-0 animate-slide-in [animation-delay:_0.4s]">
+        <div className="opacity-0 animate-slide-in" style={{ animationDelay: '400ms' }}>
           0
         </div>
-        <div className="opacity-0 animate-slide-in [animation-delay:_0.6s]">
+        <div className="opacity-0 animate-slide-in" style={{ animationDelay: '600ms' }}>
           4
         </div>
       </div>
@@ -19,12 +19,12 @@ export function Page404() {
         La page est introuvable
       </h2>
       <p className="text-xl">
-        La page que vous recherchez a peut-être été supprimée, a été renommée ou
-        est provisoirement indisponible.
+        La page que vous recherchez a peut-être été supprimée, a été renommée ou est provisoirement
+        indisponible.
       </p>
 
-      <Button asChild>
-        <Link to="/">Retourner à l&apos;accueil</Link>
+      <Button nativeButton={false} render={<Link to="/recipes" />}>
+        Retourner à l&apos;accueil
       </Button>
     </div>
   );

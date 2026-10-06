@@ -20,7 +20,7 @@ const config: UserConfig = {
       preset: 'vercel',
     }),
     tailwindcss(),
-    react(),
+    react({ compiler: true }),
   ],
   ssr: {
     noExternal: ['@convex-dev/better-auth'],

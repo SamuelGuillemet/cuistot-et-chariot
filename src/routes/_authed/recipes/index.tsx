@@ -6,24 +6,14 @@ import type { FunctionReturnType } from 'convex/server';
 import { useCallback, useMemo, useState } from 'react';
 import { RecipeList } from '@/components/recipes/recipe-list';
 import { RecipesToolbar } from '@/components/recipes/recipes-toolbar';
-import { useCurrentMember } from '@/hooks/use-current-member';
 
 export const Route = createFileRoute('/_authed/recipes/')({
-  component: RouteComponent,
+  component: RecipesPage,
   loader: async ({ context }) => {
-    const householdId = context.householdId;
-    if (householdId) {
-      await context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.recipes.queries.getRecipes, {
-          publicId: householdId,
-        }),
-      );
-    }
-
-    return {
-      breadcrumbs: 'Liste des recettes',
-      householdId: householdId,
-    };
+    await context.convexQueryClient.queryClient.query({
+      ...convexQuery(api.recipes.queries.getRecipes, {}),
+      staleTime: 'static',
+    });
   },
 });
 
@@ -46,8 +36,8 @@ function useFilters(recipes: Recipes) {
     (recipe: Recipes[number]) => {
       const haystack = [
         recipe.name,
-        ...recipe.instructions.map((s) => s.text),
-        ...recipe.products.map((p) => p.product.name),
+        ...recipe.instructions.map((step) => step.text),
+        ...recipe.products.map((product) => product.product.name),
       ]
         .join(' ')
         .toLowerCase();
@@ -57,45 +47,34 @@ function useFilters(recipes: Recipes) {
   );
 
   const filterOnDifficulty = useCallback(
-    (recipe: Recipes[number]) => {
-      return (
-        filters.difficulty === 'all' || recipe.difficulty === filters.difficulty
-      );
-    },
+    (recipe: Recipes[number]) =>
+      filters.difficulty === 'all' || recipe.difficulty === filters.difficulty,
     [filters.difficulty],
   );
 
   const filterOnFavorites = useCallback(
-    (recipe: Recipes[number]) => {
-      return !filters.showFavoritesOnly || recipe.isFavorite;
-    },
+    (recipe: Recipes[number]) => !filters.showFavoritesOnly || recipe.isFavorite,
     [filters.showFavoritesOnly],
   );
 
-  const filteredRecipes = useMemo(() => {
-    return recipes.filter(
-      (recipe) =>
-        filterOnSearchTerm(recipe) &&
-        filterOnDifficulty(recipe) &&
-        filterOnFavorites(recipe),
-    );
-  }, [recipes, filterOnSearchTerm, filterOnDifficulty, filterOnFavorites]);
+  const filteredRecipes = useMemo(
+    () =>
+      recipes.filter(
+        (recipe) =>
+          filterOnSearchTerm(recipe) && filterOnDifficulty(recipe) && filterOnFavorites(recipe),
+      ),
+    [recipes, filterOnSearchTerm, filterOnDifficulty, filterOnFavorites],
+  );
 
   return { filters, setFilters, filteredRecipes };
 }
 
-function RouteComponent() {
-  const { householdId } = Route.useLoaderData();
-  const { currentMember } = useCurrentMember();
-
-  const { data: recipes = [] } = useSuspenseQuery(
-    convexQuery(api.recipes.queries.getRecipes, { publicId: householdId }),
-  );
-
+function RecipesPage() {
+  const { data: recipes } = useSuspenseQuery(convexQuery(api.recipes.queries.getRecipes, {}));
   const { filters, setFilters, filteredRecipes } = useFilters(recipes);
 
   return (
-    <div className="space-y-4 mx-auto py-6 container">
+    <div className="space-y-4 mt-5">
       <div className="space-y-2">
         <h1 className="font-bold text-3xl tracking-tight">Recettes</h1>
         <p className="text-muted-foreground">
@@ -103,16 +82,9 @@ function RouteComponent() {
           {filteredRecipes.length > 1 ? ' recettes' : ' recette'})
         </p>
       </div>
-
-      <RecipesToolbar
-        onFilter={setFilters}
-        canCreate={currentMember?.status === 'accepted'}
-        filters={filters}
-      />
-
+      <RecipesToolbar onFilter={setFilters} canCreate filters={filters} />
       <RecipeList
         recipes={filteredRecipes}
-        householdId={householdId}
         emptyMessage={
           recipes.length === 0
             ? 'Aucune recette pour le moment'

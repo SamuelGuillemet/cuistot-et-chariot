@@ -10,17 +10,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { ScrollArea } from '../ui/scroll-area';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
-type Product = FunctionReturnType<
-  typeof api.products.queries.getProducts
->[number];
+type Product = FunctionReturnType<typeof api.products.queries.getProducts>[number];
 
 interface ProductSelectorProps {
   products: Product[];
@@ -49,11 +41,9 @@ export function ProductSelector({
     return products.filter((p) => {
       const matchesSearch = searchText
         ? p.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          (p.description?.toLowerCase().includes(searchText.toLowerCase()) ??
-            false)
+          (p.description?.toLowerCase().includes(searchText.toLowerCase()) ?? false)
         : true;
-      const matchesCategory =
-        categoryFilter === 'all' ? true : p.category === categoryFilter;
+      const matchesCategory = categoryFilter === 'all' ? true : p.category === categoryFilter;
       return matchesSearch && matchesCategory;
     });
   }, [products, searchText, categoryFilter]);
@@ -111,32 +101,37 @@ export function ProductSelector({
               <div className="space-y-2">
                 <Label htmlFor="category">Catégorie</Label>
                 <Select
+                  items={[
+                    { value: 'all', label: 'Toutes les catégories' },
+                    ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
+                      value,
+                      label,
+                    })),
+                  ]}
                   value={categoryFilter}
-                  onValueChange={setCategoryFilter}
+                  onValueChange={(value) => {
+                    if (value !== null) setCategoryFilter(value);
+                  }}
                 >
                   <SelectTrigger id="category">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Toutes les catégories</SelectItem>
-                    {Object.entries(CATEGORY_DISPLAY_NAMES).map(
-                      ([key, label]) => (
-                        <SelectItem key={key} value={key}>
-                          {label}
-                        </SelectItem>
-                      ),
-                    )}
+                    {Object.entries(CATEGORY_DISPLAY_NAMES).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <ScrollArea className="border rounded-md h-[400px]">
+            <ScrollArea className="border rounded-md h-100">
               {filteredProducts.length === 0 ? (
                 <div className="flex flex-col justify-center items-center py-12 text-center">
-                  <p className="font-medium text-muted-foreground">
-                    Aucun produit trouvé
-                  </p>
+                  <p className="font-medium text-muted-foreground">Aucun produit trouvé</p>
                   <p className="text-muted-foreground text-sm">
                     Modifiez vos filtres pour voir plus de résultats
                   </p>
@@ -154,12 +149,7 @@ export function ProductSelector({
                         product._id === value && 'bg-accent',
                       )}
                     >
-                      <i
-                        className={cn(
-                          getIconClass(product.icon),
-                          'shrink-0 mt-0.5 text-xl',
-                        )}
-                      />
+                      <i className={cn(getIconClass(product.icon), 'shrink-0 mt-0.5 text-xl')} />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm">{product.name}</p>
                         {product.description && (

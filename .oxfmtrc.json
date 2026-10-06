@@ -1,0 +1,23 @@
+{
+  "ignorePatterns": [
+    "**/dist",
+    "**/node_modules",
+    "**/.output",
+    "**/.nitro",
+    "**/.tanstack",
+    "**/.vercel",
+    "convex/_generated/*",
+    "**/routeTree.gen.ts"
+  ],
+  "useTabs": false,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "semi": true,
+  "sortImports": {
+    "newlinesBetween": false
+  },
+  "sortTailwindcss": {
+    "functions": ["cn", "cva"],
+    "stylesheet": "./src/index.css"
+  }
+}

@@ -1,17 +1,15 @@
-import { v } from 'convex/values';
 import { nullThrows } from 'convex-helpers';
+import { v } from 'convex/values';
 import type { Id } from '../_generated/dataModel';
-import { queryWithRLS } from './rls';
+import { query } from '../_generated/server';
+import { requireAuthUserId } from '../auth';
 
-export const getRecipes = queryWithRLS({
+export const getRecipes = query({
   args: {},
   handler: async (ctx) => {
-    const { householdId, userId } = ctx;
+    const userId = await requireAuthUserId(ctx);
 
-    const recipes = await ctx.db
-      .query('recipes')
-      .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
-      .collect();
+    const recipes = await ctx.db.query('recipes').collect();
 
     // Enrich with favorite count for each recipe
     const recipesWithMeta = await Promise.all(
@@ -52,25 +50,23 @@ export const getRecipes = queryWithRLS({
   },
 });
 
-export const getRecipeById = queryWithRLS({
+export const getRecipeById = query({
   args: {
     recipeId: v.string(),
   },
   handler: async (ctx, args) => {
-    const { householdId, userId } = ctx;
+    const userId = await requireAuthUserId(ctx);
 
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
 
-    if (recipe?.householdId !== householdId) {
+    if (!recipe) {
       return null;
     }
 
     // Get favorite status for the current user
     const favorite = await ctx.db
       .query('recipeFavorites')
-      .withIndex('by_userId_recipeId', (q) =>
-        q.eq('userId', userId).eq('recipeId', recipe._id),
-      )
+      .withIndex('by_userId_recipeId', (q) => q.eq('userId', userId).eq('recipeId', recipe._id))
       .first();
 
     // Get all products for this recipe

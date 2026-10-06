@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 type Step = { order: number; text: string };
@@ -13,42 +13,45 @@ export function RecipeInstructionsDisplay({
   className,
 }: RecipeInstructionsDisplayProps) {
   const steps = useMemo(() => {
-    return instructions
-      .toSorted((a, b) => a.order - b.order)
-      .map((s) => s.text);
+    return instructions.toSorted((a, b) => a.order - b.order);
   }, [instructions]);
 
   // Local ephemeral progress per view
-  const [completed, setCompleted] = useState<boolean[]>(() =>
-    new Array(steps.length).fill(false),
-  );
-
-  // Reset when steps count changes
-  useEffect(() => {
-    setCompleted(new Array(steps.length).fill(false));
-  }, [steps.length]);
+  const [progress, setProgress] = useState(() => ({
+    stepCount: steps.length,
+    completed: Array.from({ length: steps.length }, () => false),
+  }));
+  const completed = progress.stepCount === steps.length ? progress.completed : [];
 
   const toggle = (idx: number) => {
-    setCompleted((prev) => {
-      const copy = [...prev];
-      copy[idx] = !copy[idx];
-      return copy;
+    setProgress((previous) => {
+      const current =
+        previous.stepCount === steps.length
+          ? previous.completed
+          : Array.from({ length: steps.length }, () => false);
+      const next = [...current];
+      next[idx] = !next[idx];
+      return {
+        stepCount: steps.length,
+        completed: next,
+      };
     });
   };
 
   return (
     <ol className={cn('space-y-3', className)}>
-      {steps.map((text, idx) => {
+      {steps.map((step, idx) => {
         const isDone = completed[idx];
         return (
-          <li key={`${idx}-${text.slice(0, 24)}`} className="group">
+          <li key={step.order} className="group">
             <button
               type="button"
               onClick={() => toggle(idx)}
               className={cn(
-                'items-start gap-3 grid grid-cols-[auto,1fr] p-3 rounded-md w-full text-left transition-colors',
+                'items-start gap-3 grid p-3 rounded-md w-full text-left transition-colors',
                 'hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               )}
+              style={{ gridTemplateColumns: 'auto minmax(0, 1fr)' }}
               aria-pressed={isDone}
               aria-label={`Étape ${idx + 1}${isDone ? ' terminée' : ''}`}
             >
@@ -65,12 +68,9 @@ export function RecipeInstructionsDisplay({
                 </span>
               </div>
               <div
-                className={cn(
-                  'leading-relaxed',
-                  isDone && 'text-muted-foreground line-through',
-                )}
+                className={cn('leading-relaxed', isDone && 'text-muted-foreground line-through')}
               >
-                {text}
+                {step.text}
               </div>
             </button>
           </li>

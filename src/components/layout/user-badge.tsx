@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -27,13 +28,13 @@ export default function UserBadge() {
   }, [data]);
 
   const onLogout = () => {
-    authClient.signOut({
+    void authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
           queryClient.setQueryData(authSessionQueryOptions().queryKey, {
             token: undefined,
           });
-          router.navigate({ to: '/login' });
+          void router.navigate({ to: '/login' });
           location.reload();
         },
       },
@@ -42,24 +43,22 @@ export default function UserBadge() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full overflow-hidden"
-        >
-          <Avatar>
-            <AvatarImage src={data.image} />
-            <AvatarFallback>{nameInitials}</AvatarFallback>
-          </Avatar>
-        </Button>
+      <DropdownMenuTrigger
+        render={<Button variant="outline" size="icon" className="rounded-full overflow-hidden" />}
+      >
+        <Avatar>
+          <AvatarImage src={data.image} />
+          <AvatarFallback>{nameInitials}</AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Mon compte ({data.name})</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
-          Se déconnecter
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>Mon compte ({data.name})</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
+            Se déconnecter
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

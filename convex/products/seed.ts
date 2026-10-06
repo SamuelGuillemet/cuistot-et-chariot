@@ -1,13 +1,7 @@
-import { v } from 'convex/values';
 import { internalMutation } from '../_generated/server';
 
 export const seedProducts = internalMutation({
-  args: {
-    householdId: v.id('households'),
-  },
-  handler: async (ctx, args) => {
-    const { householdId } = args;
-
+  handler: async (ctx, _) => {
     const products = [
       // Dairy products
       {
@@ -157,7 +151,6 @@ export const seedProducts = internalMutation({
     for (const product of products) {
       const existingProduct = await ctx.db
         .query('products')
-        .withIndex('by_householdId', (q) => q.eq('householdId', householdId))
         .filter((q) => q.eq(q.field('name'), product.name))
         .first();
 
@@ -166,7 +159,6 @@ export const seedProducts = internalMutation({
       } else {
         const id = await ctx.db.insert('products', {
           ...product,
-          householdId,
         });
         productIds[product.name] = id;
       }

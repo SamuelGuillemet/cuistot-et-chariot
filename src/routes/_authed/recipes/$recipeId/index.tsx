@@ -6,67 +6,47 @@ import { RecipeDetailHeader } from '@/components/recipes/recipe-detail-header';
 import { RecipeInstructionsDisplay } from '@/components/recipes/recipe-instructions-display';
 import { RecipeProductsList } from '@/components/recipes/recipe-products-list';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useCurrentMember } from '@/hooks/use-current-member';
 
 export const Route = createFileRoute('/_authed/recipes/$recipeId/')({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    const householdId = context.householdId;
-    if (householdId) {
-      await context.convexQueryClient.queryClient.ensureQueryData(
-        convexQuery(api.recipes.queries.getRecipeById, {
-          publicId: householdId,
-          recipeId: params.recipeId,
-        }),
-      );
-    }
-
-    return {
-      householdId: householdId,
-      breadcrumbs: 'Détail',
-    };
+    await context.convexQueryClient.queryClient.query({
+      ...convexQuery(api.recipes.queries.getRecipeById, { recipeId: params.recipeId }),
+      staleTime: 'static',
+    });
   },
 });
 
 function RouteComponent() {
-  const { householdId } = Route.useLoaderData();
   const { recipeId } = Route.useParams();
-  const { currentMember } = useCurrentMember();
   const navigate = useNavigate();
 
   const { data: recipeData } = useSuspenseQuery(
-    convexQuery(api.recipes.queries.getRecipeById, {
-      publicId: householdId,
-      recipeId: recipeId,
-    }),
+    convexQuery(api.recipes.queries.getRecipeById, { recipeId }),
   );
 
   if (!recipeData) {
     return (
-      <div className="space-y-4 mx-auto py-6 container">
+      <div className="space-y-4 mt-5">
         <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
           <p className="font-medium text-lg">Recette non trouvée</p>
           <p className="max-w-md text-muted-foreground text-sm">
-            Cette recette n'existe pas ou vous n'avez pas accès à ce foyer.
+            Cette recette n'existe pas ou vous n'avez pas accès à celle-ci.
           </p>
         </div>
       </div>
     );
   }
 
-  const canEdit = currentMember?.status === 'accepted';
-
   const handleEdit = () => {
-    navigate({ to: '/recipes/$recipeId/edit', params: { recipeId } });
+    void navigate({ to: '/recipes/$recipeId/edit', params: { recipeId } });
   };
 
   return (
-    <div className="space-y-6 mx-auto py-6 container">
+    <div className="space-y-6 mt-5">
       <RecipeDetailHeader
         recipe={recipeData}
         isFavorite={recipeData.isFavorite}
-        householdId={householdId}
-        canEdit={canEdit}
         onEdit={handleEdit}
       />
 
@@ -77,9 +57,7 @@ function RouteComponent() {
               <CardTitle>Instructions</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecipeInstructionsDisplay
-                instructions={recipeData.instructions}
-              />
+              <RecipeInstructionsDisplay instructions={recipeData.instructions} />
             </CardContent>
           </Card>
         </div>

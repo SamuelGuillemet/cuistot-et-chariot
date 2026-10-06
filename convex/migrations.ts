@@ -5,13 +5,37 @@ import type { DataModel } from './_generated/dataModel.js';
 export const migrations = new Migrations<DataModel>(components.migrations);
 export const run = migrations.runner();
 
-export const addCanManageProductsField = migrations.define({
-  table: 'householdMembers',
-  migrateOne: async (_, doc) => ({
-    canManageProducts: doc.role === 'admin', // Admins get true, members get false
+export const clearLegacyHouseholdIdsProducts = migrations.define({
+  table: 'products',
+  migrateOne: async () => ({
+    householdId: undefined,
+  }),
+});
+
+export const clearLegacyHouseholdIdsRecipes = migrations.define({
+  table: 'recipes',
+  migrateOne: async () => ({
+    householdId: undefined,
+  }),
+});
+
+export const clearLegacyHouseholdIdsRecipeProducts = migrations.define({
+  table: 'recipeProducts',
+  migrateOne: async () => ({
+    householdId: undefined,
+  }),
+});
+
+export const clearLegacyHouseholdIdsRecipeFavorites = migrations.define({
+  table: 'recipeFavorites',
+  migrateOne: async () => ({
+    householdId: undefined,
   }),
 });
 
 export const runAll = migrations.runner([
-  internal.migrations.addCanManageProductsField,
+  internal.migrations.clearLegacyHouseholdIdsProducts,
+  internal.migrations.clearLegacyHouseholdIdsRecipes,
+  internal.migrations.clearLegacyHouseholdIdsRecipeProducts,
+  internal.migrations.clearLegacyHouseholdIdsRecipeFavorites,
 ]);

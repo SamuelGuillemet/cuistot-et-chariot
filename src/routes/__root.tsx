@@ -20,27 +20,34 @@ import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { authClient } from '@/lib/auth-client';
-import {
-  authSessionQueryOptions,
-  themeQueryOptions,
-} from '@/lib/server-queries';
+import { authSessionQueryOptions, themeQueryOptions } from '@/lib/server-queries';
 import mainCss from '@/styles/main.css?url';
 
 const ReactScan =
   process.env.NODE_ENV === 'production'
     ? () => null
     : () => (
-        <script
-          crossOrigin="anonymous"
-          src="https://unpkg.com/react-scan/dist/auto.global.js"
-        />
+        <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
       );
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
-  breadcrumbs?: string;
 }>()({
+  beforeLoad: async (opts) => {
+    const { token } = await opts.context.queryClient.query({
+      ...authSessionQueryOptions(),
+      staleTime: 'static',
+    });
+    if (token) {
+      opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
+    }
+
+    return { isAuthenticated: !!token, token };
+  },
+  loader: async (opts) => {
+    await opts.context.queryClient.query({ ...themeQueryOptions(), staleTime: 'static' });
+  },
   head: () => ({
     meta: [
       {
@@ -64,22 +71,6 @@ export const Route = createRootRouteWithContext<{
         <DefaultCatchBoundary {...props} />
       </RootDocument>
     );
-  },
-  beforeLoad: async (opts) => {
-    const { token } = await opts.context.queryClient.ensureQueryData(
-      authSessionQueryOptions(),
-    );
-    if (token) {
-      opts.context.convexQueryClient.serverHttpClient?.setAuth(token);
-    }
-
-    return { isAuthenticated: !!token, token };
-  },
-  loader: async (opts) => {
-    await opts.context.queryClient.ensureQueryData(themeQueryOptions());
-    return {
-      breadcrumbs: null,
-    };
   },
 });
 

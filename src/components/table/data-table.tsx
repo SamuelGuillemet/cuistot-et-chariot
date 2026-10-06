@@ -1,18 +1,22 @@
 import {
+  columnFilteringFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   type ColumnDef,
+  type ColumnVisibilityState,
   flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   type PaginationState,
+  sortFn_text,
   type SortingState,
-  useReactTable,
-  type VisibilityState,
+  rowPaginationFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DataTablePagination } from '@/components/table/data-table-pagination';
 import {
   Table,
@@ -23,61 +27,57 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-interface DataTableProps<TData extends { _id: string | number }, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+export const productTableFeatures = tableFeatures({
+  columnFilteringFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { text: sortFn_text },
+});
+
+export type ProductTableFeatures = typeof productTableFeatures;
+
+interface DataTableProps<TData extends { _id: string | number }> {
+  columns: ColumnDef<ProductTableFeatures, TData>[];
   data: TData[];
   pagination?: boolean;
   defaultSorting?: SortingState;
 }
 
-export function DataTable<TData extends { _id: string | number }, TValue>({
+export function DataTable<TData extends { _id: string | number }>({
   columns,
   data,
   pagination = true,
   defaultSorting = [{ id: '_id', desc: true }],
-}: Readonly<DataTableProps<TData, TValue>>) {
-  const [rowSelection, setRowSelection] = useState({});
-  const columnVisibility: VisibilityState = { _id: false };
+}: Readonly<DataTableProps<TData>>) {
+  const columnVisibility: ColumnVisibilityState = { _id: false };
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [paginationState, setPaginationState] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
 
-  const table = useReactTable({
+  const table = useTable({
+    features: productTableFeatures,
     sortDescFirst: true,
     data,
     columns,
     state: {
       sorting,
       columnVisibility,
-      rowSelection,
-      pagination: paginationState,
+      pagination: {
+        ...paginationState,
+        pageSize: pagination ? paginationState.pageSize : data.length || 1,
+      },
     },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onPaginationChange: setPaginationState,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    autoResetPageIndex: false,
+    autoResetPageIndex: true,
   });
-
-  // Ensure pageIndex is valid when data changes
-  useEffect(() => {
-    const pageCount = table.getPageCount();
-    if (paginationState.pageIndex >= pageCount && pageCount > 0) {
-      setPaginationState((prev) => ({ ...prev, pageIndex: pageCount - 1 }));
-    }
-  }, [table, paginationState.pageIndex]);
-
-  if (!pagination) {
-    table.getState().pagination.pageSize = data.length;
-  }
 
   return (
     <div className="space-y-4">
@@ -91,10 +91,7 @@ export function DataTable<TData extends { _id: string | number }, TValue>({
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -107,20 +104,14 @@ export function DataTable<TData extends { _id: string | number }, TValue>({
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Aucun résultat.
                 </TableCell>
               </TableRow>

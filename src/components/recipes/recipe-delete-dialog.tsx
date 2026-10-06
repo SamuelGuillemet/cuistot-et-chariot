@@ -17,25 +17,19 @@ import {
 
 interface RecipeDeleteDialogProps {
   readonly recipe: Doc<'recipes'>;
-  readonly householdId: string;
   readonly isOpen: boolean;
   readonly onOpenChange: (open: boolean) => void;
 }
 
-export function RecipeDeleteDialog({
-  recipe,
-  householdId,
-  isOpen,
-  onOpenChange,
-}: RecipeDeleteDialogProps) {
+export function RecipeDeleteDialog({ recipe, isOpen, onOpenChange }: RecipeDeleteDialogProps) {
   const navigate = useNavigate();
 
   const { mutate: deleteRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.deleteRecipe),
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Recette supprimée avec succès');
       onOpenChange(false);
-      navigate({ to: '/recipes' });
+      await navigate({ to: '/recipes' });
     },
     onError: () => {
       toast.error('Erreur lors de la suppression de la recette');
@@ -43,7 +37,7 @@ export function RecipeDeleteDialog({
   });
 
   const handleDelete = () => {
-    deleteRecipe({ publicId: householdId, recipeId: recipe._id });
+    deleteRecipe({ recipeId: recipe._id });
   };
 
   return (
@@ -52,9 +46,8 @@ export function RecipeDeleteDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Supprimer la recette ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Êtes-vous sûr de vouloir supprimer la recette "{recipe.name}" ?
-            Cette action est irréversible et supprimera également tous les
-            ingrédients et favoris associés.
+            Êtes-vous sûr de vouloir supprimer la recette "{recipe.name}" ? Cette action est
+            irréversible et supprimera également tous les ingrédients et favoris associés.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

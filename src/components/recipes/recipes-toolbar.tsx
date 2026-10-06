@@ -25,11 +25,7 @@ interface RecipesToolbarProps {
   };
 }
 
-export function RecipesToolbar({
-  onFilter,
-  canCreate,
-  filters,
-}: RecipesToolbarProps) {
+export function RecipesToolbar({ onFilter, canCreate, filters }: RecipesToolbarProps) {
   return (
     <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-4">
       <div className="flex sm:flex-row flex-col flex-1 sm:items-center gap-2">
@@ -44,21 +40,28 @@ export function RecipesToolbar({
         </div>
 
         <Select
+          items={[
+            { value: 'all', label: 'Toutes les difficultés' },
+            ...Object.entries(RECIPE_DIFFICULTY_DISPLAY_NAMES).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
           value={filters.difficulty}
-          onValueChange={(value) => onFilter({ ...filters, difficulty: value })}
+          onValueChange={(value) => {
+            if (value !== null) onFilter({ ...filters, difficulty: value });
+          }}
         >
-          <SelectTrigger className="w-full sm:w-[200px]">
+          <SelectTrigger className="w-full sm:w-50">
             <SelectValue placeholder="Difficulté" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toutes les difficultés</SelectItem>
-            {Object.entries(RECIPE_DIFFICULTY_DISPLAY_NAMES).map(
-              ([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ),
-            )}
+            {Object.entries(RECIPE_DIFFICULTY_DISPLAY_NAMES).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -80,11 +83,9 @@ export function RecipesToolbar({
       </div>
 
       {canCreate && (
-        <Button asChild>
-          <Link to="/recipes/new">
-            <PlusIcon className="mr-2 w-4 h-4" />
-            Nouvelle recette
-          </Link>
+        <Button nativeButton={false} render={<Link to="/recipes/new" />}>
+          <PlusIcon className="mr-2 w-4 h-4" />
+          Nouvelle recette
         </Button>
       )}
     </div>

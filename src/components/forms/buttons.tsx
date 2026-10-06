@@ -16,25 +16,22 @@ export function SubmitButton({
   readonly hidden?: boolean;
   readonly className?: string;
 }) {
-  const form = useFormContext();
   return (
-    <form.Subscribe selector={(state) => state.isSubmitting}>
-      <Button
-        type="submit"
-        hidden={hidden}
-        disabled={isLoading}
-        className={cn('gap-2', className ?? 'w-full sm:w-auto')}
-      >
-        {isLoading ? (
-          <>
-            <Loader2Icon className="size-4 animate-spin" />
-            <span>{loadingLabel}</span>
-          </>
-        ) : (
-          <span>{label}</span>
-        )}
-      </Button>
-    </form.Subscribe>
+    <Button
+      type="submit"
+      hidden={hidden}
+      disabled={isLoading}
+      className={cn('gap-2', className ?? 'w-full sm:w-auto')}
+    >
+      {isLoading ? (
+        <>
+          <Loader2Icon className="size-4 animate-spin" />
+          <span>{loadingLabel}</span>
+        </>
+      ) : (
+        <span>{label}</span>
+      )}
+    </Button>
   );
 }
 

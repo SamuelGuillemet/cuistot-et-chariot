@@ -7,14 +7,14 @@ type LoginSearch = {
   error?: string;
 };
 
-const allowedSearchKeys = ['redirect', 'error'];
+const allowedSearchKeys = new Set(['redirect', 'error']);
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
   validateSearch: (search: Record<string, unknown>): LoginSearch => {
     const searchParams: LoginSearch = {};
     for (const key in search) {
-      if (allowedSearchKeys.includes(key)) {
+      if (allowedSearchKeys.has(key)) {
         searchParams[key as keyof LoginSearch] =
           typeof search[key] === 'string' ? search[key] : undefined;
       }
@@ -23,7 +23,7 @@ export const Route = createFileRoute('/login')({
   },
   beforeLoad: ({ context }) => {
     if (context.isAuthenticated) {
-      throw redirect({ to: '/dashboard' });
+      throw redirect({ to: '/recipes' });
     }
   },
 });
@@ -32,7 +32,7 @@ function LoginPage() {
   return (
     <div className="flex flex-col justify-center items-center gap-6 bg-muted p-6 md:p-10 min-h-svh">
       <div className="flex flex-col gap-6 w-full max-w-sm">
-        <Link to="/" className="flex justify-center items-center gap-3">
+        <Link to="/recipes" className="flex justify-center items-center gap-3">
           <div className="flex justify-center items-center bg-primary shadow-sm rounded-md w-9 h-9 text-primary-foreground">
             <ChefHatIcon className="w-5 h-5" />
           </div>

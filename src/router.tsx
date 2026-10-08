@@ -48,7 +48,9 @@ export function getRouter() {
   const router = createRouter({
     routeTree,
     scrollRestoration: true,
-    scrollRestorationBehavior: 'smooth',
+    scrollRestorationBehavior: 'instant',
+    // The page scrolls inside <main>, not the window.
+    scrollToTopSelectors: ['main'],
     defaultPreload: 'intent',
     defaultErrorComponent: DefaultCatchBoundary,
     defaultNotFoundComponent: Page404,

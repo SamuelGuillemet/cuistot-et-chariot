@@ -1,5 +1,5 @@
+import { Textarea } from '@/components/ui/textarea';
 import { useFieldContext } from '@/lib/forms';
-import { Textarea } from '../ui/textarea';
 import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 type TextareaProps = Omit<

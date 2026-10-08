@@ -1,6 +1,6 @@
 import type { AnyFieldApi } from '@tanstack/react-form';
 import type { ReactNode } from 'react';
-import { Field, FieldDescription, FieldError, FieldLabel } from '../ui/field';
+import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 
 export interface BaseFieldProps {
   readonly label?: string;
@@ -31,7 +31,11 @@ export function BaseField({
       {label && (
         <FieldLabel htmlFor={field.name}>
           {label}
-          {required && <span className="text-destructive">*</span>}
+          {required && (
+            <span className="text-destructive" aria-hidden="true">
+              *
+            </span>
+          )}
         </FieldLabel>
       )}
       {children}

@@ -1,5 +1,11 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useFieldContext } from '@/lib/forms';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 export function SelectField<TValue extends string>({
@@ -29,7 +35,12 @@ export function SelectField<TValue extends string>({
         }}
         aria-invalid={isInvalid}
       >
-        <SelectTrigger id={field.name} aria-invalid={isInvalid} onBlur={field.handleBlur}>
+        <SelectTrigger
+          id={field.name}
+          aria-label={props.label}
+          aria-invalid={isInvalid}
+          onBlur={field.handleBlur}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

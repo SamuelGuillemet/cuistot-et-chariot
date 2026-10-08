@@ -5,6 +5,8 @@ interface RecipeTimeDisplayProps {
   readonly prepTime: number;
   readonly cookTime: number;
   readonly className?: string;
+  /** One line: total time with the prep/cook split in muted text. */
+  readonly compact?: boolean;
 }
 
 function formatTime(minutes: number): string {
@@ -19,8 +21,29 @@ function formatTime(minutes: number): string {
   return `${hours}h${mins}`;
 }
 
-export function RecipeTimeDisplay({ prepTime, cookTime, className }: RecipeTimeDisplayProps) {
+export function RecipeTimeDisplay({
+  prepTime,
+  cookTime,
+  className,
+  compact = false,
+}: RecipeTimeDisplayProps) {
   const totalTime = prepTime + cookTime;
+
+  if (compact) {
+    const split = [
+      prepTime > 0 && `${formatTime(prepTime)} prép.`,
+      cookTime > 0 && `${formatTime(cookTime)} cuisson`,
+    ].filter(Boolean);
+    return (
+      <div className={cn('flex flex-wrap items-center gap-x-2 text-sm', className)}>
+        <div className="flex items-center gap-1 font-medium">
+          <ClockIcon className="w-4 h-4" />
+          <span>{formatTime(totalTime)}</span>
+        </div>
+        {split.length > 0 && <span className="text-muted-foreground">({split.join(' + ')})</span>}
+      </div>
+    );
+  }
 
   return (
     <div className={cn('flex flex-wrap gap-3 text-sm', className)}>

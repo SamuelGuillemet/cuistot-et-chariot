@@ -1,6 +1,7 @@
 import { MinusIcon, PlusIcon, RotateCcwIcon, UsersIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { formatDecimal } from '@/utils/quantity';
 
 interface ServingAdjusterProps {
   readonly originalServings: number;
@@ -46,22 +47,22 @@ export function ServingAdjuster({
   };
 
   return (
-    <div className="flex justify-between items-center bg-accent/30 p-3 border rounded-lg">
+    <div className="flex flex-wrap justify-between items-center gap-3 bg-accent/30 p-3 border rounded-lg">
       <div className="flex items-center gap-2 font-medium text-sm">
         <UsersIcon className="w-4 h-4 text-primary" />
         <span>Portions :</span>
         {isModified && (
-          <div className="flex flex-gap-2 items-center">
+          <div className="flex items-center gap-1">
             <div className="font-medium text-muted-foreground text-xs text-right">
-              ×{ratio.toFixed(1)}
+              ×{formatDecimal(ratio)}
             </div>
             <Button
               type="button"
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={handleReset}
               disabled={disabled}
-              className="px-2 h-8"
+              aria-label="Réinitialiser les portions"
               title="Réinitialiser"
             >
               <RotateCcwIcon className="w-3 h-3" />
@@ -70,40 +71,39 @@ export function ServingAdjuster({
         )}
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleDecrement}
-            disabled={disabled || currentServings <= min}
-            className="p-0 w-8 h-8"
-          >
-            <MinusIcon className="w-4 h-4" />
-          </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={handleDecrement}
+          disabled={disabled || currentServings <= min}
+          aria-label="Moins de portions"
+        >
+          <MinusIcon className="w-4 h-4" />
+        </Button>
 
-          <Input
-            type="number"
-            value={currentServings}
-            onChange={handleInputChange}
-            disabled={disabled}
-            className="w-16 h-8 font-semibold text-center"
-            min={min}
-            max={max}
-          />
+        <Input
+          type="number"
+          value={currentServings}
+          onChange={handleInputChange}
+          disabled={disabled}
+          aria-label="Nombre de portions"
+          className="w-16 font-semibold text-center"
+          min={min}
+          max={max}
+        />
 
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleIncrement}
-            disabled={disabled || currentServings >= max}
-            className="p-0 w-8 h-8"
-          >
-            <PlusIcon className="w-4 h-4" />
-          </Button>
-        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="icon"
+          onClick={handleIncrement}
+          disabled={disabled || currentServings >= max}
+          aria-label="Plus de portions"
+        >
+          <PlusIcon className="w-4 h-4" />
+        </Button>
       </div>
     </div>
   );

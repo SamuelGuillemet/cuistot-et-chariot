@@ -1,5 +1,5 @@
+import { Input } from '@/components/ui/input';
 import { useFieldContext } from '@/lib/forms';
-import { Input } from '../ui/input';
 import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 type InputProps = Omit<

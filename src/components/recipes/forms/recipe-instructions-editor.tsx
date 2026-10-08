@@ -1,9 +1,16 @@
 import { useSelector } from '@tanstack/react-form';
 import { ArrowDownIcon, ArrowUpIcon, PlusIcon, Trash2Icon } from 'lucide-react';
+import { BaseField, isFieldInvalid } from '@/components/forms/base-field';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { BaseField, isFieldInvalid } from '../forms/base-field';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import type { RecipeFormApi } from './recipe-form';
 
 export function InstructionsFieldArray({ form }: { readonly form: RecipeFormApi }) {
@@ -95,7 +102,7 @@ function InstructionRow({
   const step = index + 1;
 
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
       <div className="flex justify-center items-center bg-primary/10 mt-1 rounded-full size-7 font-semibold text-primary text-xs shrink-0">
         {step}
       </div>
@@ -113,7 +120,7 @@ function InstructionRow({
         </form.AppField>
       </div>
 
-      <div className="flex gap-0.5 shrink-0">
+      <div className="flex justify-end gap-0.5 max-sm:basis-full">
         <Button
           type="button"
           variant="ghost"

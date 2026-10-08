@@ -16,8 +16,10 @@ export function RecipeDetailHeader({ recipe, isFavorite, onEdit }: RecipeDetailH
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-start gap-4">
-        <div className="flex-1 space-y-2">
-          <h1 className="font-bold text-3xl tracking-tight">{recipe.name}</h1>
+        <div className="flex-1 space-y-2 min-w-0">
+          <h1 className="font-bold text-2xl sm:text-3xl break-words tracking-tight">
+            {recipe.name}
+          </h1>
           <div className="flex flex-wrap items-center gap-3">
             <RecipeDifficultyBadge difficulty={recipe.difficulty} />
             <RecipeServingsDisplay servings={recipe.servings} />
@@ -25,7 +27,12 @@ export function RecipeDetailHeader({ recipe, isFavorite, onEdit }: RecipeDetailH
         </div>
 
         <div className="flex items-center gap-2">
-          <RecipeFavoriteButton recipeId={recipe._id} isFavorite={isFavorite} size="default" />
+          <RecipeFavoriteButton
+            recipeId={recipe._id}
+            recipeName={recipe.name}
+            isFavorite={isFavorite}
+            size="default"
+          />
           <RecipeActionsDropdown recipe={recipe} onEdit={onEdit} />
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { Loader2Icon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useFormContext } from '@/lib/forms';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
 
 export function SubmitButton({
   label = 'Enregistrer',
@@ -9,19 +9,22 @@ export function SubmitButton({
   isLoading,
   hidden = false,
   className,
+  formId,
 }: {
   readonly label?: string;
   readonly loadingLabel?: string;
   readonly isLoading?: boolean;
   readonly hidden?: boolean;
   readonly className?: string;
+  readonly formId?: string;
 }) {
   return (
     <Button
       type="submit"
+      form={formId}
       hidden={hidden}
       disabled={isLoading}
-      className={cn('gap-2', className ?? 'w-full sm:w-auto')}
+      className={cn('gap-2', className ?? 'flex-1 sm:flex-none')}
     >
       {isLoading ? (
         <>
@@ -38,9 +41,11 @@ export function SubmitButton({
 export function ResetButton({
   label = 'Réinitialiser',
   isLoading,
+  onReset,
 }: {
   readonly label?: string;
   readonly isLoading?: boolean;
+  readonly onReset?: () => void;
 }) {
   const form = useFormContext();
   return (
@@ -48,9 +53,11 @@ export function ResetButton({
       variant="outline"
       type="button"
       disabled={isLoading}
+      className="shrink-0"
       onClick={(e) => {
         e.preventDefault();
         form.reset();
+        onReset?.();
       }}
     >
       {label}

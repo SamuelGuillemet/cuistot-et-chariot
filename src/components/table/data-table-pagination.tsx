@@ -49,44 +49,46 @@ export function DataTablePagination<TData extends Record<string, unknown>>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex justify-center items-center w-20 font-medium text-sm">
+        <div className="flex justify-center items-center w-25 font-medium text-sm">
           Page {table.state.pagination.pageIndex + 1} sur {Math.max(table.getPageCount(), 1)}
         </div>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="hidden lg:flex p-0 w-8 h-8"
+            size="icon"
+            className="hidden lg:flex"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">Première page</span>
             <ChevronsLeftIcon className="w-4 h-4" />
           </Button>
           <Button
             variant="outline"
-            className="p-0 w-8 h-8"
+            size="icon"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">Page précédente</span>
             <ChevronLeftIcon className="w-4 h-4" />
           </Button>
           <Button
             variant="outline"
-            className="p-0 w-8 h-8"
+            size="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">Page suivante</span>
             <ChevronRightIcon className="w-4 h-4" />
           </Button>
           <Button
             variant="outline"
-            className="hidden lg:flex p-0 w-8 h-8"
+            size="icon"
+            className="hidden lg:flex"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <span className="sr-only">Go to last page</span>
+            <span className="sr-only">Dernière page</span>
             <ChevronsRightIcon className="w-4 h-4" />
           </Button>
         </div>

@@ -5,11 +5,18 @@ import { useSelector } from '@tanstack/react-form';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import type { FunctionReturnType } from 'convex/server';
 import { PlusIcon, Trash2Icon } from 'lucide-react';
+import { BaseField, isFieldInvalid } from '@/components/forms/base-field';
+import { ProductSelector } from '@/components/products/product-selector';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { BaseField, isFieldInvalid } from '../forms/base-field';
-import { ProductSelector } from '../products/product-selector';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import type { RecipeFormApi } from './recipe-form';
 
 type Product = FunctionReturnType<typeof api.products.queries.getProducts>[number];
@@ -19,6 +26,10 @@ export function ProductsFieldArray({ form }: { readonly form: RecipeFormApi }) {
     convexQuery(api.products.queries.getProducts, {}),
   );
   const count = useSelector(form.store, (state) => state.values.products.length);
+  const unmatchedCount = useSelector(
+    form.store,
+    (state) => state.values.products.filter((row) => row.hint && !row.productId).length,
+  );
 
   const onAddIngredient = () => {
     form.setFieldValue(`products[${count}]`, { productId: '', quantity: 1, unit: 'pieces' });
@@ -37,6 +48,7 @@ export function ProductsFieldArray({ form }: { readonly form: RecipeFormApi }) {
             <CardTitle>Ingrédients</CardTitle>
             <CardDescription>
               {count === 0 ? 'Ajoutez les produits nécessaires.' : `${count} ingrédient(s)`}
+              {unmatchedCount > 0 && ` · ${unmatchedCount} à associer`}
             </CardDescription>
           </CardHeader>
           <CardContent className="lg:flex-1 lg:min-h-0 lg:overflow-y-auto py-1">
@@ -86,9 +98,32 @@ function IngredientRow({
 
   return (
     <div
-      className="relative items-start gap-3 grid grid-cols-2 p-3 border rounded-lg"
+      className="items-start gap-3 grid grid-cols-2 p-3 border rounded-lg"
       id={`products-${index}`}
     >
+      <div className="flex justify-between items-center gap-2 col-span-2">
+        <p className="min-w-0 font-medium text-sm truncate">
+          {hint ? (
+            <>
+              <span className="font-normal text-muted-foreground">Ingrédient : </span>
+              {hint.name}
+            </>
+          ) : (
+            `Ingrédient ${index + 1}`
+          )}
+        </p>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Supprimer l'ingrédient"
+          onClick={onRemove}
+          className="shrink-0 text-destructive hover:text-destructive"
+        >
+          <Trash2Icon />
+        </Button>
+      </div>
+
       <div className="col-span-2">
         <form.AppField name={`products[${index}].productId`}>
           {(field) => (
@@ -119,17 +154,6 @@ function IngredientRow({
       <form.AppField name={`products[${index}].unit`}>
         {(field) => <field.SelectField label="Unité" options={PRODUCT_UNITS} required />}
       </form.AppField>
-
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon-xs"
-        aria-label="Supprimer l'ingrédient"
-        onClick={onRemove}
-        className="top-2 right-2 absolute text-destructive hover:text-destructive"
-      >
-        <Trash2Icon />
-      </Button>
     </div>
   );
 }

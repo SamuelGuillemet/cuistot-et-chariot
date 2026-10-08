@@ -51,9 +51,7 @@ export function RecipeProductsList({ recipeProducts, originalServings }: RecipeP
             <RecipeProductItem
               key={rp._id}
               recipeProduct={rp}
-              adjustedQuantity={
-                showAdjustment ? Number((rp.quantity * ratio).toFixed(2)) : undefined
-              }
+              adjustedQuantity={showAdjustment ? rp.quantity * ratio : undefined}
               showOriginal={showAdjustment}
             />
           ))}

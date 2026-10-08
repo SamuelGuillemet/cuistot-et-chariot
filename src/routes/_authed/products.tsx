@@ -4,8 +4,9 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
 import { createProductColumns } from '@/components/products/product-columns';
-import { ProductsToolbar } from '@/components/products/products-toolbar';
+import { type ProductFilters, ProductsToolbar } from '@/components/products/products-toolbar';
 import { DataTable } from '@/components/table/data-table';
+import { Button } from '@/components/ui/button';
 
 export const Route = createFileRoute('/_authed/products')({
   component: RouteComponent,
@@ -17,11 +18,10 @@ export const Route = createFileRoute('/_authed/products')({
   },
 });
 
+const NO_FILTERS: ProductFilters = { search: '', category: 'all' };
+
 function RouteComponent() {
-  const [filters, setFilters] = useState<{ search: string; category: string }>({
-    search: '',
-    category: 'all',
-  });
+  const [filters, setFilters] = useState<ProductFilters>(NO_FILTERS);
 
   const { data: products } = useSuspenseQuery(convexQuery(api.products.queries.getProducts, {}));
 
@@ -40,15 +40,8 @@ function RouteComponent() {
 
   return (
     <div className="space-y-4 my-5">
-      <div className="space-y-2">
-        <h1 className="font-bold text-3xl tracking-tight">Produits</h1>
-        <p className="text-muted-foreground">
-          Gérez vos produits ({filtered.length}
-          {filtered.length > 1 ? ' éléments' : ' élément'})
-        </p>
-      </div>
-
-      <ProductsToolbar onFilter={setFilters} />
+      <h1 className="font-bold text-2xl tracking-tight">Produits</h1>
+      <ProductsToolbar filters={filters} onFilter={setFilters} resultCount={filtered.length} />
 
       {filtered.length === 0 ? (
         <div className="flex flex-col justify-center items-center gap-4 bg-muted/30 py-16 border rounded-md text-center">
@@ -60,12 +53,18 @@ function RouteComponent() {
                 : 'Aucun produit ne correspond à vos filtres. Modifiez la recherche ou la catégorie.'}
             </p>
           </div>
+          {products.length > 0 && (
+            <Button variant="outline" onClick={() => setFilters(NO_FILTERS)}>
+              Réinitialiser la recherche
+            </Button>
+          )}
         </div>
       ) : (
         <DataTable
           columns={columns}
           data={filtered}
           defaultSorting={[{ id: 'name', desc: false }]}
+          hideOnMobile={['description', 'category', 'defaultUnit']}
         />
       )}
     </div>

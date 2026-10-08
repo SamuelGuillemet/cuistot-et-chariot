@@ -2,9 +2,10 @@ import { api } from '@api/api';
 import { convexQuery } from '@convex-dev/react-query';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { BackLink } from '@/components/layout/back-link';
+import { RecipeInstructionsDisplay } from '@/components/recipes/details/recipe-instructions-display';
+import { RecipeProductsList } from '@/components/recipes/details/recipe-products-list';
 import { RecipeDetailHeader } from '@/components/recipes/recipe-detail-header';
-import { RecipeInstructionsDisplay } from '@/components/recipes/recipe-instructions-display';
-import { RecipeProductsList } from '@/components/recipes/recipe-products-list';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const Route = createFileRoute('/_authed/recipes/$recipeId/')({
@@ -44,6 +45,8 @@ function RouteComponent() {
 
   return (
     <div className="space-y-6 my-5">
+      <BackLink to="/recipes">Toutes les recettes</BackLink>
+
       <RecipeDetailHeader
         recipe={recipeData}
         isFavorite={recipeData.isFavorite}
@@ -57,12 +60,16 @@ function RouteComponent() {
               <CardTitle>Instructions</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecipeInstructionsDisplay instructions={recipeData.instructions} />
+              <RecipeInstructionsDisplay
+                instructions={recipeData.instructions}
+                recipeId={recipeId}
+              />
             </CardContent>
           </Card>
         </div>
 
-        <div className="space-y-6">
+        {/* Ingredients first on mobile: the servings control lives there. */}
+        <div className="space-y-6 max-md:order-first">
           <RecipeProductsList
             recipeProducts={recipeData.products}
             originalServings={recipeData.servings}

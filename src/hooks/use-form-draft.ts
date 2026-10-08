@@ -24,7 +24,8 @@ function readDraft(key: string): string | null {
 /** Keeps a copy of unsaved form values in localStorage (expires after 24h). */
 export function useFormDraft<TValues>(storageKey: string) {
   const key = `form-draft-${storageKey}`;
-  const [cleared, setCleared] = useState(false);
+  // Once the user edits or discards, a stored draft is no longer an offer to restore.
+  const [dismissed, setDismissed] = useState(false);
   const snapshot = useSyncExternalStore(
     subscribe,
     () => readDraft(key),
@@ -32,13 +33,14 @@ export function useFormDraft<TValues>(storageKey: string) {
   );
 
   return {
-    values: cleared || snapshot === null ? null : (JSON.parse(snapshot) as TValues),
+    values: dismissed || snapshot === null ? null : (JSON.parse(snapshot) as TValues),
     save: (values: TValues) => {
       localStorage.setItem(key, JSON.stringify({ timestamp: Date.now(), data: values }));
+      setDismissed(true);
     },
     clear: () => {
       localStorage.removeItem(key);
-      setCleared(true);
+      setDismissed(true);
     },
   };
 }

@@ -21,7 +21,9 @@ export function RecipeActionsDropdown({ recipe, onEdit }: RecipeActionsDropdownP
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
+        <DropdownMenuTrigger
+          render={<Button variant="outline" size="icon" aria-label="Actions de la recette" />}
+        >
           <MoreVerticalIcon className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

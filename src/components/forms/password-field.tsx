@@ -1,5 +1,5 @@
+import { PasswordInput } from '@/components/ui/password-input';
 import { useFieldContext } from '@/lib/forms';
-import { PasswordInput } from '../ui/password-input';
 import { BaseField, type BaseFieldProps, isFieldInvalid } from './base-field';
 
 type InputProps = Omit<

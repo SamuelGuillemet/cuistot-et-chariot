@@ -134,9 +134,12 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
 
   return (
     <Card
-      className={cn('bg-background py-0 md:py-6 rounded-xl max-w-full overflow-hidden', className)}
+      className={cn(
+        'gap-3 bg-background py-0 md:py-6 rounded-xl max-w-full overflow-hidden',
+        className,
+      )}
     >
-      <CardHeader className="p-0 md:p-4">
+      <CardHeader className="gap-3 p-1 md:p-4">
         {/* Search Bar */}
         <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-4">
           <div className="relative flex-1 max-w-sm">
@@ -150,7 +153,7 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 max-md:w-full">
             {/* Category Filter */}
             {showCategories && (
               <Select
@@ -160,7 +163,7 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
                   if (value !== null) updateCategory(value);
                 }}
               >
-                <SelectTrigger className="">
+                <SelectTrigger className="max-md:flex-1">
                   <SelectValue placeholder="Catégorie" />
                 </SelectTrigger>
                 <SelectContent>
@@ -193,9 +196,9 @@ export const FoodIconSelector: React.FC<IconSelectorProps> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="px-0 md:px-2 pt-0">
+      <CardContent className="px-1 md:px-2 pt-0">
         {/* Icons Grid */}
-        <div className="gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 p-0 md:p-4 scrollbar-thumb-border max-h-60 md:max-h-96 overflow-y-auto scrollbar-thin scrollbar-track-muted">
+        <div className="gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 p-0 md:p-4 scrollbar-thumb-border max-h-72 md:max-h-96 overflow-y-auto scrollbar-thin scrollbar-track-muted">
           {displayedIcons.map((icon) => (
             <IconItem
               key={icon.id}

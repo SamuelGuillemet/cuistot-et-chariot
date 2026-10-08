@@ -46,6 +46,8 @@ interface DataTableProps<TData extends { _id: string | number }> {
   data: TData[];
   pagination?: boolean;
   defaultSorting?: SortingState;
+  /** Column ids hidden below the `md` breakpoint. */
+  hideOnMobile?: string[];
 }
 
 export function DataTable<TData extends { _id: string | number }>({
@@ -53,6 +55,7 @@ export function DataTable<TData extends { _id: string | number }>({
   data,
   pagination = true,
   defaultSorting = [{ id: '_id', desc: true }],
+  hideOnMobile = [],
 }: Readonly<DataTableProps<TData>>) {
   const columnVisibility: ColumnVisibilityState = { _id: false };
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
@@ -88,7 +91,12 @@ export function DataTable<TData extends { _id: string | number }>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={
+                        hideOnMobile.includes(header.column.id) ? 'max-md:hidden' : undefined
+                      }
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -103,7 +111,12 @@ export function DataTable<TData extends { _id: string | number }>({
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={
+                        hideOnMobile.includes(cell.column.id) ? 'max-md:hidden' : undefined
+                      }
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

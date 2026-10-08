@@ -20,7 +20,7 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
     },
     {
       accessorKey: 'icon',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Icône" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title="" />,
       cell: ({ row }) => {
         const icon = row.getValue<FoodIcons>('icon');
         return (
@@ -35,7 +35,18 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
     {
       accessorKey: 'name',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Nom" />,
-      cell: ({ row }) => <div className="font-medium">{row.getValue<string>('name')}</div>,
+      cell: ({ row }) => {
+        const { name, category, defaultUnit } = row.original;
+        return (
+          <div className="whitespace-normal">
+            <div className="font-medium">{name}</div>
+            <div className="md:hidden flex flex-wrap gap-1 mt-1">
+              <Badge variant="secondary">{CATEGORY_DISPLAY_NAMES[category] || category}</Badge>
+              <Badge variant="outline">{PRODUCT_UNITS[defaultUnit] || defaultUnit}</Badge>
+            </div>
+          </div>
+        );
+      },
     },
     {
       accessorKey: 'description',

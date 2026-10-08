@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { type Product, ProductForm } from './product-form';
 
 interface ProductActionsProps {
@@ -63,12 +63,7 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
         <Tooltip>
           <TooltipTrigger
             render={
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-8 h-8"
-                onClick={() => setIsEditDialogOpen(true)}
-              />
+              <Button variant="ghost" size="icon" onClick={() => setIsEditDialogOpen(true)} />
             }
           >
             <PenIcon className="w-4 h-4" />
@@ -82,7 +77,7 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-8 h-8 text-destructive hover:text-destructive"
+                className="text-destructive hover:text-destructive"
                 onClick={() => setIsDeleteDialogOpen(true)}
               />
             }

@@ -6,15 +6,21 @@ import type { FunctionReturnType } from 'convex/server';
 import { ChevronDownIcon, PlusIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { getIconClass } from '@/components/food-icons/icon-food-font-config';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { capitalize } from '@/utils/string-utils';
-import { getIconClass } from '../food-icons/icon-food-font-config';
-import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { ScrollArea } from '../ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { type Product as ProductFormValues, ProductForm } from './product-form';
 
 type Product = FunctionReturnType<typeof api.products.queries.getProducts>[number];
@@ -137,14 +143,14 @@ export function ProductSelector({
           </span>
         ) : (
           <span className="truncate">
-            {hint ? `Associer : ${hint.name}` : 'Sélectionner un produit'}
+            {hint ? 'Associer à un produit' : 'Sélectionner un produit'}
           </span>
         )}
         <ChevronDownIcon className="opacity-50 ml-auto w-4 h-4" />
       </Button>
 
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className={isCreating ? 'sm:max-w-4xl' : 'sm:max-w-2xl'}>
+        <DialogContent className={cn('*:min-w-0', isCreating ? 'sm:max-w-4xl' : 'sm:max-w-2xl')}>
           <DialogHeader>
             <DialogTitle>{isCreating ? 'Nouveau produit' : 'Sélectionner un produit'}</DialogTitle>
           </DialogHeader>
@@ -175,10 +181,12 @@ export function ProductSelector({
                 onClick={() => setIsCreating(true)}
               >
                 <PlusIcon />
-                {newProductName ? `Créer « ${newProductName} »` : 'Créer un nouveau produit'}
+                <span className="truncate">
+                  {newProductName ? `Créer « ${newProductName} »` : 'Créer un nouveau produit'}
+                </span>
               </Button>
 
-              <div className="gap-4 grid grid-cols-2">
+              <div className="gap-4 grid sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="search">Rechercher</Label>
                   <Input
@@ -204,7 +212,7 @@ export function ProductSelector({
                       if (value !== null) setCategoryFilter(value);
                     }}
                   >
-                    <SelectTrigger id="category">
+                    <SelectTrigger id="category" className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

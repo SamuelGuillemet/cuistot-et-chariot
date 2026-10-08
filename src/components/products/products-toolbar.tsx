@@ -2,9 +2,12 @@ import { api } from '@api/api';
 import { CATEGORY_DISPLAY_NAMES } from '@backend/types';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { PlusIcon, SearchIcon, XIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
+import { FilterField, FiltersDrawer } from '@/components/layout/filters-drawer';
+import { FooterItem } from '@/components/layout/footer';
+import { SearchInput } from '@/components/layout/search-input';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,7 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -23,14 +25,19 @@ import {
 } from '@/components/ui/select';
 import { type Product, ProductForm } from './product-form';
 
-export interface ProductsToolbarProps {
-  onFilter: (data: { search: string; category: string }) => void;
+export interface ProductFilters {
+  search: string;
+  category: string;
 }
 
-export function ProductsToolbar({ onFilter }: ProductsToolbarProps) {
+export interface ProductsToolbarProps {
+  filters: ProductFilters;
+  resultCount: number;
+  onFilter: (filters: ProductFilters) => void;
+}
+
+export function ProductsToolbar({ filters, resultCount, onFilter }: ProductsToolbarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
 
   const { mutate, isPending } = useMutation({
     mutationFn: useConvexMutation(api.products.mutations.createProduct),
@@ -46,77 +53,58 @@ export function ProductsToolbar({ onFilter }: ProductsToolbarProps) {
     });
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    onFilter({ search: value, category });
-  };
-
-  const handleCategoryChange = (value: string) => {
-    setCategory(value);
-    onFilter({ search, category: value });
-  };
-
-  const hasFilters = useMemo(
-    () => search.trim().length > 0 || category !== 'all',
-    [search, category],
-  );
-
-  const resetFilters = () => {
-    setSearch('');
-    setCategory('all');
-    onFilter({ search: '', category: 'all' });
-  };
+  const activeFilterCount = filters.category === 'all' ? 0 : 1;
 
   return (
     <div className="flex md:flex-row flex-col md:justify-between md:items-center gap-3 mb-4">
-      <div className="flex md:flex-row flex-col flex-1 md:items-center gap-3">
-        <div className="relative md:w-72">
-          <SearchIcon className="top-1/2 left-2 absolute w-4 h-4 text-muted-foreground -translate-y-1/2" />
-          <Input
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Rechercher un produit..."
-            className="pl-8"
-            aria-label="Rechercher"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <Select
-            items={[
-              ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
-                value,
-                label,
-              })),
-              { value: 'all', label: 'Toutes catégories' },
-            ]}
-            value={category}
-            onValueChange={(value) => {
-              if (value !== null) handleCategoryChange(value);
-            }}
-          >
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Catégorie" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-              <SelectItem value="all">Toutes catégories</SelectItem>
-            </SelectContent>
-          </Select>
-          {hasFilters && (
-            <Button variant="ghost" size="sm" onClick={resetFilters} className="gap-1">
-              <XIcon className="w-3.5 h-3.5" /> Réinitialiser
-            </Button>
-          )}
-        </div>
+      <div className="flex flex-1 items-center gap-2">
+        <SearchInput
+          value={filters.search}
+          onValueChange={(search) => onFilter({ ...filters, search })}
+          placeholder="Rechercher…"
+          label="Rechercher un produit"
+          className="md:flex-none md:w-72"
+        />
+        <FiltersDrawer
+          activeCount={activeFilterCount}
+          resultCount={resultCount}
+          onReset={() => onFilter({ ...filters, category: 'all' })}
+        >
+          <FilterField label="Catégorie" htmlFor="filter-category">
+            <Select
+              items={[
+                ...Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => ({
+                  value,
+                  label,
+                })),
+                { value: 'all', label: 'Toutes catégories' },
+              ]}
+              value={filters.category}
+              onValueChange={(value) => {
+                if (value !== null) onFilter({ ...filters, category: value });
+              }}
+            >
+              <SelectTrigger id="filter-category" className="w-full">
+                <SelectValue placeholder="Catégorie" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(CATEGORY_DISPLAY_NAMES).map(([value, label]) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+                <SelectItem value="all">Toutes catégories</SelectItem>
+              </SelectContent>
+            </Select>
+          </FilterField>
+        </FiltersDrawer>
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger render={<Button className="self-start md:self-auto" />}>
-          <PlusIcon className="mr-2 w-4 h-4" /> Nouveau produit
-        </DialogTrigger>
+        <FooterItem id="products-new">
+          <DialogTrigger render={<Button className="w-full sm:w-auto" />}>
+            <PlusIcon className="mr-2 w-4 h-4" /> Nouveau produit
+          </DialogTrigger>
+        </FooterItem>
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle>Nouveau produit</DialogTitle>

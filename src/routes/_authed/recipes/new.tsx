@@ -3,7 +3,8 @@ import { useConvexMutation } from '@convex-dev/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { type Recipe, RecipeForm } from '@/components/recipes/recipe-form';
+import { BackLink } from '@/components/layout/back-link';
+import { type Recipe, RecipeForm } from '@/components/recipes/forms/recipe-form';
 
 export const Route = createFileRoute('/_authed/recipes/new')({
   component: RouteComponent,
@@ -29,6 +30,7 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col gap-4 lg:flex-1 lg:min-h-0 mt-5">
+      <BackLink to="/recipes">Toutes les recettes</BackLink>
       <div className="space-y-2">
         <h1 className="font-bold text-3xl tracking-tight">Créer une nouvelle recette</h1>
         <p className="text-muted-foreground">Ajoutez une nouvelle recette à votre collection.</p>

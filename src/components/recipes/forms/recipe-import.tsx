@@ -5,9 +5,19 @@ import type { FunctionReturnType } from 'convex/server';
 import { SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export type ImportedRecipe = NonNullable<
   FunctionReturnType<typeof api.recipes.actions.searchMarmiton>
@@ -23,6 +33,7 @@ export function RecipeImport({
   readonly onImport: (recipe: ImportedRecipe) => void;
 }) {
   const [query, setQuery] = useState('');
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const { mutate: search, isPending } = useMutation<
     ImportedRecipe | null,
     Error,
@@ -43,10 +54,8 @@ export function RecipeImport({
   const canSearch = !disabled && !isPending && query.trim() !== '';
   const handleSearch = () => {
     if (!canSearch) return;
-    if (
-      confirmOverwrite &&
-      !window.confirm('Importer cette recette remplacera les modifications en cours. Continuer ?')
-    ) {
+    if (confirmOverwrite) {
+      setIsConfirmOpen(true);
       return;
     }
     search({ query });
@@ -58,7 +67,7 @@ export function RecipeImport({
         <Label htmlFor="marmiton-query">Importer depuis Marmiton</Label>
         <Input
           id="marmiton-query"
-          placeholder="Nom de la recette"
+          placeholder="Ex: lasagnes"
           value={query}
           disabled={disabled || isPending}
           onChange={(event) => setQuery(event.target.value)}
@@ -74,6 +83,28 @@ export function RecipeImport({
       <Button type="button" variant="outline" disabled={!canSearch} onClick={handleSearch}>
         <SearchIcon /> {isPending ? 'Recherche…' : 'Rechercher'}
       </Button>
+
+      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remplacer le formulaire ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Importer cette recette remplacera les modifications en cours.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setIsConfirmOpen(false);
+                search({ query });
+              }}
+            >
+              Importer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

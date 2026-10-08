@@ -12,6 +12,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 /** Label above a filter control inside the drawer. */
 export function FilterField({
@@ -39,8 +40,10 @@ interface FiltersDrawerProps {
 }
 
 export function FiltersDrawer({ activeCount, resultCount, onReset, children }: FiltersDrawerProps) {
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+
   return (
-    <Drawer showSwipeHandle>
+    <Drawer showSwipeHandle={!isDesktop} swipeDirection={isDesktop ? 'right' : 'down'}>
       <DrawerTrigger render={<Button variant="outline" className="gap-2" />}>
         <FilterIcon className="w-4 h-4" />
         Filtres

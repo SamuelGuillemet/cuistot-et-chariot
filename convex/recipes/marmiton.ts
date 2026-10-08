@@ -101,6 +101,15 @@ export function parseIngredient(line: string): ParsedIngredient {
   return { quantity: Math.round(quantity * multiplier * 1e6) / 1e6, unit, name };
 }
 
+/** Drops the SEO suffix Marmiton appends to page titles, e.g. "Lasagnes : la meilleure recette". */
+export function cleanRecipeName(name: string): string {
+  const cleaned = name
+    .replace(/\s*:\s*(?:la |notre |les )?meilleures? recettes?\b.*$/i, '')
+    .replace(/\s*:\s*d[ée]couvrez\b.*$/i, '')
+    .trim();
+  return cleaned || name;
+}
+
 function record(value: unknown): Record<string, unknown> | null {
   return value !== null && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
@@ -173,7 +182,7 @@ export function parseMarmitonRecipe(html: string): MarmitonRecipe | null {
   if (/\bdifficile\b/.test(keywords)) difficulty = 'hard';
   else if (/\bfacile\b/.test(keywords)) difficulty = 'easy';
   return {
-    name: parse(recipe.name).text.trim(),
+    name: cleanRecipeName(parse(recipe.name).text.trim()),
     difficulty,
     people,
     ingredients: recipe.recipeIngredient.filter((line) => line.trim()).map(parseIngredient),

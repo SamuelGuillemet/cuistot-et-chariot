@@ -6,15 +6,27 @@ type Product = Pick<Doc<'products'>, '_id' | 'name' | 'defaultUnit'>;
 
 const MAX_CANDIDATES = 5;
 const MIN_SCORE = 0.25;
+const CONFIDENT_SCORE = 0.9;
+const CONFIDENT_MARGIN = 0.05;
 
 export function matchRecipeProducts(recipe: MarmitonRecipe, products: readonly Product[]) {
   const match = createProductMatcher(products);
   return {
     ...recipe,
-    ingredients: recipe.ingredients.map((ingredient) => ({
-      ...ingredient,
-      productIds: match(ingredient).map(({ product }) => product._id),
-    })),
+    ingredients: recipe.ingredients.map((ingredient) => {
+      const candidates = match(ingredient);
+      const [best, runnerUp] = candidates;
+      const isConfident =
+        best !== undefined &&
+        best.score >= CONFIDENT_SCORE &&
+        (!runnerUp || best.score - runnerUp.score >= CONFIDENT_MARGIN);
+      return {
+        ...ingredient,
+        productIds: candidates.map(({ product }) => product._id),
+        /** Set only when the top candidate is clearly better than the rest. */
+        productId: isConfident ? best.product._id : null,
+      };
+    }),
   };
 }
 

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 interface RecipeFavoriteButtonProps {
   readonly recipeId: string;
+  readonly recipeName?: string;
   readonly isFavorite: boolean;
   readonly className?: string;
   readonly size?: 'default' | 'sm' | 'lg' | 'icon';
@@ -15,6 +16,7 @@ interface RecipeFavoriteButtonProps {
 
 export function RecipeFavoriteButton({
   recipeId,
+  recipeName,
   isFavorite,
   className,
   size = 'icon',
@@ -46,7 +48,8 @@ export function RecipeFavoriteButton({
       onClick={handleToggle}
       disabled={isPending}
       className={cn(className)}
-      aria-label={isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      aria-label={recipeName ? `Favori : ${recipeName}` : 'Favori'}
+      aria-pressed={isFavorite}
     >
       <HeartIcon
         className={cn(

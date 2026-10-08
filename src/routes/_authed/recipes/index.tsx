@@ -72,23 +72,33 @@ function useFilters(recipes: Recipes) {
 function RecipesPage() {
   const { data: recipes } = useSuspenseQuery(convexQuery(api.recipes.queries.getRecipes, {}));
   const { filters, setFilters, filteredRecipes } = useFilters(recipes);
+  const hasNoRecipes = recipes.length === 0;
 
   return (
     <div className="space-y-4 my-5">
-      <div className="space-y-2">
-        <h1 className="font-bold text-3xl tracking-tight">Recettes</h1>
-        <p className="text-muted-foreground">
-          Gérez vos recettes ({filteredRecipes.length}
-          {filteredRecipes.length > 1 ? ' recettes' : ' recette'})
-        </p>
-      </div>
-      <RecipesToolbar onFilter={setFilters} canCreate filters={filters} />
+      <h1 className="font-bold text-2xl tracking-tight">Recettes</h1>
+      <RecipesToolbar
+        onFilter={setFilters}
+        canCreate
+        filters={filters}
+        resultCount={filteredRecipes.length}
+      />
       <RecipeList
         recipes={filteredRecipes}
         emptyMessage={
-          recipes.length === 0
+          hasNoRecipes
             ? 'Aucune recette pour le moment'
             : 'Aucune recette ne correspond à vos filtres'
+        }
+        emptyDescription={
+          hasNoRecipes
+            ? 'Commencez en créant votre première recette.'
+            : 'Modifiez la recherche ou les filtres pour voir plus de résultats.'
+        }
+        onResetFilters={
+          hasNoRecipes
+            ? undefined
+            : () => setFilters({ search: '', difficulty: 'all', showFavoritesOnly: false })
         }
       />
     </div>

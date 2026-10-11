@@ -15,11 +15,10 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
-    <Card className="relative hover:bg-accent/30 h-full transition-colors">
+    <Card className="relative hover:bg-accent/30 h-full">
       <CardHeader>
         <div className="flex items-start gap-3">
           <CardTitle className="flex-1 min-w-0 self-center text-lg line-clamp-2">
-            {/* The link stretches over the whole card; the favourite button sits above it. */}
             <Link
               to="/recipes/$recipeId"
               params={{ recipeId: recipe._id }}
@@ -38,7 +37,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2">
+      <CardContent className="space-y-2 mt-auto">
         <div className="flex items-center gap-2">
           <RecipeDifficultyBadge difficulty={recipe.difficulty} />
           <RecipeServingsDisplay servings={recipe.servings} />

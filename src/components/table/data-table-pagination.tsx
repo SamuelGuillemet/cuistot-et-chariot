@@ -49,7 +49,7 @@ export function DataTablePagination<TData extends Record<string, unknown>>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex justify-center items-center w-25 font-medium text-sm">
+        <div className="flex justify-center items-center w-32 font-medium text-sm">
           Page {table.state.pagination.pageIndex + 1} sur {Math.max(table.getPageCount(), 1)}
         </div>
         <div className="flex items-center gap-2">

@@ -29,9 +29,10 @@ function RouteComponent() {
   };
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-1 lg:min-h-0 mt-5">
+    <div className="flex flex-col lg:flex-1 lg:min-h-0">
       <BackLink to="/recipes">Toutes les recettes</BackLink>
-      <div className="space-y-2">
+
+      <div className="space-y-2 mb-4">
         <h1 className="font-bold text-3xl tracking-tight">Créer une nouvelle recette</h1>
         <p className="text-muted-foreground">Ajoutez une nouvelle recette à votre collection.</p>
       </div>

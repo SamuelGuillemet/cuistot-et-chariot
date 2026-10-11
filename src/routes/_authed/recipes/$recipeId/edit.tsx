@@ -56,11 +56,12 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-1 lg:min-h-0 mt-5">
+    <div className="flex flex-col lg:flex-1 lg:min-h-0">
       <BackLink to="/recipes/$recipeId" params={{ recipeId }}>
         Retour à la recette
       </BackLink>
-      <div className="space-y-2">
+
+      <div className="space-y-2 mb-4">
         <h1 className="font-bold text-3xl tracking-tight">Modifier la recette</h1>
         <p className="text-muted-foreground">Modifiez les informations de votre recette.</p>
       </div>

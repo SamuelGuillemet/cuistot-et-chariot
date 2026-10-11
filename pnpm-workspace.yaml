@@ -10,3 +10,11 @@ peerDependencyRules:
     - vite
   allowedVersions:
     vite: '*'
+
+permissions:
+  '@tanstack/devtools-vite':
+    skills: false
+  '@tanstack/react-start':
+    skills: false
+  '@tanstack/react-table':
+    skills: false

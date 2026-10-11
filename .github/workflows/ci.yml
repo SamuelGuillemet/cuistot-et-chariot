@@ -20,7 +20,6 @@ jobs:
           node-version: '24'
           cache: true
 
-      - run: vp run dev:setup
       - run: vp check
       - run: vp test
       - run: vp build

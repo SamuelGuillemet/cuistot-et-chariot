@@ -65,5 +65,8 @@
     "vite": "catalog:",
     "vite-plugin-pwa": "^2.0.0",
     "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "seroval": ">=1.6.3"
   }
 }

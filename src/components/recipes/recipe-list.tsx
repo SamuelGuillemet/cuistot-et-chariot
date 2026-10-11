@@ -37,7 +37,7 @@ export function RecipeList({
   }
 
   return (
-    <div className="gap-4 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="gap-4 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-fr">
       {recipes.map((recipe) => (
         <RecipeCard key={recipe._id} recipe={recipe} />
       ))}

@@ -44,7 +44,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="space-y-6 my-5">
+    <div className="mb-5">
       <BackLink to="/recipes">Toutes les recettes</BackLink>
 
       <RecipeDetailHeader
@@ -53,8 +53,8 @@ function RouteComponent() {
         onEdit={handleEdit}
       />
 
-      <div className="gap-6 grid md:grid-cols-3">
-        <div className="space-y-6 md:col-span-2">
+      <div className="gap-6 grid md:grid-cols-3 pt-6">
+        <div className="md:col-span-2">
           <Card>
             <CardHeader>
               <CardTitle>Instructions</CardTitle>
@@ -69,7 +69,7 @@ function RouteComponent() {
         </div>
 
         {/* Ingredients first on mobile: the servings control lives there. */}
-        <div className="space-y-6 max-md:order-first">
+        <div className="max-md:order-first">
           <RecipeProductsList
             recipeProducts={recipeData.products}
             originalServings={recipeData.servings}

@@ -62,7 +62,7 @@ export function Layout({ children }: PropsWithChildren) {
         </header>
         <main
           data-scroll-restoration-id="main"
-          className="flex min-h-0 w-full flex-1 flex-col overflow-y-auto px-4 sm:px-12"
+          className="relative flex min-h-0 w-full flex-1 flex-col overflow-y-auto px-4 sm:px-12"
         >
           {children}
         </main>

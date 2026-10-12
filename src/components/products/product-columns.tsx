@@ -30,7 +30,7 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
         );
       },
       enableSorting: false,
-      size: 80,
+      size: 70,
     },
     {
       accessorKey: 'name',
@@ -40,7 +40,7 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
         return (
           <div className="whitespace-normal">
             <div className="font-medium">{name}</div>
-            <div className="md:hidden flex flex-wrap gap-1 mt-1">
+            <div className="md:hidden flex flex-col gap-1 mt-1">
               <Badge variant="secondary">{CATEGORY_DISPLAY_NAMES[category] || category}</Badge>
               <Badge variant="outline">{PRODUCT_UNITS[defaultUnit] || defaultUnit}</Badge>
             </div>
@@ -52,11 +52,12 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
       accessorKey: 'description',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
       cell: ({ row }) => (
-        <div className="text-muted-foreground">
+        <div className="text-muted-foreground text-ellipsis overflow-hidden">
           {row.getValue<string | undefined>('description') || '-'}
         </div>
       ),
       enableSorting: false,
+      size: 800,
     },
     {
       accessorKey: 'category',
@@ -81,7 +82,7 @@ export function createProductColumns(): ColumnDef<ProductTableFeatures, Doc<'pro
       header: 'Actions',
       cell: ({ row }) => <ProductActions product={row.original} />,
       enableSorting: false,
-      size: 120,
+      size: 100,
     },
   ];
 }

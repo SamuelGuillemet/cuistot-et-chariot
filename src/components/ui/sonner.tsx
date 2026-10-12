@@ -37,6 +37,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
           toast: 'cn-toast',
         },
       }}
+      expand={false}
+      duration={2000}
       swipeDirections={['left', 'right']}
       {...props}
     />

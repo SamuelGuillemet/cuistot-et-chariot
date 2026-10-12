@@ -27,7 +27,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-export const productTableFeatures = tableFeatures({
+const productTableFeatures = tableFeatures({
   columnFilteringFeature,
   columnSizingFeature,
   columnVisibilityFeature,
@@ -40,6 +40,19 @@ export const productTableFeatures = tableFeatures({
 });
 
 export type ProductTableFeatures = typeof productTableFeatures;
+
+const getEmptyRowCount = (
+  pagination: boolean,
+  paginationState: PaginationState,
+  rowsLength: number,
+  totalRows: number,
+) => {
+  if (!pagination) return 0;
+  if (totalRows < paginationState.pageSize) return 0;
+  if (rowsLength >= paginationState.pageSize) return 0;
+
+  return paginationState.pageSize - rowsLength;
+};
 
 interface DataTableProps<TData extends { _id: string | number }> {
   columns: ColumnDef<ProductTableFeatures, TData>[];
@@ -82,10 +95,15 @@ export function DataTable<TData extends { _id: string | number }>({
     autoResetPageIndex: false,
   });
 
+  const rows = table.getRowModel().rows;
+  const emptyRowCount = getEmptyRowCount(pagination, paginationState, rows.length, data.length);
+
+  console.log(emptyRowCount);
+
   return (
     <div className="space-y-4">
       <div className="border rounded-md">
-        <Table>
+        <Table className="table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -93,6 +111,7 @@ export function DataTable<TData extends { _id: string | number }>({
                   return (
                     <TableHead
                       key={header.id}
+                      style={{ width: header.getSize() }}
                       className={
                         hideOnMobile.includes(header.column.id) ? 'max-md:hidden' : undefined
                       }
@@ -107,28 +126,34 @@ export function DataTable<TData extends { _id: string | number }>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={
-                        hideOnMobile.includes(cell.column.id) ? 'max-md:hidden' : undefined
-                      }
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+            {rows.length === 0 && (
+              <TableRow className={pagination ? 'h-14' : undefined}>
+                <TableCell colSpan={columns.length - 1} className="text-center">
                   Aucun résultat.
                 </TableCell>
               </TableRow>
             )}
+            {rows.map((row) => (
+              <TableRow key={row.id} className={pagination ? 'h-14' : undefined}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={cell.id}
+                    className={hideOnMobile.includes(cell.column.id) ? 'max-md:hidden' : undefined}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+            {Array.from({ length: emptyRowCount }, (_, index) => (
+              <TableRow
+                key={`empty-${index}`}
+                aria-hidden
+                className="h-14 hover:bg-transparent border-b-transparent"
+              >
+                <TableCell colSpan={columns.length - 1} />
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

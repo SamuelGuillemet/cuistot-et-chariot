@@ -128,7 +128,7 @@ export function DataTable<TData extends { _id: string | number }>({
           <TableBody>
             {rows.length === 0 && (
               <TableRow className={pagination ? 'h-14' : undefined}>
-                <TableCell colSpan={columns.length} className="text-center">
+                <TableCell colSpan={columns.length - 1} className="text-center">
                   Aucun résultat.
                 </TableCell>
               </TableRow>
@@ -151,7 +151,7 @@ export function DataTable<TData extends { _id: string | number }>({
                 aria-hidden
                 className="h-14 hover:bg-transparent border-b-transparent"
               >
-                <TableCell colSpan={columns.length} />
+                <TableCell colSpan={columns.length - 1} />
               </TableRow>
             ))}
           </TableBody>

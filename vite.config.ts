@@ -3,6 +3,7 @@ import { devtools } from '@tanstack/devtools-vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
@@ -21,6 +22,29 @@ export default defineConfig({
     }),
     tailwindcss(),
     react({ compiler: true }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: null,
+      outDir: '.vercel/output/static',
+      devOptions: { enabled: false },
+      includeAssets: ['icon.svg'],
+      manifest: {
+        name: 'Cuistot et Chariot',
+        short_name: 'Cuistot',
+        description: 'Recettes et liste de courses',
+        lang: 'fr',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        theme_color: '#171717',
+        background_color: '#ffffff',
+        icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,woff2}'],
+        navigateFallback: null,
+      },
+    }),
   ],
   ssr: {
     noExternal: ['@convex-dev/better-auth'],

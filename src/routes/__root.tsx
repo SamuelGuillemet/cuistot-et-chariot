@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
 import type { ConvexQueryClient } from '@convex-dev/react-query';
 import { TanStackDevtools } from '@tanstack/react-devtools';
@@ -17,6 +15,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import type { PropsWithChildren } from 'react';
 import { Page404 } from '@/components/404';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
+import { PwaRegister } from '@/components/layout/pwa-register';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { authClient } from '@/lib/auth-client';
@@ -58,10 +57,18 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
+        name: 'theme-color',
+        content: '#171717',
+      },
+      {
         title: 'Cuistot et Chariot',
       },
     ],
-    links: [{ rel: 'stylesheet', href: mainCss }],
+    links: [
+      { rel: 'stylesheet', href: mainCss },
+      { rel: 'manifest', href: '/manifest.webmanifest' },
+      { rel: 'icon', href: '/icon.svg', type: 'image/svg+xml' },
+    ],
   }),
   component: RootComponent,
   notFoundComponent: Page404,
@@ -104,6 +111,7 @@ function RootDocument({ children }: PropsWithChildren) {
           {children}
           <Toaster richColors position="bottom-left" />
         </ThemeProvider>
+        <PwaRegister />
         <TanStackDevtools
           plugins={[
             {

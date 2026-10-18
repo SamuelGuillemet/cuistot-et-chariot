@@ -1,5 +1,4 @@
 import tailwindcss from '@tailwindcss/vite';
-import { devtools } from '@tanstack/devtools-vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
@@ -8,14 +7,10 @@ import { defineConfig } from 'vite-plus';
 
 export default defineConfig({
   server: {
-    port: 3000,
+    port: 5173,
+    host: '0.0.0.0',
   },
   plugins: [
-    devtools({
-      enhancedLogs: {
-        enabled: true,
-      },
-    }),
     tanstackStart(),
     nitro({
       preset: 'vercel',
@@ -24,17 +19,12 @@ export default defineConfig({
     react({ compiler: true }),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: null,
       outDir: '.vercel/output/static',
-      devOptions: { enabled: false },
       includeAssets: ['icon.svg'],
       manifest: {
         name: 'Cuistot et Chariot',
-        short_name: 'Cuistot',
+        short_name: 'C&C',
         description: 'Recettes et liste de courses',
-        lang: 'fr',
-        start_url: '/',
-        scope: '/',
         display: 'standalone',
         theme_color: '#171717',
         background_color: '#ffffff',

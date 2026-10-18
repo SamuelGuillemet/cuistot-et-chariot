@@ -72,7 +72,7 @@ type RecipeFormValues = Omit<Recipe, 'products'> & {
 };
 
 interface RecipeFormProps {
-  readonly onSubmit: (values: Recipe) => void | Promise<void>;
+  readonly onSubmit: (values: Recipe) => Promise<void>;
   readonly allowImport?: boolean;
   readonly isLoading?: boolean;
   readonly recipe?: Recipe;
@@ -161,27 +161,26 @@ export function RecipeForm({
         <RecipeImport
           disabled={isLoading}
           confirmOverwrite={!isDefaultValue}
-          onImport={(imported) =>
-            form.reset(
-              {
-                name: imported.name,
-                instructions: imported.steps.map((text, index) => ({ order: index + 1, text })),
-                servings: Math.min(50, Math.max(1, imported.people || 4)),
-                prepTime: imported.prepTime,
-                cookTime: imported.cookTime,
-                difficulty: imported.difficulty,
-                products: imported.ingredients.map(
-                  ({ name, quantity, unit, productIds, productId }) => ({
-                    productId: productId ?? '',
-                    quantity: quantity || 1,
-                    unit: unit ?? 'pieces',
-                    hint: { name, unit, productIds },
-                  }),
-                ),
-              },
-              { keepDefaultValues: true },
-            )
-          }
+          onImport={(imported) => {
+            const values = {
+              name: imported.name,
+              instructions: imported.steps.map((text, index) => ({ order: index + 1, text })),
+              servings: Math.min(50, Math.max(1, imported.people || 4)),
+              prepTime: imported.prepTime,
+              cookTime: imported.cookTime,
+              difficulty: imported.difficulty,
+              products: imported.ingredients.map(
+                ({ name, quantity, unit, productIds, productId }) => ({
+                  productId: productId ?? '',
+                  quantity: quantity || 1,
+                  unit: unit ?? 'pieces',
+                  hint: { name, unit, productIds },
+                }),
+              ),
+            };
+            form.reset(values, { keepDefaultValues: true });
+            draft.save(values);
+          }}
         />
       )}
 

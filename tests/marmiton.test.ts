@@ -1,9 +1,10 @@
 import { test, expect } from 'vite-plus/test';
 import {
   cleanRecipeName,
+  getMarmitonRecipe,
   parseIngredient,
   parseMarmitonRecipe,
-  searchMarmitonRecipe,
+  searchMarmitonRecipes,
 } from '../convex/recipes/marmiton.ts';
 
 const recipe = {
@@ -75,29 +76,36 @@ test('supports JSON-LD type arrays and fractional durations, ignores invalid dur
   expect(parseWith({ ...recipe, prepTime: 'PT30M1H' })?.prepTime).toBe(0);
 });
 
-test('takes the first search result, not the highest-rated one', async () => {
+test('returns recipe choices and imports the selected recipe', async () => {
   const calls: string[] = [];
   const fetchPage = async (input: URL | RequestInfo) => {
     calls.push(input instanceof Request ? input.url : input.toString());
     return new Response(
       calls.length === 1
-        ? '<ul class="search-list"><li class="search-list__item"><a class="card-content__title" href="/recettes/recette_soupe_1.aspx">Soupe</a><span class="rating__rating">3/5</span></li><li class="search-list__item"><a class="card-content__title" href="/recettes/recette_pain_2.aspx">Pain</a><span class="rating__rating">5/5</span></li></ul>'
+        ? '<ul class="search-list"><li class="search-list__item"><a class="card-content__title" href="/recettes/recette_soupe_1.aspx">Soupe : la meilleure recette</a><span class="rating__rating">3/5</span></li><li class="search-list__item"><a class="card-content__title" href="/recettes/recette_pain_2.aspx">Pain</a><span class="rating__rating">5/5</span></li><li class="search-list__item"><a class="card-content__title" href="/recettes/recette_soupe_1.aspx">Soupe</a></li></ul>'
         : html,
     );
   };
-  expect((await searchMarmitonRecipe(' soupe & pain ', fetchPage))?.people).toBe(4);
+  const results = await searchMarmitonRecipes(' soupe & pain ', fetchPage);
+  expect(results).toEqual([
+    { name: 'Soupe', url: 'https://www.marmiton.org/recettes/recette_soupe_1.aspx' },
+    { name: 'Pain', url: 'https://www.marmiton.org/recettes/recette_pain_2.aspx' },
+  ]);
   expect(new URL(calls[0]).searchParams.get('aqt')).toBe('soupe & pain');
-  expect(calls[1]).toBe('https://www.marmiton.org/recettes/recette_soupe_1.aspx');
+  expect((await getMarmitonRecipe(results[1].url, fetchPage)).people).toBe(4);
+  expect(calls[1]).toBe('https://www.marmiton.org/recettes/recette_pain_2.aspx');
 });
 
 test('handles empty results and rejects invalid inputs, HTTP failures and off-site URLs', async () => {
-  expect(await searchMarmitonRecipe('soupe', async () => new Response('<html></html>'))).toBeNull();
-  await expect(searchMarmitonRecipe(' ')).rejects.toThrow(/Search must/);
+  expect(await searchMarmitonRecipes('soupe', async () => new Response('<html></html>'))).toEqual(
+    [],
+  );
+  await expect(searchMarmitonRecipes(' ')).rejects.toThrow(/Search must/);
   await expect(
-    searchMarmitonRecipe('soupe', async () => new Response('', { status: 403 })),
+    searchMarmitonRecipes('soupe', async () => new Response('', { status: 403 })),
   ).rejects.toThrow(/403/);
   await expect(
-    searchMarmitonRecipe(
+    searchMarmitonRecipes(
       'soupe',
       async () =>
         new Response(
@@ -105,6 +113,9 @@ test('handles empty results and rejects invalid inputs, HTTP failures and off-si
         ),
     ),
   ).rejects.toThrow(/Invalid Marmiton recipe URL/);
+  await expect(getMarmitonRecipe('https://example.com/recettes/recette_1')).rejects.toThrow(
+    /Invalid Marmiton recipe URL/,
+  );
 });
 
 test('strips the SEO suffix from recipe titles', () => {

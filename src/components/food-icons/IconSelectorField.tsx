@@ -3,13 +3,13 @@ import type React from 'react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+  ResponsiveDialogTrigger,
+} from '@/components/ui/responsive-dialog';
 import { cn } from '@/lib/utils';
 import type { FoodIcons } from './icon-food-font-config';
 import { getIconClass } from './icon-food-font-config';
@@ -61,8 +61,8 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
 
   return (
     <div className={cn('relative', disabled && 'opacity-50 pointer-events-none')}>
-      <Dialog open={isDialogOpen} onOpenChange={onDialogOpenChange}>
-        <DialogTrigger
+      <ResponsiveDialog open={isDialogOpen} onOpenChange={onDialogOpenChange}>
+        <ResponsiveDialogTrigger
           render={
             <button
               type="button"
@@ -89,18 +89,18 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
               <span className="text-muted-foreground">Choisir une icône</span>
             </>
           )}
-        </DialogTrigger>
-        <DialogContent className="sm:min-w-2xl lg:min-w-4xl">
-          <DialogHeader>
-            <DialogTitle className="pr-10">Sélectionner une icône</DialogTitle>
-          </DialogHeader>
+        </ResponsiveDialogTrigger>
+        <ResponsiveDialogContent className="sm:min-w-2xl lg:min-w-4xl">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle className="pr-10">Sélectionner une icône</ResponsiveDialogTitle>
+          </ResponsiveDialogHeader>
           <FoodIconSelector
             onIconSelect={handleIconSelect}
             selectedIcon={selectedIcon}
             showCategories={showCategories}
             className="shadow-none ring-0 w-full"
           />
-          <DialogFooter className="flex-row justify-end">
+          <ResponsiveDialogFooter className="flex-row justify-end">
             <Button variant="outline" onClick={handleCancel} className="flex-1 sm:flex-none">
               Annuler
             </Button>
@@ -111,9 +111,9 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
             >
               Valider
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </div>
   );
 };

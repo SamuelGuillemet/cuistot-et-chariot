@@ -17,8 +17,10 @@ export function getRouter() {
   if (!CONVEX_URL) {
     throw new Error('Missing required environment variable: VITE_CONVEX_URL');
   }
+  const disableAuthForTesting =
+    import.meta.env.DEV && import.meta.env.VITE_DISABLE_AUTH_FOR_TESTING === 'true';
   const convexQueryClient = new ConvexQueryClient(CONVEX_URL, {
-    expectAuth: true,
+    expectAuth: !disableAuthForTesting,
   });
 
   const queryClient: QueryClient = new QueryClient({

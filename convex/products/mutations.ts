@@ -21,7 +21,7 @@ export const createProduct = mutation({
       .first();
 
     if (existingProduct) {
-      throw new ConvexError('A product with this name already exists');
+      throw new ConvexError('Un produit avec ce nom existe déjà');
     }
 
     return await ctx.db.insert('products', args);
@@ -42,7 +42,7 @@ export const updateProduct = mutation({
 
     const product = await ctx.db.get(args.productId);
     if (!product) {
-      throw new ConvexError('Product not found');
+      throw new ConvexError('Produit non trouvé');
     }
 
     // Check if a product with the new name already exists (if name is being changed)
@@ -53,7 +53,7 @@ export const updateProduct = mutation({
         .first();
 
       if (existingProduct && existingProduct._id !== product._id) {
-        throw new ConvexError('A product with this name already exists');
+        throw new ConvexError('Un produit avec ce nom existe déjà');
       }
     }
 
@@ -72,7 +72,7 @@ export const deleteProduct = mutation({
 
     const product = await ctx.db.get(args.productId);
     if (!product) {
-      throw new ConvexError('Product not found');
+      throw new ConvexError('Produit non trouvé');
     }
 
     const recipeProduct = await ctx.db
@@ -81,7 +81,7 @@ export const deleteProduct = mutation({
       .first();
 
     if (recipeProduct) {
-      throw new ConvexError('Cannot delete a product that is used in a recipe');
+      throw new ConvexError('Impossible de supprimer un produit utilisé dans une recette');
     }
 
     await ctx.db.delete(args.productId);

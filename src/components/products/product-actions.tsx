@@ -16,7 +16,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from '@/components/ui/responsive-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { type Product, ProductForm } from './product-form';
 
@@ -63,7 +68,7 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
         <Tooltip>
           <TooltipTrigger
             render={
-              <Button variant="ghost" size="icon" onClick={() => setIsEditDialogOpen(true)} />
+              <Button variant="ghost" size="icon-sm" onClick={() => setIsEditDialogOpen(true)} />
             }
           >
             <PenIcon className="w-4 h-4" />
@@ -76,7 +81,7 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
             render={
               <Button
                 variant="ghost"
-                size="icon"
+                size="icon-sm"
                 className="text-destructive hover:text-destructive"
                 onClick={() => setIsDeleteDialogOpen(true)}
               />
@@ -90,19 +95,19 @@ export function ProductActions({ product }: Readonly<ProductActionsProps>) {
       </div>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Modifier le produit</DialogTitle>
-          </DialogHeader>
+      <ResponsiveDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <ResponsiveDialogContent className="sm:max-w-4xl">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>Modifier le produit</ResponsiveDialogTitle>
+          </ResponsiveDialogHeader>
           <ProductForm
             onSubmit={handleEditProduct}
             isLoading={updateProductMutation.isPending}
             product={product}
             submitText="Modifier le produit"
           />
-        </DialogContent>
-      </Dialog>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>

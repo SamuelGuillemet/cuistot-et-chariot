@@ -10,6 +10,7 @@ interface ViteTypeOptions {
 interface ImportMetaEnv {
   readonly VITE_CONVEX_URL: string;
   readonly VITE_CONVEX_SITE_URL: string;
+  readonly VITE_DISABLE_AUTH_FOR_TESTING: string;
   // more env variables...
 }
 

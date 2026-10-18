@@ -36,14 +36,14 @@ export const createRecipe = mutation({
       .first();
 
     if (existingRecipe) {
-      throw new ConvexError('A recipe with this name already exists');
+      throw new ConvexError('Une recette avec ce nom existe déjà');
     }
 
     // Verify all ingredient products exist in the shared catalog.
     for (const productData of args.products) {
       const product = await ctx.db.get(productData.productId as Id<'products'>);
       if (!product) {
-        throw new ConvexError('Product not found');
+        throw new ConvexError('Produit non trouvé');
       }
     }
 
@@ -102,7 +102,7 @@ export const updateRecipe = mutation({
 
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
-      throw new ConvexError('Recipe not found');
+      throw new ConvexError('Recette non trouvée');
     }
 
     // Check if a recipe with the new name already exists (if name is being changed)
@@ -113,7 +113,7 @@ export const updateRecipe = mutation({
         .first();
 
       if (existingRecipe && existingRecipe._id !== recipe._id) {
-        throw new ConvexError('A recipe with this name already exists');
+        throw new ConvexError('Une recette avec ce nom existe déjà');
       }
     }
 
@@ -127,7 +127,7 @@ export const updateRecipe = mutation({
       for (const productData of args.products) {
         const product = await ctx.db.get(productData.productId as Id<'products'>);
         if (!product) {
-          throw new ConvexError('Product not found');
+          throw new ConvexError('Produit non trouvé');
         }
       }
 
@@ -162,7 +162,7 @@ export const deleteRecipe = mutation({
     await requireAuthUserId(ctx);
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
-      throw new ConvexError('Recipe not found');
+      throw new ConvexError('Recette non trouvée');
     }
 
     // Delete all associated recipe products
@@ -200,7 +200,7 @@ export const toggleRecipeFavorite = mutation({
     // The recipe collection is shared by authenticated users.
     const recipe = await ctx.db.get(args.recipeId as Id<'recipes'>);
     if (!recipe) {
-      throw new ConvexError('Recipe not found');
+      throw new ConvexError('Recette non trouvée');
     }
 
     // Check if already a favorite

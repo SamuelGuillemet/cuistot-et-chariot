@@ -30,9 +30,6 @@ export function RecipeFavoriteButton({
         data.isFavorite ? 'Recette ajoutée aux favoris' : 'Recette retirée des favoris',
       );
     },
-    onError: () => {
-      toast.error('Erreur lors de la mise à jour des favoris');
-    },
   });
 
   const handleToggle = (event: React.MouseEvent) => {

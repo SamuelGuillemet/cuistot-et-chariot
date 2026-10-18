@@ -27,7 +27,7 @@ export function BaseField({
   const isInvalid = isFieldInvalid(field);
 
   return (
-    <Field data-invalid={isInvalid}>
+    <Field data-invalid={isInvalid} className="relative">
       {label && (
         <FieldLabel htmlFor={field.name}>
           {label}

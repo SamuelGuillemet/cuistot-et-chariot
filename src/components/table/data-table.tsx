@@ -98,8 +98,6 @@ export function DataTable<TData extends { _id: string | number }>({
   const rows = table.getRowModel().rows;
   const emptyRowCount = getEmptyRowCount(pagination, paginationState, rows.length, data.length);
 
-  console.log(emptyRowCount);
-
   return (
     <div className="space-y-4">
       <div className="border rounded-md">

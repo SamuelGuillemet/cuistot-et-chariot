@@ -17,6 +17,11 @@ export interface MarmitonRecipe {
   steps: string[];
 }
 
+export interface MarmitonSearchResult {
+  name: string;
+  url: string;
+}
+
 const BASE_URL = 'https://www.marmiton.org';
 const units: [ProductUnit, string, number][] = [
   ['tablespoon', String.raw`cuilleres? a soupe|cuillers? a soupe|c\.?\s*a\s*soupe|cas`, 1],
@@ -192,34 +197,57 @@ export function parseMarmitonRecipe(html: string): MarmitonRecipe | null {
   };
 }
 
-export async function searchMarmitonRecipe(
+function recipeUrl(value: string): URL {
+  const url = new URL(value, BASE_URL);
+  if (url.origin !== BASE_URL || !url.pathname.startsWith('/recettes/recette_')) {
+    throw new Error('Invalid Marmiton recipe URL');
+  }
+  return url;
+}
+
+export async function searchMarmitonRecipes(
   query: string,
   fetchPage: typeof fetch = fetch,
-): Promise<MarmitonRecipe | null> {
+): Promise<MarmitonSearchResult[]> {
   const text = query.trim();
   if (!text || text.length > 200)
     throw new Error('Search must contain between 1 and 200 characters');
   const searchUrl = new URL('/recettes/recherche.aspx', BASE_URL);
   searchUrl.searchParams.set('aqt', text);
   searchUrl.searchParams.set('page', '1');
-  const load = async (url: URL) => {
-    const response = await fetchPage(url, {
-      signal: AbortSignal.timeout(15_000),
-      redirect: 'error',
-    });
-    if (!response.ok) throw new Error(`Marmiton request failed (${response.status})`);
-    return response.text();
-  };
-  const search = parse(await load(searchUrl));
-  const href = search
-    .querySelector('ul.search-list li.search-list__item a.card-content__title')
-    ?.getAttribute('href');
-  if (!href) return null;
-  const recipeUrl = new URL(href, BASE_URL);
-  if (recipeUrl.origin !== BASE_URL || !recipeUrl.pathname.startsWith('/recettes/recette_')) {
-    throw new Error('Invalid Marmiton recipe URL');
+  const response = await fetchPage(searchUrl, {
+    signal: AbortSignal.timeout(15_000),
+    redirect: 'error',
+  });
+  if (!response.ok) throw new Error(`Marmiton request failed (${response.status})`);
+  const search = parse(await response.text());
+  const results: MarmitonSearchResult[] = [];
+  const seen = new Set<string>();
+  for (const anchor of search.querySelectorAll(
+    'ul.search-list li.search-list__item a.card-content__title',
+  )) {
+    const href = anchor.getAttribute('href');
+    const name = cleanRecipeName(parse(anchor.text).text.trim());
+    if (!href || !name) continue;
+    const url = recipeUrl(href).toString();
+    if (seen.has(url)) continue;
+    seen.add(url);
+    results.push({ name, url });
   }
-  const recipe = parseMarmitonRecipe(await load(recipeUrl));
+  return results;
+}
+
+export async function getMarmitonRecipe(
+  url: string,
+  fetchPage: typeof fetch = fetch,
+): Promise<MarmitonRecipe> {
+  const recipeUrlValue = recipeUrl(url);
+  const response = await fetchPage(recipeUrlValue, {
+    signal: AbortSignal.timeout(15_000),
+    redirect: 'error',
+  });
+  if (!response.ok) throw new Error(`Marmiton request failed (${response.status})`);
+  const recipe = parseMarmitonRecipe(await response.text());
   if (!recipe) throw new Error('Marmiton recipe structured data not found');
   return recipe;
 }

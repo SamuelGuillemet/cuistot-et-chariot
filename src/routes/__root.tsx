@@ -1,9 +1,6 @@
 import { ConvexBetterAuthProvider } from '@convex-dev/better-auth/react';
 import type { ConvexQueryClient } from '@convex-dev/react-query';
-import { TanStackDevtools } from '@tanstack/react-devtools';
-import { FormDevtoolsPanel } from '@tanstack/react-form-devtools';
 import { type QueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -11,29 +8,24 @@ import {
   Scripts,
   useRouteContext,
 } from '@tanstack/react-router';
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import type { PropsWithChildren } from 'react';
 import { Page404 } from '@/components/404';
 import { DefaultCatchBoundary } from '@/components/DefaultCatchBoundary';
-import { PwaRegister } from '@/components/layout/pwa-register';
 import { ThemeProvider } from '@/components/layout/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { authClient } from '@/lib/auth-client';
 import { authSessionQueryOptions, themeQueryOptions } from '@/lib/server-queries';
 import mainCss from '@/styles/main.css?url';
 
-const ReactScan =
-  process.env.NODE_ENV === 'production'
-    ? () => null
-    : () => (
-        <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
-      );
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexQueryClient: ConvexQueryClient;
 }>()({
   beforeLoad: async (opts) => {
+    if (import.meta.env.DEV && import.meta.env.VITE_DISABLE_AUTH_FOR_TESTING === 'true') {
+      return { isAuthenticated: true, token: undefined };
+    }
+
     const { token } = await opts.context.queryClient.query({
       ...authSessionQueryOptions(),
       staleTime: 'static',
@@ -104,30 +96,23 @@ function RootDocument({ children }: PropsWithChildren) {
     <html lang="fr" className={theme} suppressHydrationWarning>
       <head>
         <HeadContent />
-        <ReactScan />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(document.documentElement.classList.contains('system')&&matchMedia('(prefers-color-scheme: dark)').matches)document.documentElement.classList.add('dark')",
+          }}
+        />
       </head>
       <body className="font-regular antialiased tracking-wide">
         <ThemeProvider theme={theme}>
           {children}
-          <Toaster richColors position="bottom-left" />
+          <Toaster
+            richColors
+            position="top-center"
+            offset={{ top: 64 }}
+            mobileOffset={{ top: 64, left: 16, right: 16 }}
+          />
         </ThemeProvider>
-        <PwaRegister />
-        <TanStackDevtools
-          plugins={[
-            {
-              name: 'TanStack Query',
-              render: <ReactQueryDevtoolsPanel />,
-            },
-            {
-              name: 'TanStack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            {
-              name: 'TanStack Form',
-              render: <FormDevtoolsPanel />,
-            },
-          ]}
-        />
         <Scripts />
       </body>
     </html>

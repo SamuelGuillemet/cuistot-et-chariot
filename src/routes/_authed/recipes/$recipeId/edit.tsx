@@ -24,19 +24,16 @@ function RouteComponent() {
     convexQuery(api.recipes.queries.getRecipeById, { recipeId }),
   );
 
-  const { mutate: updateRecipe, isPending } = useMutation({
+  const { mutateAsync: updateRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.updateRecipe),
     onSuccess: async () => {
       toast.success('Recette mise à jour avec succès');
       await navigate({ to: '/recipes/$recipeId', params: { recipeId } });
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Erreur lors de la mise à jour de la recette');
-    },
   });
 
-  const handleSubmit = (values: Recipe) => {
-    updateRecipe({
+  const handleSubmit = async (values: Recipe) => {
+    await updateRecipe({
       recipeId: recipeId,
       ...values,
     });

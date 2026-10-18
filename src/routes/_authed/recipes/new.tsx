@@ -13,19 +13,16 @@ export const Route = createFileRoute('/_authed/recipes/new')({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { mutate: createRecipe, isPending } = useMutation({
+  const { mutateAsync: createRecipe, isPending } = useMutation({
     mutationFn: useConvexMutation(api.recipes.mutations.createRecipe),
     onSuccess: async () => {
       toast.success('Recette créée avec succès');
       await navigate({ to: '/recipes' });
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Erreur lors de la création de la recette');
-    },
   });
 
-  const handleSubmit = (values: Recipe) => {
-    createRecipe(values);
+  const handleSubmit = async (values: Recipe) => {
+    await createRecipe(values);
   };
 
   return (

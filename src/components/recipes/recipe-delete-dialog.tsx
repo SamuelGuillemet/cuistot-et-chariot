@@ -31,9 +31,6 @@ export function RecipeDeleteDialog({ recipe, isOpen, onOpenChange }: RecipeDelet
       onOpenChange(false);
       await navigate({ to: '/recipes' });
     },
-    onError: () => {
-      toast.error('Erreur lors de la suppression de la recette');
-    },
   });
 
   const handleDelete = () => {

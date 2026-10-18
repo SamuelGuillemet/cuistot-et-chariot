@@ -34,7 +34,7 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
   className,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState<FoodIcons | undefined>(undefined);
+  const [selectedIcon, setSelectedIcon] = useState<FoodIcons | undefined>(value);
 
   const handleIconSelect = (icon: FoodIcons | undefined) => {
     setSelectedIcon(icon);
@@ -48,14 +48,14 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
   };
 
   const handleCancel = () => {
-    setSelectedIcon(undefined);
+    setSelectedIcon(value);
     setIsDialogOpen(false);
   };
 
   const onDialogOpenChange = (open: boolean) => {
     setIsDialogOpen(open);
     if (!open) {
-      setSelectedIcon(undefined);
+      setSelectedIcon(value);
     }
   };
 
@@ -75,21 +75,21 @@ export const IconSelectorControlled: React.FC<IconSelectorControlledProps> = ({
                 !value && 'bg-muted',
                 className,
               )}
-            />
+            >
+              {value ? (
+                <>
+                  <i className={`${getIconClass(value)} text-3xl text-foreground`} />
+                  <span className="text-muted-foreground">Changer l&apos;icône</span>
+                </>
+              ) : (
+                <>
+                  <SearchIcon className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Choisir une icône</span>
+                </>
+              )}
+            </button>
           }
-        >
-          {value ? (
-            <>
-              <i className={`${getIconClass(value)} text-3xl text-foreground`} aria-hidden="true" />
-              <span className="text-muted-foreground">Changer l&apos;icône</span>
-            </>
-          ) : (
-            <>
-              <SearchIcon className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Choisir une icône</span>
-            </>
-          )}
-        </ResponsiveDialogTrigger>
+        />
         <ResponsiveDialogContent className="sm:min-w-2xl lg:min-w-4xl">
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle className="pr-10">Sélectionner une icône</ResponsiveDialogTitle>

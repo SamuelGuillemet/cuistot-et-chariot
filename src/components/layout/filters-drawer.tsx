@@ -12,7 +12,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer';
 import { Label } from '@/components/ui/label';
-import { useMediaQuery } from '@/hooks/use-media-query';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /** Label above a filter control inside the drawer. */
 export function FilterField({
@@ -40,7 +40,7 @@ interface FiltersDrawerProps {
 }
 
 export function FiltersDrawer({ activeCount, resultCount, onReset, children }: FiltersDrawerProps) {
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = !useIsMobile();
 
   return (
     <Drawer showSwipeHandle={!isDesktop} swipeDirection={isDesktop ? 'right' : 'down'}>

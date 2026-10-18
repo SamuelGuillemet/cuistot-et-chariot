@@ -54,10 +54,14 @@ export default function UserBadge() {
       <DropdownMenuContent align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Mon compte ({data.name})</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
-            Se déconnecter
-          </DropdownMenuItem>
+          {!(import.meta.env.DEV && import.meta.env.VITE_DISABLE_AUTH_FOR_TESTING === 'true') && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
+                Se déconnecter
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

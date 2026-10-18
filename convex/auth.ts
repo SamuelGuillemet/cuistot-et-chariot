@@ -4,10 +4,15 @@ import { betterAuth } from 'better-auth';
 import { ConvexError } from 'convex/values';
 import { components, internal } from './_generated/api';
 import type { DataModel, Id } from './_generated/dataModel';
-import type { MutationCtx, QueryCtx } from './_generated/server';
+import { ActionCtx, env, type MutationCtx, type QueryCtx } from './_generated/server';
 import authConfig from './auth.config';
 
 const authFunctions: AuthFunctions = internal.auth;
+const TEST_AUTH_ID = 'test-auth-user';
+
+export const isAuthDisabledForTesting = () => {
+  return env.DISABLE_AUTH_FOR_TESTING === 'true';
+};
 
 export const authComponent = createClient<DataModel>(components.betterAuth, {
   authFunctions,
@@ -15,7 +20,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
     user: {
       onCreate: async (ctx, authUser) => {
         const authorized_emails =
-          process.env.AUTHORIZED_EMAILS?.split(',')
+          env.AUTHORIZED_EMAILS?.split(',')
             .map((email) => email.trim())
             .filter(Boolean) || [];
         if (!authUser.email || !authorized_emails.includes(authUser.email)) {
@@ -48,7 +53,7 @@ export const { onCreate, onUpdate, onDelete } = authComponent.triggersApi();
 
 export const createAuth = (ctx: GenericCtx<DataModel>) =>
   betterAuth({
-    baseURL: process.env.SITE_URL,
+    baseURL: env.SITE_URL,
     database: authComponent.adapter(ctx),
     rateLimit: {
       enabled: false,
@@ -63,8 +68,8 @@ export const createAuth = (ctx: GenericCtx<DataModel>) =>
     },
     socialProviders: {
       google: {
-        clientId: process.env.AUTH_GOOGLE_ID as string,
-        clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
+        clientId: env.AUTH_GOOGLE_ID,
+        clientSecret: env.AUTH_GOOGLE_SECRET,
       },
     },
     user: {
@@ -84,6 +89,14 @@ export async function getAuthUserId(
   ctx: QueryCtx | MutationCtx,
   shouldThrow: boolean = false,
 ): Promise<Id<'users'> | null> {
+  if (isAuthDisabledForTesting()) {
+    const testUser = await ctx.db
+      .query('users')
+      .withIndex('by_authId', (q) => q.eq('authId', TEST_AUTH_ID))
+      .unique();
+    return testUser?._id ?? null;
+  }
+
   const authUser = await authComponent.safeGetAuthUser(ctx);
   if (!authUser) {
     if (shouldThrow) {
@@ -111,3 +124,12 @@ export async function requireAuthUserId(ctx: QueryCtx | MutationCtx): Promise<Id
   }
   return userId;
 }
+
+export async function ensureActionAuth(ctx: ActionCtx): Promise<void> {
+  if (isAuthDisabledForTesting()) {
+    return;
+  }
+  if (!(await ctx.auth.getUserIdentity())) throw new ConvexError('Unauthorized');
+}
+
+export { TEST_AUTH_ID };

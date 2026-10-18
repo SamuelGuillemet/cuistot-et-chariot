@@ -34,6 +34,10 @@ export const Route = createRootRouteWithContext<{
   convexQueryClient: ConvexQueryClient;
 }>()({
   beforeLoad: async (opts) => {
+    if (import.meta.env.DEV && import.meta.env.VITE_DISABLE_AUTH_FOR_TESTING === 'true') {
+      return { isAuthenticated: true, token: undefined };
+    }
+
     const { token } = await opts.context.queryClient.query({
       ...authSessionQueryOptions(),
       staleTime: 'static',

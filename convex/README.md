@@ -1,5 +1,20 @@
 # Welcome to your Convex functions directory!
 
+## Testing without authentication
+
+For a local development deployment only, set the Convex environment variable and create
+the test user:
+
+```sh
+pnpm exec convex env set DISABLE_AUTH_FOR_TESTING true
+pnpm exec convex run users:ensureTestUser
+```
+
+Add `VITE_DISABLE_AUTH_FOR_TESTING=true` to the frontend `.env.local` and restart
+the frontend dev server. The backend bypass is enabled only when
+`DISABLE_AUTH_FOR_TESTING=true` and `NODE_ENV` is not `production`. Never set this
+variable on a production deployment.
+
 Write your Convex functions here.
 See https://docs.convex.dev/functions for more.
 
